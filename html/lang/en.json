@@ -1,0 +1,419 @@
+{
+  "mainMenu": {
+    "item":{
+      "playlist": "Playlist",
+      "pmsID": "PMS ID",
+      "filter": "Filter",
+      "xmltv": "XMLTV",
+      "mapping": "Mapping",
+      "users": "Users",
+      "settings": "Settings",
+      "log": "Log",
+      "logout": "Logout"
+    },
+    "headline": {
+      "playlist": "Local or remote playlists",
+      "filter": "Filter playlist",
+      "xmltv": "Local or remote XMLTV files",
+      "mapping": "Map playlist channels to EPG channels",
+      "users": "User management",
+      "settings": "Settings",
+      "log": "Log",
+      "logout": "Logout"
+    }
+  },
+  "confirm":{
+    "restore": "All data will be replaced with those from the backup.Should the files be restored?"
+  },
+  "alert": {
+    "fileLoadingError": "File couldn't be loaded",
+    "invalidChannelNumber": "Invalid channel number"
+  },
+  "button":{
+    "back": "Back",
+    "backup": "Backup",
+    "bulkEdit": "Bulk Edit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "done": "Done",
+    "login": "Login",
+    "new": "New",
+    "next": "Next",
+    "restore": "Restore",
+    "save": "Save",
+    "search": "Search",
+    "update": "Update",
+    "craeteAccount": "Create Account",
+    "resetlogs": "Reset Logs",
+    "uploadLogo": "Upload Logo"
+  },
+  "filter": {
+    "table": {
+      "name": "Filter Name",
+      "type": "Filter Type",
+      "filter": "Filter"
+    },
+    "custom": "Custom",
+    "group": "Group",
+    "name": {
+      "title": "Filter Name",
+      "placeholder": "Filter name",
+      "description": ""
+    },
+    "description": {
+      "title": "Description",
+      "placeholder": "Description",
+      "description": ""
+    },
+    "type": {
+      "title": "Type",
+      "groupTitle": "Group Title",
+      "customFilter": "Custom Filter"
+    },
+    "caseSensitive": {
+      "title": "Case Sensitive",
+      "placeholder": "",
+      "description": ""
+    },
+    "filterRule": {
+      "title": "Filter Rule",
+      "placeholder": "Sport {HD} !{ES,IT}",
+      "description": ""
+    },
+    "filterGroup": {
+      "title": "Group Title",
+      "placeholder": "",
+      "description": "Select a M3U group. (Counter)<br>Changing the group title in the M3U invalidates the filter."
+    },
+    "include": {
+      "title": "Include",
+      "placeholder": "FHD,UHD",
+      "description": "Channel name must include.<br>(Comma separated) Comma means or"
+    },
+    "exclude": {
+      "title": "Exclude",
+      "placeholder": "ES,IT",
+      "description": "Channel name must not contain.<br>(Comma separated) Comma means or"
+    }
+
+  },
+  "playlist": {
+    "table": {
+      "playlist": "Playlist",
+      "tuner": "Tuner",
+      "lastUpdate": "Last Update",
+      "availability": "Availability",
+      "type": "Type",
+      "streams": "Streams",
+      "groupTitle": "group-title",
+      "tvgID": "tvg-id",
+      "uniqueID": "Unique ID"
+    },
+    "playlistType": {
+      "title": "Playlist type",
+      "placeholder": "",
+      "description": ""
+    },
+    "type": {
+      "title": "Type",
+      "placeholder": "",
+      "description": ""
+    },
+    "name": {
+      "title": "Name",
+      "placeholder": "Playlist name",
+      "description": ""
+    },
+    "description": {
+      "title": "Description",
+      "placeholder": "Description",
+      "description": ""
+    },
+    "fileM3U": {
+      "title": "M3U File",
+      "placeholder": "File path or URL of the M3U",
+      "description": ""
+    },
+    "fileHDHR": {
+      "title": "HDHomeRun IP",
+      "placeholder": "IP address and port (192.168.1.10:5004)",
+      "description": ""
+    },
+    "tuner": {
+      "title": "Tuner / Streams",
+      "placeholder": "",
+      "description": "Number of parallel connections that can be established to the provider. <br>Only available with activated buffer.<br>New settings will only be applied after quitting all streams."
+    }
+  },
+  "xmltv": {
+    "table": {
+      "guide": "Guide",
+      "lastUpdate": "Last Update",
+      "availability": "Availability",
+      "channels": "Channels",
+      "programs": "Programs"
+    },
+    "name": {
+      "title": "Name",
+      "placeholder": "Guide name",
+      "description": ""
+    },
+    "description": {
+      "title": "Description",
+      "placeholder": "Description",
+      "description": ""
+    },
+    "fileXMLTV": {
+      "title": "XMLTV File",
+      "placeholder": "File path or URL of the XMLTV",
+      "description": ""
+    }
+  },
+  "mapping": {
+    "table": {
+      "chNo": "Ch. No.",
+      "logo": "Logo",
+      "channelName": "Channel Name",
+      "playlist": "Playlist",
+      "groupTitle": "Group Title",
+      "xmltvFile": "XMLTV File",
+      "xmltvID": "XMLTV ID"
+    },
+    "active": {
+      "title": "Active",
+      "placeholder": "",
+      "description": ""      
+    },
+    "channelName": {
+      "title": "Channel Name",
+      "placeholder": "",
+      "description": ""      
+    },
+    "updateChannelName": {
+      "title": "Update Channel Name",
+      "placeholder": "",
+      "description": ""      
+    },
+    "channelLogo": {
+      "title": "Logo URL",
+      "placeholder": "",
+      "description": ""      
+    },
+    "updateChannelLogo": {
+      "title": "Update Channel Logo",
+      "placeholder": "",
+      "description": ""      
+    },
+    "epgCategory": {
+      "title": "EPG Category",
+      "placeholder": "",
+      "description": ""      
+    },
+    "m3uGroupTitle": {
+      "title": "Group Title (xteve.m3u)",
+      "placeholder": "",
+      "description": ""      
+    },
+    "xmltvFile": {
+      "title": "XMLTV File",
+      "placeholder": "",
+      "description": ""      
+    },
+    "xmltvChannel": {
+      "title": "XMLTV Channel",
+      "placeholder": "",
+      "description": ""      
+    }
+  },
+  "users": {
+    "table": {
+      "username": "Username",
+      "password": "Password",
+      "web": "WEB",
+      "pms": "PMS",
+      "m3u": "M3U",
+      "xml": "XML",
+      "api": "API"
+    },
+    "username": {
+      "title": "Username",
+      "placeholder": "Username",
+      "description": ""
+    },
+    "password": {
+      "title": "Password",
+      "placeholder": "Passoword",
+      "description": ""
+    },
+    "confirm": {
+      "title": "Confirm",
+      "placeholder": "Password confirm",
+      "description": ""
+    },
+    "web": {
+      "title": "Web Access",
+      "placeholder": "",
+      "description": ""
+    },
+    "pms": {
+      "title": "PMS Access",
+      "placeholder": "",
+      "description": ""
+    },
+    "m3u": {
+      "title": "M3U Access",
+      "placeholder": "",
+      "description": ""
+    },
+    "xml": {
+      "title": "XML Access",
+      "placeholder": "",
+      "description": ""
+    },
+    "api": {
+      "title": "API Access",
+      "placeholder": "",
+      "description": ""
+    }
+  },
+  "settings": {
+    "category": {
+      "general": "General",
+      "files": "Files",
+      "streaming": "Streaming",
+      "backup": "Backup",
+      "authentication": "Authentication"
+    },
+    "update": {
+      "title": "Schedule for updating (Playlist, XMLTV, Backup)",
+      "placeholder": "0000,1000,2000",
+      "description": "Time in 24 hour format (0800 = 8:00 am). More times can be entered comma separated."
+    },
+    "api": {
+      "title": "API Interface",
+      "description": "Via API interface it is possible to send commands to xTeVe. API documentation is <a href='https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md#api'>here</a>"
+    },
+    "epgSource": {
+      "title": "EPG Source",
+      "description": "PMS:<br>- Use EPG data from Plex or Emby <br><br>XEPG:<br>- Use of one or more XMLTV files<br>- Channel management<br>- M3U / XMLTV export (HTTP link for IPTV apps)"
+    },
+    "tuner":{
+      "title": "Number of Tuners",
+      "description": "Number of parallel connections that can be established to the provider.<br>Available for: Plex, Emby (HDHR), M3U (with active buffer).<br>After a change, xTeVe must be delete in the Plex / Emby DVR settings and set up again."
+    },
+    "filesUpdate": {
+      "title": "Updates all files at startup",
+      "description": "Updates all playlists, tuner and XMLTV files at startup."
+    },
+    "cacheImages": {
+      "title": "Image caching",
+      "description": "All images from the XMLTV file are cached, allowing faster rendering of the grid in the client.<br>Downloading the images may take a while and will be done in the background."
+    },
+    "replaceEmptyImages": {
+      "title": "Replace missing program images",
+      "description": "If the poster in the XMLTV program is missing, the channel logo will be used."
+    },
+    "xteveAutoUpdate": {
+      "title": "Automatic update of xTeVe",
+      "description": "If a new version of xTeVe is available, it will be automatically installed. The updates are downloaded from GitHub."
+    },
+    "streamBuffering": {
+      "title": "Stream Buffer",
+      "description": "- The stream is passed from xTeVe to Plex / Emby / M3U Player<br>- Small jerking of the streams can be compensated<br>- HLS / M3U8 support"
+    },
+    "bufferSize": {
+      "title": "Buffer Size",
+      "description": "Buffer size in MB.<br>M3U8: If the TS segment smaller then the buffer size, the file size of the segment is used."
+    },
+    "bufferTimeout": {
+      "title": "Timeout for new client connections",
+      "description": "The xTeVe buffer waits until new client connections are established. Helpful for fast channel switching. Value in milliseconds.",
+      "placeholder": "100"
+    },
+    "userAgent": {
+      "title": "User agent",
+      "description": "User Agent for HTTP requests",
+      "placeholder": "xTeVe"
+    },
+    "backupPath": {
+      "title": "Location for automatic backups",
+      "placeholder": "/mnt/data/backup/xteve/",
+      "description": "Before any update of the provider data by the schedule, xTeVe creates a backup. The path for the automatic backups can be changed. xTeVe requires write permission for this folder."
+    },
+    "tempPath": {
+      "title": "Location for the temporary files",
+      "placeholder": "/tmp/xteve/",
+      "description": "Location for the buffer files."
+    },
+    "backupKeep": {
+      "title": "Number of backups to keep",
+      "description": "Number of backups to keep. Older backups are automatically deleted."
+    },
+    "authenticationWEB": {
+      "title": "WEB Authentication",
+      "description": "Access to the web interface only possible with credentials."
+    },
+    "authenticationPMS": {
+      "title": "PMS Authentication",
+      "description": "Plex requests are only possible with authentication. <br><b>Warning!!!</b> After activating this function xTeVe must be delete in the PMS DVR settings and set up again."
+    },
+    "authenticationM3U": {
+      "title": "M3U Authentication",
+      "description": "Downloading the xteve.m3u file via an HTTP request is only possible with authentication."
+    },
+    "authenticationXML": {
+      "title": "XML Authentication",
+      "description": "Downloading the xteve.xml file via an HTTP request is only possible with authentication"
+    },
+    "authenticationAPI": {
+      "title": "API Authentication",
+      "description": "Access to the API interface is only possible with authentication."
+    }
+  },
+  "wizard": {
+    "epgSource": {
+      "title": "EPG Source",
+      "description": "PMS:<br>- Use EPG data from Plex or Emby <br><br>XEPG:<br>- Use of one or more XMLTV files<br>- Channel management<br>- M3U / XMLTV export (HTTP link for IPTV apps)"
+    },
+    "tuner":{
+      "title": "Number of tuners",
+      "description": "Number of parallel connections that can be established to the provider.<br>Available for: Plex, Emby (HDHR), M3U (with active buffer).<br>After a change, xTeVe must be delete in the Plex / Emby DVR settings and set up again."
+    },
+    "m3u": {
+      "title": "M3U Playlist",
+      "description": "Local or remote playlists"
+    },
+    "xmltv": {
+      "title": "XMLTV File",
+      "description": "Local or remote XMLTV file"
+    }
+  },
+  "login": {
+    "failed": "User authentication failed",
+    "headline": "Login",
+    "username": {
+      "title": "Username",
+      "placeholder": "Username"
+    },
+    "password": {
+      "title": "Password",
+      "placeholder": "Password"
+    }
+  },
+  "account": {
+    "failed": "Password does not match",
+    "headline": "Create user account",
+    "username": {
+      "title": "Username",
+      "placeholder": "Username"
+    },
+    "password": {
+      "title": "Password",
+      "placeholder": "Password"
+    },
+    "confirm": {
+      "title": "Confirm",
+      "placeholder": "Confirm"
+    }
+  }
+}

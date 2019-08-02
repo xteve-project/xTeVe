@@ -1,0 +1,448 @@
+* {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  font-family: "Arial", sans-serif;
+  letter-spacing: 2px; 
+}
+
+/*
+::-webkit-scrollbar { 
+    display: none; 
+}
+*/
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+ 
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 5px;
+    
+}
+ 
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0,0.6); 
+  background-color: #444;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333; 
+}
+
+::-webkit-scrollbar-corner { 
+  background: transparent; 
+}
+
+a {
+  color: #00E6FF;
+}
+
+html, body {
+  color: #fff;
+  margin: 0px auto;
+  height: 100%;
+  font-size: 14px;
+}
+
+h2 {
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
+h3 {
+  font-size: 22px;
+  letter-spacing: 1px;
+}
+
+h4 {
+  font-size: 20px;
+  letter-spacing: 1px;
+  line-height: 1.5em;
+
+}
+
+h5 {
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 1.2em;
+  margin: 25px 0px 10px 0px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #333;
+  margin: 10px 0px;
+}
+
+p {
+  margin: 2px;
+  padding: 2px 5px;
+}
+
+pre {
+  margin: 0px 0px 5px 0px;
+  font-size: 12px;
+  color: #ddd;
+  letter-spacing: 1px;
+  white-space: pre-wrap;
+  font-family: monospace; 
+  font-size: 12px; 
+  font-style: normal; 
+  font-variant: normal; 
+  line-height: 1.6em; 
+}
+
+label {
+  margin-bottom: 20px;
+  display: block;
+}
+
+li {
+  list-style-type: none;
+  background-color: #111;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-left: solid 2px #111;
+  transition: all 0.3;
+}
+
+li:hover {
+  border-color: #00E6FF
+}
+
+select {
+  cursor: pointer;
+  width: calc(100% + 2px);
+  border: solid 0px #00E6FF;
+  border-radius: 0px;
+  outline: none;
+  color: #fff;
+  padding: 9px 10px;
+  display:block;
+  background-color: #333;
+  font-size: 14px;
+  margin: 5px 0px 5px 0px;
+}
+
+select:focus {
+  outline: none;
+}
+
+input {
+  -webkit-appearance: none;
+  margin: 5px 0px;
+  padding: 2.5px 10px;
+  outline: none;
+  font-size: 14px;
+}
+
+input[type=button], input[type=submit] {
+  cursor: pointer;
+  background-color: #000;
+  margin: 10px 10px;
+  padding: 10px 25px;
+  border: solid 0px;
+  border-color: #000;
+  border-radius: 3px;
+  outline: none;
+  color: #fff;
+}
+
+input[type=button]:focus { 
+   outline: none;
+}
+
+input[type=button]:hover {
+  background-color: #00E6FF;
+  color: #000;
+}
+
+input[type=button]:hover.delete  {
+  background-color: red;
+  color: #fff;
+}
+
+input[type=text], input[type=search], input[type=password] {
+  color: #fff;
+  width: -webkit-calc(100% - 0px);
+  width: -moz-calc(100% - 0px);
+  width: calc(100% - 0px);
+  outline: none;
+  border: solid 1px transparent;
+  background-color: transparent;
+  border-bottom-color: #555;
+  border-radius: 0px;
+  padding: 8px 10px;
+}
+
+input[type="checkbox"] {
+  border: solid 1px #00E6FF;
+  background-color: #333;
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+  /*
+  -webkit-appearance: checkbox;
+  */
+}
+
+input[type="checkbox"]:checked {
+  color: #fff;
+  background-color: #00E6FF;
+  /*display: inline-block;*/
+}
+
+input[type="checkbox"]:before {
+  position: initial;
+  left: 0px;
+  margin-left: -4px;
+  content: " ";
+}
+
+input[type="checkbox"]:checked:before {
+  position: initial;
+  left: 0px;
+  margin-left: -3px;
+  content: "✓";
+  color: #000;
+}
+
+
+input[type=button].cancel {
+  
+  background-color: transparent;
+  border-color: red;
+}
+
+input[type=button].save{
+  background-color: #111;
+  float: right;
+}
+
+
+input[type=button].black, input[type=submit].black{
+  background-color: #000;
+  border-color: #000;
+}
+
+input[type=button].center{
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #000;
+  border-color: #000;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer:hover {
+  color: #00E6FF;
+  cursor: pointer;
+}
+
+.sortThis {
+  color: #00E6FF;
+}
+
+.w40px {
+  max-width: 40px;
+}
+
+.w50px {
+  max-width: 50px;
+}
+
+.w80px {
+  max-width: 80px;
+}
+
+.w150px {
+  max-width: 150px;
+}
+
+.w200px {
+  max-width: 200px;
+  min-width: 100px;
+  width: 200px;
+  overflow-x: hidden;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.w300px {
+  max-width: 300px;
+}
+
+.w220px {
+  max-width: 220px;
+  cursor: alias;
+}
+
+.footer {
+  font-size: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.screenLogHidden {
+  transform: translate(0px, -110px);
+}
+
+.borderSpace {
+  margin-bottom: 30px;
+}
+
+.block {
+
+}
+
+.none {
+  display: none;
+}
+
+
+.notVisible {
+  height: 0px;
+  display: none;
+  opacity: 0;
+  border-bottom: #000 solid 0px;
+  
+}
+
+.visible {
+  opacity: 1;
+  display: block;
+  border-bottom: #444 solid 1px; 
+  padding: 10px;
+}
+
+.floatRight {
+  float: right;
+}
+
+.floatLeft {
+  float: left;
+}
+
+.menu-active {
+  background-color: #00E6FF;
+}
+
+.menu-notActive {
+  
+}
+
+#branch {
+  display: table;
+  margin: auto;
+  color: red;
+}
+
+#interaction {
+  margin-bottom: 100px;
+  text-align: center;
+  border-bottom: solid 0px #777;
+}
+
+
+.half {
+  display: block;
+  width: 45%;
+}
+
+.menu {
+  border: solid 1px #00E6FF;
+}
+
+.infoMsg {
+  color: #aaa;
+}
+
+.errorMsg {
+  color: red;
+}
+
+.warningMsg {
+  color: yellow;
+}
+
+.debugMsg {
+  color: magenta;
+}
+
+.News, .Movie, .Series, .Sports, .Kids {
+  border-left: solid 2px
+}
+
+.News {
+  border-color: tomato
+}
+
+.Movie {
+  border-color: royalblue;
+}
+
+.Series {
+  border-color: gold;
+}
+
+.Sports {
+  border-color: yellowgreen;
+}
+
+.Kids {
+  border-color: mediumpurple;
+}
+
+/* Loading */
+#loading {
+  left: 0px;
+  top: 0px;
+  z-index: 10000;
+  position: absolute;
+  background-color: rgba(0,0,0, 0.8);
+  margin: auto;
+  width: 100%;
+  height: 100%;
+}
+
+
+.loader {
+  border: 5px solid transparent;
+  border-radius: 50%;
+  border-top: 5px solid #00E6FF;
+  border-bottom: 5px solid #00E6FF;
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 1.2s linear infinite;
+  animation: spin 1.2s linear infinite;
+
+  position: fixed;
+  margin: auto;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,540 @@
+nav img {
+  display: block;
+  max-height: 20px;
+  max-width: 20px;
+  float: left;
+}
+
+nav p {
+  text-align: left;
+  padding: 0px 30px;
+}
+
+#layout {
+  display: block;
+  height: 100%;
+}
+
+
+.layout-left {
+  display: block;
+  min-width: 150px;
+  max-width: 20%;
+  background-color: #111;
+  height: inherit;
+  float: left;
+}
+
+.layout-right {
+  display: block;
+  background-color: #444;
+}
+
+#menu-wrapper {
+  height: 100%;
+}
+
+
+#logo {
+  display: block;
+  min-width: 180px;
+  width: 100%;
+  height: 100px;
+  background: url("../img/logo_w_600x200.png");
+  background-repeat: no-repeat;
+  background-position: center; 
+  background-size: 100%;
+}
+
+
+#page {
+  max-width: 950px;
+  margin: auto;
+  background-color: #444;
+
+  /*
+  height: -webkit-calc(100% - 130px);
+  height: -moz-calc(100% - 130px);
+  height: calc(100% - 130px);
+  */
+  
+  min-height: -webkit-calc(100% - 120px);
+  min-height: -moz-calc(100% - 120px);
+  min-height: calc(100% - 120px);
+  
+  
+  box-shadow: 0px 5px 5px #222;
+  
+}
+
+#uiSetting {
+  float: right;
+  margin-right: 25px;
+}
+
+#box input[type=text], #box input[type=password] {
+  width: -webkit-calc(100% - 20px);
+  width: -moz-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+
+#box input[type=submit]{
+  margin: 50px auto;
+}
+
+#settings {
+  display: block;
+  padding: 10px 10px;
+}
+
+#settings h5 {
+  margin: 50px 0px 10px 0px;
+}
+
+#content-interaction .search {
+  width: 200px;
+  border: 1px solid #000;
+  padding: 9px;
+  background-color: #333;
+  margin: 10px;
+  float: right;
+  border-radius: 3px;
+
+}
+
+#myStreams {
+  position: fixed;
+  bottom: 0px;
+  background-color: #111;
+  width: 100%;
+  max-width: 950px;
+
+  /*
+  max-height: 100px;
+  */
+  margin-bottom: 0px;
+}
+
+#myStreams img {
+  width: 4%;
+  padding: 2px 5px;
+  cursor: pointer;
+  float: right;
+}
+
+#settings-footer {
+
+}
+
+
+/* Wizard*/
+#box {
+  background-color: #444;
+  min-height: 400px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#box p{
+  padding: 10px 0px;
+}
+
+#box-footer {
+  margin-top: auto;
+}
+
+#box-footer {
+  margin: auto;
+  padding: 10px;
+}
+
+#headline {
+  background-color: #222;
+  border-bottom: solid 2px #222;
+  transition: all 0.5s;
+  padding: 10px 0px;
+  display: block;
+}
+
+#content {
+  display: block;
+  overflow: auto;
+  padding: 10px;
+}
+
+/* --- */
+
+
+#clientInfo, #activeStreams, #inactiveStreams {
+  font-family: monospace;
+  display: block;
+  font-size: 9px;
+  background-color: #111;
+  color: #00E6FF;
+  border-bottom: solid 0px;;
+  padding: 0px;
+  letter-spacing: 1px;
+  overflow-x: hidden;
+  border-spacing: 4px 4px;
+  border-bottom: solid 1px #444;
+}
+
+#myStreamsBox {
+  position: relative;
+  padding: 0px;
+  /*height: 100px;*/
+  max-height: 150px;
+  background-color: #111;
+  color: white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+#openStreams {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  float: right;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  background: url("../img/touch.png");
+  background-color: #111;
+  
+  background-position: bottom right;  
+}
+
+#allStreams {
+  width: 100%;
+  height: 100%;
+  padding: 2px;     
+}
+
+#activeStreams, #inactiveStreams {
+  overflow-y: scroll;
+  width: 50%;
+  max-height: 100px;
+  float: left;
+}
+
+#activeStreams .tdKey, #inactiveStreams .tdKey {
+  width: 75px;
+}
+
+
+
+
+#inactiveStreams .tdKey {
+  color: red;
+}
+
+#clientInfo .tdVal, #logInfo .tdVal, #activeStreams .tdVal, #inactiveStreams .tdVal, #mappingInfo .tdVal{
+  color: #aaa;
+  white-space: inherit;
+}
+
+#box-wrapper {
+  display: inline-block;
+  width: 100%;
+  
+  overflow-y: scroll;
+}
+
+#content_table, #mapping-detail-table, #content_table {
+  display: table;
+  
+  border-collapse: collapse;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+
+#content_table .content_table_header {
+  background-color: #333;
+  height: 50px;
+  border-bottom: solid 1px #111;
+  border-left: solid 3px #333;
+  cursor: auto;
+
+}
+
+
+tbody {
+  width: 100%;
+}
+
+
+.tableEllipsis {
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#content_table img {
+  display: block;
+  max-height: 28px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 30px;
+}
+
+#content_table tr{
+  border-left: solid 3px 444;
+  border-bottom: solid 1px #333;
+  cursor: pointer;
+}
+
+#content_table tr:hover {
+  background-color: #333;
+}
+
+#content_table td {
+
+  padding: 0px 2px;
+}
+
+#content_table input[type=text]{
+  width: 80%;
+  border: 0px;
+  background-color: #333;
+  margin-left: 5px;
+  text-align: left;
+}
+
+#content_table input[type=checkbox]{
+  max-width: 25px;
+  margin: auto;
+}
+
+
+.showBulk {
+  display: block;
+}
+
+.hideBulk {
+  display: none;
+}
+
+.noBulk {
+
+}
+
+#content_table tr.activeEPG{
+  border-left: solid 3px lawngreen;
+}
+
+#content_table tr.notActiveEPG{
+  border-left: solid 3px red;
+}
+
+
+#logScreen p{
+  white-space: pre;
+  font-size: 10px;
+  /*
+  line-height: 1.6em;
+  font-family: "Arial", sans-serif;
+  */
+  letter-spacing: 1px;
+  font-family: monospace; 
+  font-size: 12px; 
+  font-style: normal; 
+  font-variant: normal; 
+  line-height: 1.6em; 
+}
+
+#popup {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0px;
+  width: 100%;
+  z-index: 100;
+  height: 100%;
+}
+
+#mapping-detail, #user-detail, #file-detail, #popup-custom {
+  box-shadow: 0px 5px 40px #000;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  max-width: 600px;
+  background-color: #222;
+  padding: 10px;
+  overflow:auto;
+}
+
+#popup-custom h3 {
+  text-align: center;
+}
+
+#file-detail input[type=text] {
+  width: -webkit-calc(100% - 20px);
+  width: -moz-calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+
+#mapping-detail img {
+  display: block;
+  max-height: 30px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#popup-custom input[type=text], #popup-custom input[type=password], #mapping-detail input[type=text], #content_settings input[type=text], #content_settings input[type=password]{
+  border: solid 1px;
+  border-color: transparent;
+  background-color: #333;
+  text-align: left;
+  width: -webkit-calc(100% - 20px);
+  width:    -moz-calc(100% - 20px);
+  width:         calc(100% - 20px);
+}
+
+#popup-custom input[type=text].notAvailable {
+  border-color: red;
+  color: #666;
+  cursor: not-allowed;
+}
+
+#mapping-detail-table, #user-detail-table {
+  display: inline-table;
+  width: 100%;
+}
+
+#popup-custom table, #content_settings table {
+  display: inline-table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+
+#mapping-detail-table td, #user-detail-table td {
+  padding: 10px 0px;
+
+}
+
+#mapping-detail-table td.left, #user-detail-table td.left, #popup-custom td.left {
+  width: 38%;
+}
+
+.interaction, #interaction {
+  margin-top: 20px;
+  display: inline-flex;
+  float: right;
+}
+
+.interaction input[type=button], .interaction input[type=submit] {
+  background-color: #000;
+  min-width: 100px;
+  margin: 0px 10px;
+  text-align: center;
+}
+
+#notification {
+  display: block;
+  position: fixed;
+  right: 0px;
+  height: 100%;
+  width: 250px;
+  
+  background-color: #222;
+  box-shadow: 0px 0px 20px #000;
+}
+
+#notification h5 {
+  background-color: #121212;
+  padding: 5px 10px 5px 10px;
+}
+
+#notification pre {
+  padding: 0px 10px 0px 10px;
+}
+
+#notification p {
+  font-size: 10 px;
+  margin: 0px;
+  padding: 0px 10px 5px 10px;
+}
+
+#notification .element {
+  /*padding: 0px 5px;*/
+  margin: 5px 5px;
+  border-radius: 5px;
+  background-color: #181818;
+  border-left: 10px solid green;
+}
+
+
+@media only screen and (min-width: 620px){
+  body {
+    width: 100%;
+    background-color: #444;
+  }
+
+  h1 {
+    font-size: 26px;
+    letter-spacing: 3px;
+  }
+
+  nav p {
+    display: block;
+  }
+
+
+
+  #header_config {
+    display: block;
+    height: 100px;
+    background: url("../img/logo_w_600x200.png");
+    background-repeat: no-repeat;
+    
+    background-size: 300px 100px;
+  }
+
+  #screenLog {
+    margin-left: 300px;
+
+    transition: none;
+    background-color: transparent;
+    border-bottom: solid 1px transparent;
+    box-shadow: 0px 0px 0px #222;
+  }
+
+  #settings {
+    /*
+    height: -webkit-calc(100% - 100px);
+    height: -moz-calc(100% - 100px);
+    height: calc(100% - 100px);
+    */
+    position: relative;
+    overflow: auto;
+  }
+
+
+  .screenLogHidden {
+    transform: translate(0px, 0px);
+  }
+
+
+  #box {
+    display: block;
+    min-height: 500px;
+    max-width: 500px;
+    margin: 10px auto;
+    background-color: #444;
+    box-shadow: 0px 5px 5px #222;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  #settings, #settings-footer {
+    
+  }
+}
