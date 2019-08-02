@@ -1,5 +1,5 @@
 <div align="center" style="background-color: #111; padding: 100;">
-    <a href="https://github.com/xteve-project/xTeVe"><img width="600" height="200" src="html/img/logo_w_600x200.png" alt="xTeVe" /></a>
+    <a href="https://github.com/xteve-project/xTeVe"><img width="640" height="320" src="html/img/logo_b_640x320.jpg" alt="xTeVe" /></a>
 </div>
 <br>
 
