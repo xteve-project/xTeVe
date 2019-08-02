@@ -10,6 +10,10 @@ assignees: mar-mei, xteve-project
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+**Server (please complete the following information):**
+- OS
+- xTeVe Version and Build (to be found in the xTeVe log)
+
 **To Reproduce**
 Steps to reproduce the behavior:
 1. Go to '...'
