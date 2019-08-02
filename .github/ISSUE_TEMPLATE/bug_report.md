@@ -7,12 +7,15 @@ assignees: mar-mei, xteve-project
 
 ---
 
+#### Please first read the [documentation](https://github.com/xteve-project/xTeVe-Wiki/blob/master/en/configuration.md). Problems affecting the client, e.g. Plex or Emby should be reported there in the forum.
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
 **Server (please complete the following information):**
-- OS
-- xTeVe Version and Build (to be found in the xTeVe log)
+- OS [e.g. Linux - Ubuntu]
+- Arch [e.g. Intel 64 Bit]
+- xTeVe Version and Build [to be found in the xTeVe log]
 
 **To Reproduce**
 Steps to reproduce the behavior:
