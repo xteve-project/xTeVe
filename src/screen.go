@@ -351,6 +351,8 @@ func getErrMsg(errCode int) (errMsg string) {
 	// Caching
 	case 4100:
 		errMsg = fmt.Sprintf("Unknown content type for downloaded image")
+	case 4101:
+		errMsg = fmt.Sprintf("Invalid URL, original URL is used for this image")
 
 	// API
 	case 5000:

@@ -113,6 +113,7 @@ func Init() (err error) {
 	}
 
 	showInfo(fmt.Sprintf("Version:%s Build: %s", System.Version, System.Build))
+	showInfo(fmt.Sprintf("Database Version:%s", System.DBVersion))
 	showInfo(fmt.Sprintf("System IP Addresses:IPv4: %d | IPv6: %d", len(System.IPAddressesV4), len(System.IPAddressesV6)))
 	showInfo("Hostname:" + System.Hostname)
 	showInfo(fmt.Sprintf("System Folder:%s", getPlatformPath(System.Folder.Config)))

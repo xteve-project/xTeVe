@@ -15,6 +15,7 @@ type SystemStruct struct {
 	Build               string
 	Compatibility       string
 	ConfigurationWizard bool
+	DBVersion           string
 	Dev                 bool
 	DeviceID            string
 	Domain              string

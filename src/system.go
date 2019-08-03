@@ -133,7 +133,7 @@ func loadSettings() (settings SettingsStrcut, err error) {
 	defaults["update"] = []string{"0000"}
 	defaults["user.agent"] = System.Name
 	defaults["uuid"] = createUUID()
-	defaults["version"] = System.Version
+	defaults["version"] = System.DBVersion
 	defaults["xteveAutoUpdate"] = true
 	defaults["temp.path"] = System.Folder.Temp
 
@@ -158,6 +158,8 @@ func loadSettings() (settings SettingsStrcut, err error) {
 		settings.Branch = System.Flag.Branch
 		showInfo(fmt.Sprintf("Git Branch:Switching Git Branch to -> %s", settings.Branch))
 	}
+
+	settings.Version = System.DBVersion
 
 	err = saveSettings(settings)
 

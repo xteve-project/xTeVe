@@ -6,24 +6,41 @@ import (
   "io"
   "io/ioutil"
   "net/http"
+  "net/url"
   "os"
   "path/filepath"
   "strings"
 )
 
-func getCacheImageURL(url string) (cacheImageURL string) {
+func getCacheImageURL(imageURL string) (cacheImageURL string) {
 
-  url = strings.Trim(url, "\r\n")
+  if Settings.CacheImages == false {
+    return imageURL
+  }
 
-  var urlMD5 = getMD5(url)
-  var fileExtension = filepath.Ext(url)
+  imageURL = strings.Trim(imageURL, "\r\n")
+
+  p, err := url.Parse(imageURL)
+  if err != nil {
+    // URL konnte nicht geparst werden, die ursprüngliche image url wird zurückgegeben
+    showInfo(fmt.Sprintf("Image Caching:Image URL: %s", imageURL))
+    showWarning(4101)
+    return imageURL
+  }
+  var urlMD5 = getMD5(imageURL)
+  var fileExtension = filepath.Ext(p.Path)
+
+  if len(fileExtension) == 0 {
+    // Keine Dateierweiterung vorhanden, die ursprüngliche image url wird zurückgegeben
+    return imageURL
+  }
 
   if indexOfString(urlMD5+fileExtension, Data.Cache.ImagesFiles) == -1 {
     Data.Cache.ImagesFiles = append(Data.Cache.ImagesFiles, urlMD5+fileExtension)
   }
 
-  if Settings.CacheImages == false || System.ImageCachingInProgress == 1 {
-    return url
+  if System.ImageCachingInProgress == 1 {
+    return imageURL
   }
 
   if indexOfString(urlMD5+fileExtension, Data.Cache.ImagesCache) != -1 {
@@ -32,15 +49,15 @@ func getCacheImageURL(url string) (cacheImageURL string) {
 
   } else {
 
-    if strings.Contains(url, System.Domain+"/images/") == false {
+    if strings.Contains(imageURL, System.Domain+"/images/") == false {
 
-      if indexOfString(url, Data.Cache.ImagesURLS) == -1 {
-        Data.Cache.ImagesURLS = append(Data.Cache.ImagesURLS, url)
+      if indexOfString(imageURL, Data.Cache.ImagesURLS) == -1 {
+        Data.Cache.ImagesURLS = append(Data.Cache.ImagesURLS, imageURL)
       }
 
     }
 
-    cacheImageURL = url
+    cacheImageURL = imageURL
 
   }
 
@@ -57,10 +74,10 @@ func cachingImages() {
 
   showInfo("Image Caching:Images are cached")
 
-  for _, url := range Data.Cache.ImagesURLS {
+  for _, imageURL := range Data.Cache.ImagesURLS {
 
-    if len(url) > 0 {
-      cacheImage(url)
+    if len(imageURL) > 0 {
+      cacheImage(imageURL)
     }
 
   }
@@ -94,16 +111,16 @@ func cachingImages() {
   return
 }
 
-func cacheImage(url string) {
+func cacheImage(imageURL string) {
 
   var debug string
-  var urlMD5 = getMD5(url)
-  var fileExtension = filepath.Ext(url)
+  var urlMD5 = getMD5(imageURL)
+  var fileExtension = filepath.Ext(imageURL)
 
-  debug = fmt.Sprintf("Image Caching:File: %s Download: %s", urlMD5+fileExtension, url)
+  debug = fmt.Sprintf("Image Caching:File: %s Download: %s", urlMD5+fileExtension, imageURL)
   showDebug(debug, 1)
 
-  resp, err := http.Get(url)
+  resp, err := http.Get(imageURL)
   if err != nil {
     return
   }

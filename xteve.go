@@ -39,7 +39,10 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.0.0.0000"
+const Version = "2.0.0.0001"
+
+// DBVersion : Datanbank Version
+const DBVersion = "2.0.0"
 
 // APIVersion : API Version
 const APIVersion = "1.1.0"
@@ -66,6 +69,7 @@ func main() {
 	system.APIVersion = APIVersion
 	system.Branch = GitHub.Branch
 	system.Build = build[len(build)-1:][0]
+	system.DBVersion = DBVersion
 	system.Dev = Dev
 	system.GitHub = GitHub
 	system.Name = Name

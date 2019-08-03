@@ -189,7 +189,7 @@ checkVersion:
 				var newFilterMap = convertToNewFilter(oldFilter)
 				settingsMap["filter"] = newFilterMap
 
-				settingsMap["version"] = "1.9.0"
+				settingsMap["version"] = "2.0.0"
 
 				err = saveMapToJSONFile(System.File.Settings, settingsMap)
 				if err != nil {
@@ -203,7 +203,7 @@ checkVersion:
 				return
 			}
 
-		case "1.9.0":
+		case "2.0.0":
 			// Falls es in einem späteren Update Änderungen an der Datenbank gibt, geht es hier weiter
 
 			break
