@@ -88,14 +88,14 @@ Including:
 #### Requirements
 * Go (go1.12.4 or newer)
 
-#### Dependancys
+#### Dependencies
 * [go-ssdp](https://github.com/koron/go-ssdp)
 * [websocket](https://github.com/gorilla/websocket)
 * [osext](https://github.com/kardianos/osext)
 
 #### Build
 1. Download source code
-2. Install dependancys
+2. Install dependencies
 ```
 go get github.com/koron/go-ssdp
 go get github.com/gorilla/websocket
