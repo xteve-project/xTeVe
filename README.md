@@ -109,7 +109,7 @@ go build xteve.go
 ---
 
 ## Fork without pull request :mega:
-When creating a fork, the xTeVe GitHub account must be changed from the sorce code or the update function disabled.
+When creating a fork, the xTeVe GitHub account must be changed from the source code or the update function disabled.
 Future updates of the xteve-project would update your fork. :wink:
 
 xteve.go - Line: 29
