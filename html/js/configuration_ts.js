@@ -63,6 +63,7 @@ var WizardItem = /** @class */ (function (_super) {
                 break;
             case "m3u":
                 var input = content.createInput("text", key, "");
+                input.setAttribute("placeholder", "{{.wizard.m3u.placeholder}}");
                 input.setAttribute("class", "wizard");
                 input.id = key;
                 doc.appendChild(input);
@@ -70,6 +71,7 @@ var WizardItem = /** @class */ (function (_super) {
                 break;
             case "xmltv":
                 var input = content.createInput("text", key, "");
+                input.setAttribute("placeholder", "{{.wizard.xmltv.placeholder}}");
                 input.setAttribute("class", "wizard");
                 input.id = key;
                 doc.appendChild(input);
@@ -117,6 +119,11 @@ function saveWizard() {
                     case "text":
                         name = config[i].name;
                         value = config[i].value;
+                        if (value.length == 0) {
+                            var msg = name.toUpperCase() + ": " + "{{.alert.missingInput}}";
+                            alert(msg);
+                            return;
+                        }
                         wizard[name] = value;
                         break;
                 }

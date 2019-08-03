@@ -62,6 +62,7 @@ class WizardItem extends WizardCategory {
 
       case "m3u":
         var input = content.createInput("text", key, "")
+        input.setAttribute("placeholder", "{{.wizard.m3u.placeholder}}")
         input.setAttribute("class", "wizard")
         input.id = key
         doc.appendChild(input)
@@ -72,6 +73,7 @@ class WizardItem extends WizardCategory {
 
       case "xmltv":
         var input = content.createInput("text", key, "")
+        input.setAttribute("placeholder", "{{.wizard.xmltv.placeholder}}")
         input.setAttribute("class", "wizard")
         input.id = key
         doc.appendChild(input)
@@ -139,6 +141,12 @@ function saveWizard() {
           case "text":
             name = (config[i] as HTMLInputElement).name
             value = (config[i] as HTMLInputElement).value
+
+            if (value.length == 0) {
+              var msg = name.toUpperCase() + ": " + "{{.alert.missingInput}}"
+              alert(msg)
+              return
+            }
 
             wizard[name] = value
             break

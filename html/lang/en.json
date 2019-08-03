@@ -27,7 +27,8 @@
   },
   "alert": {
     "fileLoadingError": "File couldn't be loaded",
-    "invalidChannelNumber": "Invalid channel number"
+    "invalidChannelNumber": "Invalid channel number",
+    "missingInput": "Missing input"
   },
   "button":{
     "back": "Back",
@@ -381,10 +382,12 @@
     },
     "m3u": {
       "title": "M3U Playlist",
+      "placeholder": "File path or URL of the M3U",
       "description": "Local or remote playlists"
     },
     "xmltv": {
       "title": "XMLTV File",
+      "placeholder": "File path or URL of the XMLTV",
       "description": "Local or remote XMLTV file"
     }
   },
