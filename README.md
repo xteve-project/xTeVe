@@ -65,10 +65,11 @@ Thanks to @alturismo and @LeeD for creating the Docker Images.
 **Created by alturismo:**  
 [xTeVe](https://hub.docker.com/r/alturismo/xteve)  
 [xTeVe / Guide2go](https://hub.docker.com/r/alturismo/xteve_guide2go)  
+[xTeVe / Guide2go / owi2plex](https://hub.docker.com/r/alturismo/xteve_g2g_owi)
 
 Including:  
 - Guide2go: XMLTV grabber for Schedules Direct  
-
+- owi2plex: XMLTV file grabber for Enigma receivers
 
 **Created by LeeD:**  
 [xTeVe / Guide2go / Zap2XML](https://hub.docker.com/r/dnsforge/xteve)  
