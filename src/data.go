@@ -37,16 +37,24 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 				reloadData = true
 
 			case "update":
-				// Die Formatierung der Uhrzeit überprüfen (0000 - 2359)
-				for _, i := range newSettings[key].([]interface{}) {
+				// Leerzeichen aus den Werten entfernen und Formatierung der Uhrzeit überprüfen (0000 - 2359)
+				var newUpdateTimes []string
 
-					_, err := time.Parse("1504", i.(string))
+				for _, v := range value.([]interface{}) {
+
+					v = strings.Replace(v.(string), " ", "", -1)
+
+					_, err := time.Parse("1504", v.(string))
 					if err != nil {
 						ShowError(err, 1012)
 						return Settings, err
 					}
 
+					newUpdateTimes = append(newUpdateTimes, v.(string))
+
 				}
+
+				value = newUpdateTimes
 
 			case "cache.images":
 				cacheImages = true
