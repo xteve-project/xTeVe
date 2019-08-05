@@ -790,7 +790,7 @@ InitBuffer:
 			}
 
 		// Video Stream (TS)
-		case "video/mpeg", "video/mp4", "video/mp2t", "application/octet-stream":
+		case "video/mpeg", "video/mp4", "video/mp2t", "application/octet-stream", "binary/octet-stream":
 
 			var fileSize int
 
@@ -1027,7 +1027,7 @@ func parseM3U8(stream *ThisStream) (err error) {
 
 		line = strings.Trim(line, "\r\n")
 
-		var parameters = []string{"#EXT-X-VERSION:", "#EXT-X-MEDIA-SEQUENCE:", "#EXT-X-STREAM-INF:", "#EXTINF:"}
+		var parameters = []string{"#EXT-X-VERSION:", "#EXT-X-PLAYLIST-TYPE:", "#EXT-X-MEDIA-SEQUENCE:", "#EXT-X-STREAM-INF:", "#EXTINF:"}
 
 		for _, parameter := range parameters {
 
@@ -1042,6 +1042,9 @@ func parseM3U8(stream *ThisStream) (err error) {
 					if err == nil {
 						segment.Version = version
 					}
+
+				case "#EXT-X-PLAYLIST-TYPE:":
+					segment.PlaylistType = value
 
 				case "#EXT-X-MEDIA-SEQUENCE:":
 					n, err := strconv.ParseInt(value, 10, 64)
@@ -1193,6 +1196,11 @@ func parseM3U8(stream *ThisStream) (err error) {
 
 				noNewSegment = false
 				stream.LastSequence = segment.Sequence
+
+				// Stream ist vom Typ VOD. Es muss das erste Segment der M3U8 Playlist verwendet werden.
+				if strings.ToUpper(segment.PlaylistType) == "VOD" {
+					break
+				}
 
 			} else {
 

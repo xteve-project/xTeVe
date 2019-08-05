@@ -714,7 +714,7 @@ class ShowContent extends Content {
         break
 
       case "log":
-        var input = this.createInput("button", menuKey, "{{.button.resetlogs}}")
+        var input = this.createInput("button", menuKey, "{{.button.resetLogs}}")
         input.setAttribute("onclick", 'javascript: resetLogs();')
         interaction.appendChild(input)
 

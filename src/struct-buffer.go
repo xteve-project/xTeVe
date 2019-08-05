@@ -68,12 +68,13 @@ type ThisStream struct {
 
 // Segment : URL Segmente (HLS / M3U8)
 type Segment struct {
-	Duration float64
-	Info     bool
-	Sequence int64
-	URL      string
-	Version  int
-	Wait     float64
+	Duration     float64
+	Info         bool
+	PlaylistType string
+	Sequence     int64
+	URL          string
+	Version      int
+	Wait         float64
 
 	StreamInf struct {
 		AverageBandwidth int

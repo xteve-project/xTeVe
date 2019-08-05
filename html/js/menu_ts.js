@@ -583,7 +583,7 @@ var ShowContent = /** @class */ (function (_super) {
                 return;
                 break;
             case "log":
-                var input = this.createInput("button", menuKey, "{{.button.resetlogs}}");
+                var input = this.createInput("button", menuKey, "{{.button.resetLogs}}");
                 input.setAttribute("onclick", 'javascript: resetLogs();');
                 interaction.appendChild(input);
                 var wrapper = document.createElement("DIV");
