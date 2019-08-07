@@ -39,7 +39,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.0.0.0002"
+const Version = "2.0.0.0007"
 
 // DBVersion : Datanbank Version
 const DBVersion = "2.0.0"
@@ -52,12 +52,15 @@ const Dev = false
 
 var homeDirectory = fmt.Sprintf("%s%s.%s%s", src.GetUserHomeDirectory(), string(os.PathSeparator), strings.ToLower(Name), string(os.PathSeparator))
 var samplePath = fmt.Sprintf("%spath%sto%sxteve%s", string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator))
+var sampleRestore = fmt.Sprintf("%spath%sto%sfile%s", string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator))
 
 var configFolder = flag.String("config", "", ": Config Folder        ["+samplePath+"] (default: "+homeDirectory+")")
 var port = flag.String("port", "", ": Server port          [34400] (default: 34400)")
+var restore = flag.String("restore", "", ": Restore from backup  ["+sampleRestore+"xteve_backup.zip]")
 
 var gitBranch = flag.String("branch", "", ": Git Branch           [master|beta] (default: master)")
 var debug = flag.Int("debug", 0, ": Debug level          [0 - 3] (default: 0)")
+var info = flag.Bool("info", false, ": Show system info")
 var h = flag.Bool("h", false, ": Show help")
 
 func main() {
@@ -119,6 +122,22 @@ func main() {
 		return
 	}
 
+	// Systeminformationen anzeigen
+	if *info {
+
+		system.Flag.Info = true
+
+		err := src.Init()
+		if err != nil {
+			src.ShowError(err, 0)
+			os.Exit(0)
+		}
+
+		src.ShowSystemInfo()
+		return
+
+	}
+
 	// Webserver Port
 	if len(*port) > 0 {
 		system.Flag.Port = *port
@@ -140,6 +159,25 @@ func main() {
 	// Speicherort für die Konfigurationsdateien
 	if len(*configFolder) > 0 {
 		system.Folder.Config = *configFolder
+	}
+
+	// Backup wiederherstellen
+	if len(*restore) > 0 {
+
+		system.Flag.Restore = *restore
+
+		err := src.Init()
+		if err != nil {
+			src.ShowError(err, 0)
+			os.Exit(0)
+		}
+
+		err = src.XteveRestoreFromCLI(*restore)
+		if err != nil {
+			src.ShowError(err, 0)
+		}
+
+		os.Exit(0)
 	}
 
 	err := src.Init()

@@ -709,7 +709,7 @@ InitBuffer:
 
 		if resp.StatusCode != http.StatusOK {
 
-			showInfo("Content type:" + contentType)
+			showInfo("Content Type:" + contentType)
 			showInfo("Streaming Status:" + httpStatusInfo)
 			showInfo("Error with this URL:" + currentURL)
 
@@ -754,7 +754,7 @@ InitBuffer:
 			showDebug(debug, 1)
 
 			showInfo("Streaming Status:" + "HTTP Response Status [" + strconv.Itoa(resp.StatusCode) + "] " + http.StatusText(resp.StatusCode))
-			showInfo("Content type:" + contentType)
+			showInfo("Content Type:" + contentType)
 
 		} else {
 
@@ -790,7 +790,7 @@ InitBuffer:
 			}
 
 		// Video Stream (TS)
-		case "video/mpeg", "video/mp4", "video/mp2t", "application/octet-stream", "binary/octet-stream":
+		case "video/mpeg", "video/mp4", "video/mp2t", "application/octet-stream", "binary/octet-stream", "application/mp2t":
 
 			var fileSize int
 
@@ -931,7 +931,7 @@ InitBuffer:
 
 		// Umbekanntes Format
 		default:
-			showInfo("Content type:" + resp.Header.Get("Content-Type"))
+			showInfo("Content Type:" + resp.Header.Get("Content-Type"))
 			err = errors.New("Streaming error")
 			ShowError(err, 4003)
 

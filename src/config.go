@@ -83,6 +83,11 @@ func Init() (err error) {
 		return
 	}
 
+	if len(System.Flag.Restore) > 0 {
+		// Einstellungen werden über CLI wiederhergestellt. Weitere Initialisierung ist nicht notwendig.
+		return
+	}
+
 	System.File.XML = getPlatformFile(fmt.Sprintf("%s%s.xml", System.Folder.Data, System.AppName))
 	System.File.M3U = getPlatformFile(fmt.Sprintf("%s%s.m3u", System.Folder.Data, System.AppName))
 
@@ -161,9 +166,6 @@ func Init() (err error) {
 		return
 	}
 
-	// DLNA Server starten
-	go SSDP()
-
 	// Branch festlegen
 	System.Branch = Settings.Branch
 
@@ -194,6 +196,13 @@ func Init() (err error) {
 
 	}
 
+	// DLNA Server starten
+	err = SSDP()
+	if err != nil {
+		return
+	}
+
+	// HTML Datein laden
 	loadHTMLMap()
 
 	return
