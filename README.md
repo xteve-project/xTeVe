@@ -110,12 +110,14 @@ xteve -branch master
 ...
 ```
 
-When the branch is changed, an update is only performed if there is a new version and the update function is activated in the settings.
+When the branch is changed, an update is only performed if there is a new version and the update function is activated in the settings.  
+
+---
 
 ## Build from source code [Go / Golang]
 
 #### Requirements
-* Go (go1.12.4 or newer)
+* [Go](https://golang.org) (go1.12.4 or newer)
 
 #### Dependencies
 * [go-ssdp](https://github.com/koron/go-ssdp)
