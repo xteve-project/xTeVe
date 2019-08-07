@@ -83,6 +83,35 @@ Including:
 
 ---
 
+### xTeVe Beta branch
+New features and bug fixes are only available in beta brunch. Only after successful testing, they are merged into the master branch.
+
+**It is not recommended to use the beta version in a production system.**  
+
+With the command line argument `branch` the Git Branch can be changed. xTeVe must be started via the terminal.  
+
+#### Switch from master to beta branch:
+```
+xteve -branch beta
+
+...
+[xTeVe] GitHub:                https://github.com/xteve-project
+[xTeVe] Git Branch:            beta [xteve-project]
+...
+```
+
+#### Switch from beta to master branch:
+```
+xteve -branch master
+
+...
+[xTeVe] GitHub:                https://github.com/xteve-project
+[xTeVe] Git Branch:            master [xteve-project]
+...
+```
+
+When the branch is changed, an update is only performed if there is a new version and the update function is activated in the settings.
+
 ## Build from source code [Go / Golang]
 
 #### Requirements
