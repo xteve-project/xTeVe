@@ -599,7 +599,7 @@ func Web(w http.ResponseWriter, r *http.Request) {
 
 		if System.ScanInProgress == 0 {
 
-			if len(Settings.Files.M3U) == 0 || len(Settings.Files.HDHR) == 0 {
+			if len(Settings.Files.M3U) == 0 && len(Settings.Files.HDHR) == 0 {
 				System.ConfigurationWizard = true
 			}
 
