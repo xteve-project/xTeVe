@@ -11,24 +11,26 @@ import (
 )
 
 // SSDP : SSPD / DLNA Server
-func SSDP() {
+func SSDP() (err error) {
 
-  showInfo(fmt.Sprintf("SSDP / DLNA:%t", Settings.SSDP))
-
-  if Settings.SSDP == false {
+  if Settings.SSDP == false || System.Flag.Info == true {
     return
   }
 
-  time.Sleep(10 * time.Second)
+  showInfo(fmt.Sprintf("SSDP / DLNA:%t", Settings.SSDP))
+
+  quit := make(chan os.Signal, 1)
+  signal.Notify(quit, os.Interrupt)
+
   ad, err := ssdp.Advertise(
-    "upnp:"+System.AppName,                   // send as "ST"
-    System.DeviceID+"::upnp:"+System.AppName, // send as "USN"
-    System.URLBase+"/device.xml",             // send as "LOCATION"
-    System.AppName,                           // send as "SERVER"
-    1800)                                     // send as "maxAge" in "CACHE-CONTROL"
+    fmt.Sprintf("upnp:rootdevice"),                           // send as "ST"
+    fmt.Sprintf("uuid:%s::upnp:rootdevice", System.DeviceID), // send as "USN"
+    fmt.Sprintf("%s/device.xml", System.URLBase),             // send as "LOCATION"
+    System.AppName, // send as "SERVER"
+    1800)           // send as "maxAge" in "CACHE-CONTROL"
 
   if err != nil {
-    ShowError(err, 000)
+    return
   }
 
   // Debug SSDP
@@ -36,34 +38,35 @@ func SSDP() {
     ssdp.Logger = log.New(os.Stderr, "[SSDP] ", log.LstdFlags)
   }
 
-  var aliveTick <-chan time.Time
-  var ai = 10
+  go func(adv *ssdp.Advertiser) {
 
-  if ai > 0 {
-    aliveTick = time.Tick(time.Duration(ai) * time.Second)
-  } else {
-    aliveTick = make(chan time.Time)
-  }
+    aliveTick := time.Tick(300 * time.Second)
 
-  quit := make(chan os.Signal, 1)
-  signal.Notify(quit, os.Interrupt)
+  loop:
+    for {
 
-loop:
+      select {
 
-  for {
+      case <-aliveTick:
+        err = adv.Alive()
+        if err != nil {
+          ShowError(err, 0)
+          adv.Bye()
+          adv.Close()
+          break loop
+        }
 
-    select {
+      case <-quit:
+        adv.Bye()
+        adv.Close()
+        os.Exit(0)
+        break loop
 
-    case <-aliveTick:
-      ad.Alive()
-    case <-quit:
-      os.Exit(0)
-      break loop
+      }
 
     }
 
-  }
+  }(ad)
 
-  ad.Bye()
-  ad.Close()
+  return
 }

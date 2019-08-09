@@ -299,6 +299,8 @@ tbody {
 
 #content_table input[type=text]{
   width: 80%;
+  min-width: 35px;
+  max-width: 60px;
   border: 0px;
   background-color: #333;
   margin-left: 5px;

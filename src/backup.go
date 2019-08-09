@@ -2,6 +2,7 @@ package src
 
 import (
   b64 "encoding/base64"
+  "errors"
   "fmt"
   "io/ioutil"
   "os"
@@ -124,35 +125,44 @@ func xteveBackup() (archiv string, err error) {
   return
 }
 
-func xteveRestore(input string) (newWebURL string, err error) {
+func xteveRestore(archive string) (newWebURL string, err error) {
 
-  var newPort, oldPort string
+  var newPort, oldPort, backupVersion, tmpRestore string
 
-  // Base64 Json String in base64 umwandeln
-  b64data := input[strings.IndexByte(input, ',')+1:]
+  tmpRestore = System.Folder.Temp + "restore" + string(os.PathSeparator)
 
-  // Base64 in bytes umwandeln und speichern
-  sDec, err := b64.StdEncoding.DecodeString(b64data)
-
+  err = checkFolder(tmpRestore)
   if err != nil {
     return
   }
 
-  var archive = System.Folder.Temp + "restore.zip"
-
-  err = writeByteToFile(archive, sDec)
+  // Zip Archiv in tmp entpacken
+  err = extractZIP(archive, tmpRestore)
   if err != nil {
     return
   }
 
-  // Zip Archiv entpacken
+  // Neue Config laden um den Port und die Version zu überprüfen
+  newConfig, err := loadJSONFileToMap(tmpRestore + "settings.json")
+  if err != nil {
+    ShowError(err, 0)
+    return
+  }
+
+  backupVersion = newConfig["version"].(string)
+  if backupVersion < System.Compatibility {
+    err = errors.New(getErrMsg(1013))
+    return
+  }
+
+  // Zip Archiv in den Config Ordner entpacken
   err = extractZIP(archive, System.Folder.Config)
   if err != nil {
     return
   }
 
-  // Neue Config laden um den Port zu überprüfen
-  newConfig, err := loadJSONFileToMap(System.Folder.Config + "settings.json")
+  // Neue Config laden um den Port und die Version zu überprüfen
+  newConfig, err = loadJSONFileToMap(System.Folder.Config + "settings.json")
   if err != nil {
     ShowError(err, 0)
     return
@@ -187,5 +197,78 @@ func xteveRestore(input string) (newWebURL string, err error) {
   var url = System.URLBase + "/web/"
   newWebURL = strings.Replace(url, ":"+oldPort, ":"+newPort, 1)
 
+  os.RemoveAll(tmpRestore)
+
+  return
+}
+
+func xteveRestoreFromWeb(input string) (newWebURL string, err error) {
+
+  // Base64 Json String in base64 umwandeln
+  b64data := input[strings.IndexByte(input, ',')+1:]
+
+  // Base64 in bytes umwandeln und speichern
+  sDec, err := b64.StdEncoding.DecodeString(b64data)
+
+  if err != nil {
+    return
+  }
+
+  var archive = System.Folder.Temp + "restore.zip"
+
+  err = writeByteToFile(archive, sDec)
+  if err != nil {
+    return
+  }
+
+  newWebURL, err = xteveRestore(archive)
+
+  return
+}
+
+// XteveRestoreFromCLI : Wiederherstellung über die Kommandozeile
+func XteveRestoreFromCLI(archive string) (err error) {
+
+  var confirm string
+
+  println()
+  showInfo(fmt.Sprintf("Version:%s Build: %s", System.Version, System.Build))
+  showInfo(fmt.Sprintf("Backup File:%s", archive))
+  showInfo(fmt.Sprintf("System Folder:%s", getPlatformPath(System.Folder.Config)))
+  println()
+
+  fmt.Print("All data will be replaced with those from the backup. Should the files be restored? [yes|no]:")
+
+  fmt.Scanln(&confirm)
+
+  switch strings.ToLower(confirm) {
+
+  case "yes":
+    break
+
+  case "no":
+    return
+
+  default:
+    fmt.Println("Invalid input")
+    return
+
+  }
+
+  if len(System.Folder.Config) > 0 {
+
+    err = checkFilePermission(System.Folder.Config)
+    if err != nil {
+      return
+    }
+
+    _, err = xteveRestore(archive)
+    if err != nil {
+      return
+    }
+
+    showHighlight(fmt.Sprintf("Restor:Backup was successfully restored. %s can now be started normally", System.Name))
+
+  }
   return
 }

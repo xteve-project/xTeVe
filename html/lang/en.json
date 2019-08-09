@@ -23,7 +23,7 @@
     }
   },
   "confirm":{
-    "restore": "All data will be replaced with those from the backup.Should the files be restored?"
+    "restore": "All data will be replaced with those from the backup. Should the files be restored?"
   },
   "alert": {
     "fileLoadingError": "File couldn't be loaded",
@@ -45,7 +45,7 @@
     "search": "Search",
     "update": "Update",
     "craeteAccount": "Create Account",
-    "resetlogs": "Reset Logs",
+    "resetLogs": "Reset Logs",
     "uploadLogo": "Upload Logo"
   },
   "filter": {
@@ -243,7 +243,7 @@
     },
     "password": {
       "title": "Password",
-      "placeholder": "Passoword",
+      "placeholder": "Password",
       "description": ""
     },
     "confirm": {
@@ -320,7 +320,7 @@
     },
     "streamBuffering": {
       "title": "Stream Buffer",
-      "description": "- The stream is passed from xTeVe to Plex / Emby / M3U Player<br>- Small jerking of the streams can be compensated<br>- HLS / M3U8 support"
+      "description": "- The stream is passed from xTeVe to Plex / Emby / M3U Player<br>- Small jerking of the streams can be compensated<br>- HLS / M3U8 support<br>- Re-streaming<br>- Separate tuner limit for each playlist"
     },
     "bufferSize": {
       "title": "Buffer Size",

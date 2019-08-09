@@ -81,6 +81,11 @@ Including:
 - Crond: Daemon to execute scheduled commands  
 - Perl: Programming language   
 
+## Beta version
+
+New features are first available in the beta version and will be added to the master branch after successful testing
+If you prefer to use the beta version, you can always switch between master and beta branch.
+
 ---
 
 ### xTeVe Beta branch

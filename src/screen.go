@@ -12,6 +12,10 @@ import (
 
 func showInfo(str string) {
 
+	if System.Flag.Info == true {
+		return
+	}
+
 	var max = 22
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
@@ -240,7 +244,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1012:
 		errMsg = fmt.Sprintf("Invalid formatting of the time")
 	case 1013:
-		errMsg = fmt.Sprintf("Invalid settings file (%s), file must be at least version %s", System.File.Settings, System.Compatibility)
+		errMsg = fmt.Sprintf("Invalid settings file (settings.json), file must be at least version %s", System.Compatibility)
 
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")

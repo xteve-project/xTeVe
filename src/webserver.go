@@ -34,7 +34,19 @@ func StartWebserver() (err error) {
 
 	showInfo("DVR IP:" + System.IPAddress + ":" + Settings.Port)
 
-	showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/", System.ServerProtocol.WEB, System.IPAddress, Settings.Port))
+	var ips = len(System.IPAddressesV4) + len(System.IPAddressesV6) - 1
+	switch ips {
+
+	case 0:
+		showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/", System.ServerProtocol.WEB, System.IPAddress, Settings.Port))
+
+	case 1:
+		showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, ips))
+
+	default:
+		showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP's.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, len(System.IPAddressesV4)+len(System.IPAddressesV6)-1))
+
+	}
 
 	if err = http.ListenAndServe(":"+port, nil); err != nil {
 		ShowError(err, 1001)
@@ -147,7 +159,8 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 		showInfo("Streaming URL:" + streamInfo.URL)
 		http.Redirect(w, r, streamInfo.URL, 302)
 
-		showInfo("Streaming Info:URL was passed to the client")
+		showInfo("Streaming Info:URL was passed to the client.")
+		showInfo("Streaming Info:xTeVe is no longer involved, the client connects directly to the streaming server.")
 
 	}
 
@@ -302,6 +315,8 @@ func WS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not open websocket connection", http.StatusBadRequest)
 	}
 
+	setGlobalDomain(r.Host)
+
 	for {
 
 		err = conn.ReadJSON(&request)
@@ -447,7 +462,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			file, errNew := xteveBackup()
 			err = errNew
 			if err == nil {
-				response.OpenLink = System.URLBase + "/download/" + file
+				response.OpenLink = fmt.Sprintf("%s://%s/download/%s", System.ServerProtocol.WEB, System.Domain, file)
 			}
 
 		case "xteveRestore":
@@ -457,9 +472,10 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 			if len(request.Base64) > 0 {
 
-				newWebURL, err := xteveRestore(request.Base64)
+				newWebURL, err := xteveRestoreFromWeb(request.Base64)
 				if err != nil {
 					ShowError(err, 000)
+					response.Alert = err.Error()
 				}
 
 				if err == nil {
@@ -528,7 +544,6 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			response.Settings = Settings
 		}
 
-		setGlobalDomain(r.Host)
 		response = setDefaultResponseData(response, true)
 		if System.ConfigurationWizard == true {
 			response.ConfigurationWizard = System.ConfigurationWizard
@@ -582,8 +597,12 @@ func Web(w http.ResponseWriter, r *http.Request) {
 
 	if getFilenameFromPath(requestFile) == "html" {
 
-		if len(Data.Streams.All) == 0 && System.ScanInProgress == 0 {
-			System.ConfigurationWizard = true
+		if System.ScanInProgress == 0 {
+
+			if len(Settings.Files.M3U) == 0 || len(Settings.Files.HDHR) == 0 {
+				System.ConfigurationWizard = true
+			}
+
 		}
 
 		switch System.ConfigurationWizard {
@@ -867,8 +886,6 @@ func API(w http.ResponseWriter, r *http.Request) {
 
 	case "status":
 
-		fmt.Println("-----------------------------")
-		os.Exit(0)
 		response.VersionXteve = System.Version
 		response.VersionAPI = System.APIVersion
 		response.StreamsActive = int64(len(Data.Streams.Active))

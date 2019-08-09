@@ -174,49 +174,58 @@ func createXEPGMapping() {
 		return
 	}
 
-	if len(Data.XMLTV.Files) == 0 {
-		return
-	}
+	if len(Data.XMLTV.Files) > 0 {
 
-	for i := len(Data.XMLTV.Files) - 1; i >= 0; i-- {
+		for i := len(Data.XMLTV.Files) - 1; i >= 0; i-- {
 
-		var file = Data.XMLTV.Files[i]
+			var file = Data.XMLTV.Files[i]
 
-		var err error
-		var fileID = strings.TrimSuffix(getFilenameFromPath(file), path.Ext(getFilenameFromPath(file)))
-		showInfo("XEPG:" + "Parse XMLTV file: " + getProviderParameter(fileID, "xmltv", "name"))
+			var err error
+			var fileID = strings.TrimSuffix(getFilenameFromPath(file), path.Ext(getFilenameFromPath(file)))
+			showInfo("XEPG:" + "Parse XMLTV file: " + getProviderParameter(fileID, "xmltv", "name"))
 
-		//xmltv, err = getLocalXMLTV(file)
-		var xmltv XMLTV
+			//xmltv, err = getLocalXMLTV(file)
+			var xmltv XMLTV
 
-		err = getLocalXMLTV(file, &xmltv)
-		if err != nil {
-			Data.XMLTV.Files = append(Data.XMLTV.Files, Data.XMLTV.Files[i+1:]...)
-			var errMsg = err.Error()
-			err = errors.New(getProviderParameter(fileID, "xmltv", "name") + ": " + errMsg)
-			ShowError(err, 000)
-		}
+			err = getLocalXMLTV(file, &xmltv)
+			if err != nil {
+				Data.XMLTV.Files = append(Data.XMLTV.Files, Data.XMLTV.Files[i+1:]...)
+				var errMsg = err.Error()
+				err = errors.New(getProviderParameter(fileID, "xmltv", "name") + ": " + errMsg)
+				ShowError(err, 000)
+			}
 
-		// XML Parsen (Provider Datei)
-		if err == nil {
+			// XML Parsen (Provider Datei)
+			if err == nil {
 
-			// Daten aus der XML Datei in eine temporäre Map schreiben
-			var xmltvMap = make(map[string]interface{})
+				// Daten aus der XML Datei in eine temporäre Map schreiben
+				var xmltvMap = make(map[string]interface{})
 
-			for _, c := range xmltv.Channel {
-				var channel = make(map[string]interface{})
+				for _, c := range xmltv.Channel {
+					var channel = make(map[string]interface{})
 
-				channel["id"] = c.ID
-				channel["display-name"] = friendlyDisplayName(*c)
-				channel["icon"] = c.Icon.Src
+					channel["id"] = c.ID
+					channel["display-name"] = friendlyDisplayName(*c)
+					channel["icon"] = c.Icon.Src
 
-				xmltvMap[c.ID] = channel
+					xmltvMap[c.ID] = channel
+
+				}
+
+				tmpMap[getFilenameFromPath(file)] = xmltvMap
+				Data.XMLTV.Mapping[getFilenameFromPath(file)] = xmltvMap
 
 			}
 
-			tmpMap[getFilenameFromPath(file)] = xmltvMap
-			Data.XMLTV.Mapping[getFilenameFromPath(file)] = xmltvMap
+		}
 
+		Data.XMLTV.Mapping = tmpMap
+		tmpMap = make(map[string]interface{})
+
+	} else {
+
+		if System.ConfigurationWizard == false {
+			showWarning(1007)
 		}
 
 	}
@@ -236,10 +245,7 @@ func createXEPGMapping() {
 
 	}
 
-	Data.XMLTV.Mapping = tmpMap
 	Data.XMLTV.Mapping["xTeVe Dummy"] = dummy
-
-	tmpMap = make(map[string]interface{})
 
 	return
 }
@@ -583,7 +589,12 @@ func createXMLTVFile() (err error) {
 	var xepgXML XMLTV
 
 	xepgXML.Generator = System.Name
-	xepgXML.Source = fmt.Sprintf("%s - %s", System.Name, System.Version)
+
+	if System.Branch == "master" {
+		xepgXML.Source = fmt.Sprintf("%s - %s", System.Name, System.Version)
+	} else {
+		xepgXML.Source = fmt.Sprintf("%s - %s.%s", System.Name, System.Version, System.Build)
+	}
 
 	var tmpProgram = &XMLTV{}
 
@@ -749,7 +760,9 @@ func createDummyProgram(xepgChannel XEPGChannelStruct) (dummyXMLTV XMLTV) {
 				epg.Poster = append(epg.Poster, poster)
 			}
 
-			epg.EpisodeNum = append(epg.EpisodeNum, &EpisodeNum{Value: epgStartTime.Format("2006-01-02 15:04:05"), System: "original-air-date"})
+			if xepgChannel.XCategory != "Movie" {
+				epg.EpisodeNum = append(epg.EpisodeNum, &EpisodeNum{Value: epgStartTime.Format("2006-01-02 15:04:05"), System: "original-air-date"})
+			}
 
 			epg.New = &New{Value: ""}
 
@@ -812,10 +825,10 @@ func getEpisodeNum(program *Program, xmltvProgram *Program, xepgChannel XEPGChan
 
 	program.EpisodeNum = xmltvProgram.EpisodeNum
 
-	if len(xepgChannel.XCategory) > 0 {
+	if len(xepgChannel.XCategory) > 0 && xepgChannel.XCategory != "Movie" {
 
 		if len(xmltvProgram.EpisodeNum) == 0 {
-			program.EpisodeNum = append(program.EpisodeNum, &EpisodeNum{Value: time.Now().Format("2006-01-02"), System: "original-air-date"})
+			program.EpisodeNum = append(program.EpisodeNum, &EpisodeNum{Value: time.Now().Format("2006-01-02  15:04:05"), System: "original-air-date"})
 		}
 
 	}

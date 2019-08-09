@@ -117,7 +117,7 @@ func loadSettings() (settings SettingsStrcut, err error) {
 	defaults["buffer.size.kb"] = 1024
 	defaults["buffer.timeout"] = 500
 	defaults["cache.images"] = false
-	defaults["epgSource"] = "XEPG"
+	defaults["epgSource"] = "PMS"
 	defaults["files"] = dataMap
 	defaults["files.update"] = true
 	defaults["filter"] = make(map[string]interface{})

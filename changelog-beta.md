@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 #### 2.0.0.0008-beta
 ##### Fixes
 - Pull request #6 [Error in http/https detection] window.location.protocol return "https:", not "https://"
 
+=======
+>>>>>>> beta
 #### 2.0.0.0007-beta
 ```diff
 + Buffer HLS: Add VOD tag from M3U8

@@ -714,7 +714,7 @@ class ShowContent extends Content {
         break
 
       case "log":
-        var input = this.createInput("button", menuKey, "{{.button.resetlogs}}")
+        var input = this.createInput("button", menuKey, "{{.button.resetLogs}}")
         input.setAttribute("onclick", 'javascript: resetLogs();')
         interaction.appendChild(input)
 
@@ -1529,6 +1529,8 @@ function openPopUp(dataType, element) {
         input.setAttribute("readonly", "true")
       }
       content.appendRow("{{.mapping.channelName.title}}", input)
+
+      content.description(data["name"])
 
       // Aktualisierung des Kanalnamens
       if (data.hasOwnProperty("_uuid.key")) {
