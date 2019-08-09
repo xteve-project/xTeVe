@@ -597,8 +597,12 @@ func Web(w http.ResponseWriter, r *http.Request) {
 
 	if getFilenameFromPath(requestFile) == "html" {
 
-		if len(Data.Streams.All) == 0 && System.ScanInProgress == 0 {
-			System.ConfigurationWizard = true
+		if System.ScanInProgress == 0 {
+
+			if len(Settings.Files.M3U) == 0 || len(Settings.Files.HDHR) == 0 {
+				System.ConfigurationWizard = true
+			}
+
 		}
 
 		switch System.ConfigurationWizard {

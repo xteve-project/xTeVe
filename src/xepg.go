@@ -760,7 +760,9 @@ func createDummyProgram(xepgChannel XEPGChannelStruct) (dummyXMLTV XMLTV) {
 				epg.Poster = append(epg.Poster, poster)
 			}
 
-			epg.EpisodeNum = append(epg.EpisodeNum, &EpisodeNum{Value: epgStartTime.Format("2006-01-02 15:04:05"), System: "original-air-date"})
+			if xepgChannel.XCategory != "Movie" {
+				epg.EpisodeNum = append(epg.EpisodeNum, &EpisodeNum{Value: epgStartTime.Format("2006-01-02 15:04:05"), System: "original-air-date"})
+			}
 
 			epg.New = &New{Value: ""}
 
@@ -823,10 +825,10 @@ func getEpisodeNum(program *Program, xmltvProgram *Program, xepgChannel XEPGChan
 
 	program.EpisodeNum = xmltvProgram.EpisodeNum
 
-	if len(xepgChannel.XCategory) > 0 {
+	if len(xepgChannel.XCategory) > 0 && xepgChannel.XCategory != "Movie" {
 
 		if len(xmltvProgram.EpisodeNum) == 0 {
-			program.EpisodeNum = append(program.EpisodeNum, &EpisodeNum{Value: time.Now().Format("2006-01-02"), System: "original-air-date"})
+			program.EpisodeNum = append(program.EpisodeNum, &EpisodeNum{Value: time.Now().Format("2006-01-02  15:04:05"), System: "original-air-date"})
 		}
 
 	}

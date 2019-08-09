@@ -1530,6 +1530,8 @@ function openPopUp(dataType, element) {
       }
       content.appendRow("{{.mapping.channelName.title}}", input)
 
+      content.description(data["name"])
+
       // Aktualisierung des Kanalnamens
       if (data.hasOwnProperty("_uuid.key")) {
         if (data["_uuid.key"] != "") {
