@@ -24,7 +24,7 @@ class Server {
       case "http:": 
         this.protocol = "ws://"
         break
-      case "https://": 
+      case "https:": 
         this.protocol = "wss://"
         break
     }
