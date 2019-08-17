@@ -1288,6 +1288,9 @@ function openPopUp(dataType, element) {
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("onchange", "javascript: this.className = 'changed'");
             content.appendRow("{{.mapping.m3uGroupTitle.title}}", input);
+            if (data["group-title"] != undefined) {
+                content.description(data["group-title"]);
+            }
             // XMLTV Datei
             var dbKey = "x-xmltv-file";
             var xmlFile = data[dbKey];

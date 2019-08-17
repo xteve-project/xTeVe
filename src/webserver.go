@@ -205,6 +205,7 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 	// XMLTV Datei
 	if strings.Contains(path, "xmltv/") {
 
+		w.Header().Set("Content-Type", "application/xml")
 		requestType = "xml"
 
 		file = System.Folder.Data + getFilenameFromPath(path)
