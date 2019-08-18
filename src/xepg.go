@@ -828,7 +828,16 @@ func getEpisodeNum(program *Program, xmltvProgram *Program, xepgChannel XEPGChan
 	if len(xepgChannel.XCategory) > 0 && xepgChannel.XCategory != "Movie" {
 
 		if len(xmltvProgram.EpisodeNum) == 0 {
-			program.EpisodeNum = append(program.EpisodeNum, &EpisodeNum{Value: time.Now().Format("2006-01-02  15:04:05"), System: "original-air-date"})
+
+			var timeLayout = "20060102150405"
+
+			t, err := time.Parse(timeLayout, strings.Split(xmltvProgram.Start, " ")[0])
+			if err == nil {
+				program.EpisodeNum = append(program.EpisodeNum, &EpisodeNum{Value: t.Format("2006-01-02 15:04:05"), System: "original-air-date"})
+			} else {
+				ShowError(err, 0)
+			}
+
 		}
 
 	}
