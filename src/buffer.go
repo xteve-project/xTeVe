@@ -790,7 +790,7 @@ InitBuffer:
 			}
 
 		// Video Stream (TS)
-		case "video/mpeg", "video/mp4", "video/mp2t", "application/octet-stream", "binary/octet-stream", "application/mp2t":
+		case "video/mpeg", "video/mp4", "video/mp2t", "video/m2ts", "application/octet-stream", "binary/octet-stream", "application/mp2t":
 
 			var fileSize int
 
