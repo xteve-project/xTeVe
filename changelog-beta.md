@@ -1,3 +1,10 @@
+#### 2.0.1.0011-beta
+```diff
++ Original group title is shown in the Mapping Editor
+```
+##### Fixes
+- incorrect original-air-date
+
 #### 2.0.1.0010-beta
 ```diff
 + Set timestamp to <episode-num system="original-air-date">
