@@ -1,3 +1,7 @@
+#### 2.0.1.0012-beta
+```diff
++ Add support for "video/m2ts" video streams (Pull request #14)
+```
 #### 2.0.1.0011-beta
 ```diff
 + Original group title is shown in the Mapping Editor
