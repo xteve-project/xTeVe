@@ -43,6 +43,10 @@ func filterThisStream(s interface{}) (status bool) {
 
 	for _, filter := range Data.Filter {
 
+		if filter.Rule == "" {
+			continue
+		}
+
 		var group, name, search string
 		var exclude, include string
 		var match = false

@@ -397,16 +397,24 @@ func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
 		// Filter aktualisieren / löschen
 		for key, value := range data.(map[string]interface{}) {
 
-			var oldData = filterMap[dataID].(map[string]interface{})
-			oldData[key] = value
-
 			// Filter löschen
 			if _, ok := data.(map[string]interface{})["delete"]; ok {
-
 				delete(filterMap, dataID)
 				break
+			}
+
+			if filter, ok := data.(map[string]interface{})["filter"].(string); ok {
+
+				if len(filter) == 0 {
+					err = errors.New(getErrMsg(1014))
+					delete(filterMap, dataID)
+					return
+				}
 
 			}
+
+			var oldData = filterMap[dataID].(map[string]interface{})
+			oldData[key] = value
 
 		}
 

@@ -889,8 +889,11 @@ InitBuffer:
 
 					bufferFile.Close()
 
-					stream.Status = true
-					playlist.Streams[streamID] = stream
+					if stream.Status == false {
+						stream.Status = true
+						playlist.Streams[streamID] = stream
+					}
+
 					tmpSegment++
 
 					tmpFile = fmt.Sprintf("%s%d.ts", tmpFolder, tmpSegment)
