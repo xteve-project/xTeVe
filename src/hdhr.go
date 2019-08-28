@@ -95,7 +95,7 @@ func getLineupStatus() (jsonContent []byte, err error) {
 	lineupStatus.ScanInProgress = System.ScanInProgress
 	lineupStatus.ScanPossible = 0
 	lineupStatus.Source = "Cable"
-	lineupStatus.SourceList = []string{"IPTV", "Cable"}
+	lineupStatus.SourceList = []string{"Cable"}
 
 	jsonContent, err = json.MarshalIndent(lineupStatus, "", "  ")
 
