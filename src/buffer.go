@@ -219,163 +219,169 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 	for { // Loop 1: Warten bis das erste Segment durch den Buffer heruntergeladen wurde
 
-		if stream, ok := playlist.Streams[streamID]; ok {
+		if p, ok := BufferInformation.Load(playlistID); ok {
 
-			if stream.Status == false {
+			var playlist = p.(Playlist)
 
-				timeOut++
+			if stream, ok := playlist.Streams[streamID]; ok {
 
-				time.Sleep(time.Duration(100) * time.Millisecond)
+				if stream.Status == false {
 
-				if c, ok := BufferClients.Load(playlistID + stream.MD5); ok {
+					timeOut++
 
-					var clients = c.(ClientConnection)
+					time.Sleep(time.Duration(100) * time.Millisecond)
 
-					if clients.Error != nil || timeOut > 200 {
-						killClientConnection(streamID, stream.PlaylistID, false)
-						return
-					}
+					if c, ok := BufferClients.Load(playlistID + stream.MD5); ok {
 
-				}
+						var clients = c.(ClientConnection)
 
-				continue
-			}
-
-			var oldSegments []string
-
-			for { // Loop 2: Temporäre Datein sind vorhanden, Daten können zum Client gesendet werden
-				// HTTP Clientverbindung überwachen
-				cn, ok := w.(http.CloseNotifier)
-				if ok {
-
-					select {
-
-					case <-cn.CloseNotify():
-						killClientConnection(streamID, playlistID, false)
-						return
-
-					default:
-						if c, ok := BufferClients.Load(playlistID + stream.MD5); ok {
-
-							var clients = c.(ClientConnection)
-							if clients.Error != nil {
-								ShowError(clients.Error, 0)
-								killClientConnection(streamID, playlistID, false)
-								return
-							}
-
-						} else {
-
+						if clients.Error != nil || timeOut > 200 {
+							killClientConnection(streamID, stream.PlaylistID, false)
 							return
-
 						}
 
 					}
 
+					continue
 				}
 
-				if _, err := os.Stat(stream.Folder); os.IsNotExist(err) {
-					killClientConnection(streamID, playlistID, false)
-					return
-				}
+				var oldSegments []string
 
-				var tmpFiles = getTmpFiles(&stream)
-				//fmt.Println("Buffer Loop:", stream.Connection)
+				for { // Loop 2: Temporäre Datein sind vorhanden, Daten können zum Client gesendet werden
+					// HTTP Clientverbindung überwachen
+					cn, ok := w.(http.CloseNotifier)
+					if ok {
 
-				for _, f := range tmpFiles {
+						select {
+
+						case <-cn.CloseNotify():
+							killClientConnection(streamID, playlistID, false)
+							return
+
+						default:
+							if c, ok := BufferClients.Load(playlistID + stream.MD5); ok {
+
+								var clients = c.(ClientConnection)
+								if clients.Error != nil {
+									ShowError(clients.Error, 0)
+									killClientConnection(streamID, playlistID, false)
+									return
+								}
+
+							} else {
+
+								return
+
+							}
+
+						}
+
+					}
 
 					if _, err := os.Stat(stream.Folder); os.IsNotExist(err) {
 						killClientConnection(streamID, playlistID, false)
 						return
 					}
 
-					oldSegments = append(oldSegments, f)
+					var tmpFiles = getTmpFiles(&stream)
+					//fmt.Println("Buffer Loop:", stream.Connection)
 
-					var fileName = stream.Folder + f
+					for _, f := range tmpFiles {
 
-					file, err := os.Open(fileName)
-					defer file.Close()
+						if _, err := os.Stat(stream.Folder); os.IsNotExist(err) {
+							killClientConnection(streamID, playlistID, false)
+							return
+						}
 
-					if err == nil {
+						oldSegments = append(oldSegments, f)
 
-						l, err := file.Stat()
+						var fileName = stream.Folder + f
+
+						file, err := os.Open(fileName)
+						defer file.Close()
+
 						if err == nil {
 
-							debug = fmt.Sprintf("Buffer Status:Send to client (%s)", fileName)
-							showDebug(debug, 2)
-
-							var buffer = make([]byte, int(l.Size()))
-							_, err = file.Read(buffer)
-
+							l, err := file.Stat()
 							if err == nil {
 
-								file.Seek(0, 0)
+								debug = fmt.Sprintf("Buffer Status:Send to client (%s)", fileName)
+								showDebug(debug, 2)
 
-								if streaming == false {
+								var buffer = make([]byte, int(l.Size()))
+								_, err = file.Read(buffer)
 
-									contentType := http.DetectContentType(buffer)
-									_ = contentType
-									//w.Header().Set("Content-type", "video/mpeg")
-									w.Header().Set("Content-type", contentType)
-									w.Header().Set("Content-Length", "0")
-									w.Header().Set("Connection", "close")
+								if err == nil {
 
-								}
+									file.Seek(0, 0)
 
-								/*
-									// HDHR Header
-									w.Header().Set("Cache-Control", "no-cache")
-									w.Header().Set("Pragma", "no-cache")
-									w.Header().Set("transferMode.dlna.org", "Streaming")
-								*/
+									if streaming == false {
 
-								_, err := w.Write(buffer)
+										contentType := http.DetectContentType(buffer)
+										_ = contentType
+										//w.Header().Set("Content-type", "video/mpeg")
+										w.Header().Set("Content-type", contentType)
+										w.Header().Set("Content-Length", "0")
+										w.Header().Set("Connection", "close")
 
-								if err != nil {
+									}
+
+									/*
+										// HDHR Header
+										w.Header().Set("Cache-Control", "no-cache")
+										w.Header().Set("Pragma", "no-cache")
+										w.Header().Set("transferMode.dlna.org", "Streaming")
+									*/
+
+									_, err := w.Write(buffer)
+
+									if err != nil {
+										file.Close()
+										killClientConnection(streamID, playlistID, false)
+										return
+									}
+
 									file.Close()
-									killClientConnection(streamID, playlistID, false)
-									return
+									streaming = true
+
 								}
 
 								file.Close()
-								streaming = true
 
 							}
 
-							file.Close()
+							var n = indexOfString(f, oldSegments)
+
+							if n > 20 {
+
+								var fileToRemove = stream.Folder + oldSegments[0]
+								os.RemoveAll(getPlatformFile(fileToRemove))
+								oldSegments = append(oldSegments[:0], oldSegments[0+1:]...)
+
+							}
 
 						}
 
-						var n = indexOfString(f, oldSegments)
-
-						if n > 20 {
-
-							var fileToRemove = stream.Folder + oldSegments[0]
-							os.RemoveAll(getPlatformFile(fileToRemove))
-							oldSegments = append(oldSegments[:0], oldSegments[0+1:]...)
-
-						}
+						file.Close()
 
 					}
 
-					file.Close()
+					if len(tmpFiles) == 0 {
+						time.Sleep(time.Duration(100) * time.Millisecond)
+					}
 
-				}
+				} // Ende Loop 2
 
-				if len(tmpFiles) == 0 {
-					time.Sleep(time.Duration(100) * time.Millisecond)
-				}
+			} else {
 
-			} // Ende Loop 2
+				// Stream nicht vorhanden
+				killClientConnection(streamID, stream.PlaylistID, false)
+				showInfo(fmt.Sprintf("Streaming Status:Playlist: %s - Tuner: %d / %d", playlist.PlaylistName, len(playlist.Streams), playlist.Tuner))
+				return
 
-		} else {
+			}
 
-			// Stream nicht vorhanden
-			killClientConnection(streamID, stream.PlaylistID, false)
-			showInfo(fmt.Sprintf("Streaming Status:Playlist: %s - Tuner: %d / %d", playlist.PlaylistName, len(playlist.Streams), playlist.Tuner))
-			return
-
-		}
+		} // Ende BufferInformation
 
 	} // Ende Loop 1
 
