@@ -620,6 +620,7 @@ func saveWizard(request RequestStruct) (nextStep int, err error) {
 				}
 
 				buildXEPG(false)
+				System.ScanInProgress = 0
 
 			}
 
