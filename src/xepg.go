@@ -306,7 +306,6 @@ func createXEPGDatabase() (err error) {
 		}
 
 		if len(xepgChannel.XChannelID) == 0 {
-			fmt.Println(mapToJSON(xepgChannel))
 			delete(Data.XEPG.Channels, id)
 		}
 

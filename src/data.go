@@ -472,7 +472,6 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 			for {
 				time.Sleep(time.Duration(1) * time.Second)
-				fmt.Println("Scan", System.ScanInProgress)
 				if System.ScanInProgress == 0 {
 					break
 				}
