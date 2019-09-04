@@ -11,6 +11,7 @@ type SystemStruct struct {
 	APIVersion          string
 	AppName             string
 	ARCH                string
+	BackgroundProcess   bool
 	Branch              string
 	Build               string
 	Compatibility       string

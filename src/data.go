@@ -454,8 +454,40 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 	Data.XEPG.Channels = request.EpgMapping
 
-	cleanupXEPG()
-	buildXEPG(true)
+	if System.ScanInProgress == 0 {
+
+		cleanupXEPG()
+		buildXEPG(true)
+
+	} else {
+
+		// Wenn während des erstellen der Datanbank das Mapping erneut gespeichert wird, wird die Datenbank erst später erneut aktualisiert.
+		go func() {
+
+			if System.BackgroundProcess == true {
+				return
+			}
+
+			System.BackgroundProcess = true
+
+			for {
+				time.Sleep(time.Duration(1) * time.Second)
+				fmt.Println("Scan", System.ScanInProgress)
+				if System.ScanInProgress == 0 {
+					break
+				}
+
+			}
+
+			cleanupXEPG()
+			buildXEPG(false)
+
+			System.BackgroundProcess = false
+
+		}()
+
+	}
+
 	return
 }
 

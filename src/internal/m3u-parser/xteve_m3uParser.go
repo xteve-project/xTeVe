@@ -2,6 +2,8 @@ package m3u
 
 import (
   "errors"
+  "fmt"
+  "log"
   "net/url"
   "regexp"
   "strings"
@@ -12,6 +14,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
   var content = string(byteStream)
   var channelName string
+  var uuids []string
 
   var parseMetaData = func(channel string) (stream map[string]string) {
 
@@ -53,7 +56,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
             line = strings.Replace(line, p, "", 1)
 
             p = strings.Replace(p, `"`, "", -1)
-            var parameter = strings.Split(p, "=")
+            var parameter = strings.SplitN(p, "=", 2)
 
             if len(parameter) == 2 {
 
@@ -120,9 +123,15 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
         if strings.Contains(strings.ToLower(key), "id") {
 
+          if indexOfString(value, uuids) != -1 {
+            log.Println(fmt.Sprintf("Channel: %s - %s = %s ", stream["name"], key, value))
+            break
+          }
+
+          uuids = append(uuids, value)
+
           stream["_uuid.key"] = key
           stream["_uuid.value"] = value
-          //os.Exit(0)
           break
 
         }
@@ -159,4 +168,15 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
   }
 
   return
+}
+
+func indexOfString(element string, data []string) int {
+
+  for k, v := range data {
+    if element == v {
+      return k
+    }
+  }
+
+  return -1
 }
