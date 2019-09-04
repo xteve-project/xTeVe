@@ -1,3 +1,14 @@
+#### 2.0.2.0024-beta
+```diff
++ Improved monitoring of the buffer process
++ Update the XEPG database a bit faster
+```
+
+##### Fixes
+- Error message if filter rule is missing
+- Channels are lost when saving again (Mapping)
+- Plex log, invalid source: IPTV
+
 #### 2.0.1.0012-beta
 ```diff
 + Add support for "video/m2ts" video streams (Pull request #14)
