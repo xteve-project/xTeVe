@@ -366,6 +366,7 @@ func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
 	var filterMap = make(map[int64]interface{})
 	var newData = make(map[int64]interface{})
 	var defaultFilter FilterStruct
+	var newFilter = false
 
 	defaultFilter.Active = true
 	defaultFilter.CaseSensitive = false
@@ -389,6 +390,7 @@ func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
 		if dataID == -1 {
 
 			// Neuer Filter
+			newFilter = true
 			dataID = createNewID()
 			filterMap[dataID] = jsonToMap(mapToJSON(defaultFilter))
 
@@ -406,15 +408,20 @@ func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
 			if filter, ok := data.(map[string]interface{})["filter"].(string); ok {
 
 				if len(filter) == 0 {
+
 					err = errors.New(getErrMsg(1014))
-					delete(filterMap, dataID)
+					if newFilter == true {
+						delete(filterMap, dataID)
+					}
+
 					return
 				}
 
 			}
 
-			var oldData = filterMap[dataID].(map[string]interface{})
-			oldData[key] = value
+			if oldData, ok := filterMap[dataID].(map[string]interface{}); ok {
+				oldData[key] = value
+			}
 
 		}
 
