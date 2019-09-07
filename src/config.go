@@ -109,7 +109,7 @@ func Init() (err error) {
 
 	// Überprüfen ob xTeVe als root läuft
 	if os.Geteuid() == 0 {
-		showWarning(2010)
+		showWarning(2110)
 	}
 
 	if System.Flag.Debug > 0 {

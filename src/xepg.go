@@ -306,7 +306,6 @@ func createXEPGDatabase() (err error) {
 		}
 
 		if len(xepgChannel.XChannelID) == 0 {
-			fmt.Println(mapToJSON(xepgChannel))
 			delete(Data.XEPG.Channels, id)
 		}
 
@@ -314,6 +313,12 @@ func createXEPGDatabase() (err error) {
 			allChannelNumbers = append(allChannelNumbers, xChannelID)
 		}
 
+	}
+
+	var xepgChannels = make(map[string]interface{})
+
+	for k, v := range Data.XEPG.Channels {
+		xepgChannels[k] = v
 	}
 
 	for _, dsa := range Data.Streams.Active {
@@ -331,7 +336,7 @@ func createXEPGDatabase() (err error) {
 		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name)
 
 		// XEPG Datenbank durchlaufen um nach dem Kanal zu suchen.
-		for xepg, dxc := range Data.XEPG.Channels {
+		for xepg, dxc := range xepgChannels {
 
 			var xepgChannel XEPGChannelStruct
 			err = json.Unmarshal([]byte(mapToJSON(dxc)), &xepgChannel)
@@ -367,6 +372,7 @@ func createXEPGDatabase() (err error) {
 		//os.Exit(0)
 
 		switch channelExists {
+
 		case true:
 			// Bereits vorhandener Kanal
 			var xepgChannel XEPGChannelStruct

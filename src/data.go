@@ -397,16 +397,24 @@ func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
 		// Filter aktualisieren / löschen
 		for key, value := range data.(map[string]interface{}) {
 
-			var oldData = filterMap[dataID].(map[string]interface{})
-			oldData[key] = value
-
 			// Filter löschen
 			if _, ok := data.(map[string]interface{})["delete"]; ok {
-
 				delete(filterMap, dataID)
 				break
+			}
+
+			if filter, ok := data.(map[string]interface{})["filter"].(string); ok {
+
+				if len(filter) == 0 {
+					err = errors.New(getErrMsg(1014))
+					delete(filterMap, dataID)
+					return
+				}
 
 			}
+
+			var oldData = filterMap[dataID].(map[string]interface{})
+			oldData[key] = value
 
 		}
 
@@ -446,8 +454,39 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 	Data.XEPG.Channels = request.EpgMapping
 
-	cleanupXEPG()
-	buildXEPG(true)
+	if System.ScanInProgress == 0 {
+
+		cleanupXEPG()
+		buildXEPG(true)
+
+	} else {
+
+		// Wenn während des erstellen der Datanbank das Mapping erneut gespeichert wird, wird die Datenbank erst später erneut aktualisiert.
+		go func() {
+
+			if System.BackgroundProcess == true {
+				return
+			}
+
+			System.BackgroundProcess = true
+
+			for {
+				time.Sleep(time.Duration(1) * time.Second)
+				if System.ScanInProgress == 0 {
+					break
+				}
+
+			}
+
+			cleanupXEPG()
+			buildXEPG(false)
+
+			System.BackgroundProcess = false
+
+		}()
+
+	}
+
 	return
 }
 
@@ -612,6 +651,7 @@ func saveWizard(request RequestStruct) (nextStep int, err error) {
 				}
 
 				buildXEPG(false)
+				System.ScanInProgress = 0
 
 			}
 
