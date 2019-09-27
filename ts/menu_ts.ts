@@ -1113,7 +1113,7 @@ function openPopUp(dataType, element) {
       content.appendRow("{{.playlist.fileM3U.title}}", input)
 
       // Tuner
-      if (SERVER["settings"]["buffer"] == true) {
+      if (SERVER["settings"]["buffer"] != "-") {
         var text:string[] = new Array()
         var values:string[] = new Array()
 
@@ -1192,7 +1192,7 @@ function openPopUp(dataType, element) {
       content.appendRow("{{.playlist.fileHDHR.title}}", input)
 
       // Tuner
-      if (SERVER["settings"]["buffer"] == true) {
+      if (SERVER["settings"]["buffer"] != "-") {
         var text:string[] = new Array()
         var values:string[] = new Array()
 

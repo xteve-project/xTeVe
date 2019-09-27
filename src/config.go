@@ -46,6 +46,10 @@ func Init() (err error) {
 	System.DVRLimit = 480
 	System.Compatibility = "1.4.4"
 
+	// FFmpeg Default Einstellungen
+	System.FFmpeg.DefaultOptions = "-hide_banner -loglevel panic -i [URL] -c copy -f mpegts pipe:1"
+	System.VLC.DefaultOptions = "[URL] --sout #std{mux=ts,access=file,dst=-}"
+
 	// Default Logeinträge, wird später von denen aus der settings.json überschrieben. Muss gemacht werden, damit die ersten Einträge auch im Log (webUI aangezeigt werden)
 	Settings.LogEntriesRAM = 500
 
@@ -133,7 +137,6 @@ func Init() (err error) {
 	// Bedingte Update Änderungen durchführen
 	err = conditionalUpdateChanges()
 	if err != nil {
-		ShowError(err, 0)
 		return
 	}
 

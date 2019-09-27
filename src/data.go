@@ -24,6 +24,8 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 	var createXEPGFiles = false
 	var debug string
 
+	// -vvv [URL] --sout '#transcode{vcodec=mp4v, acodec=mpga} :standard{access=http, mux=ogg}'
+
 	for key, value := range newSettings {
 
 		if _, ok := oldSettings[key]; ok {
@@ -94,6 +96,17 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 					return
 				}
 
+			case "ffmpeg.path", "vlc.path":
+				var path = value.(string)
+				if len(path) > 0 {
+
+					err = checkFile(path)
+					if err != nil {
+						return
+					}
+
+				}
+
 			}
 
 			oldSettings[key] = value
@@ -135,6 +148,33 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 		Settings.AuthenticationPMS = false
 		Settings.AuthenticationWEB = false
 		Settings.AuthenticationXML = false
+
+	}
+
+	// Buffer Einstellungen überprüfen
+	if len(Settings.FFmpegOptions) == 0 {
+		Settings.FFmpegOptions = System.FFmpeg.DefaultOptions
+	}
+
+	if len(Settings.VLCOptions) == 0 {
+		Settings.VLCOptions = System.VLC.DefaultOptions
+	}
+
+	switch Settings.Buffer {
+
+	case "ffmpeg":
+
+		if len(Settings.FFmpegPath) == 0 {
+			err = errors.New(getErrMsg(2020))
+			return
+		}
+
+	case "vlc":
+
+		if len(Settings.VLCPath) == 0 {
+			err = errors.New(getErrMsg(2021))
+			return
+		}
 
 	}
 

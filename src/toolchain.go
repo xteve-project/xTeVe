@@ -10,8 +10,11 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"text/template"
 )
 
@@ -77,6 +80,7 @@ func GetUserHomeDirectory() (userHomeDirectory string) {
 	return
 }
 
+// Prüft Dateiberechtigung
 func checkFilePermission(dir string) (err error) {
 
 	var filename = dir + "permission.test"
@@ -113,6 +117,28 @@ func getFilenameFromPath(path string) (file string) {
 func removeOldSystemData() {
 	// Temporären Ordner löschen
 	os.RemoveAll(System.Folder.Temp)
+}
+
+// Sucht eine Datei im OS
+func searchFileInOS(file string) (path string) {
+
+	switch runtime.GOOS {
+
+	case "linux", "darwin", "freebsd":
+		var args = file
+		var cmd = exec.Command("which", strings.Split(args, " ")...)
+
+		out, err := cmd.CombinedOutput()
+		if err == nil {
+			path = strings.Trim(string(out), "\r\n")
+		}
+
+	default:
+		return
+
+	}
+
+	return
 }
 
 //
@@ -271,6 +297,22 @@ func resolveHostIP() (err error) {
 			} else {
 				System.IPAddressesV6 = append(System.IPAddressesV6, ip)
 			}
+
+		}
+
+	}
+
+	if len(System.IPAddress) == 0 {
+
+		switch len(System.IPAddressesV4) {
+
+		case 0:
+			if len(System.IPAddressesV6) > 0 {
+				System.IPAddress = System.IPAddressesV6[0]
+			}
+
+		default:
+			System.IPAddress = System.IPAddressesV4[0]
 
 		}
 

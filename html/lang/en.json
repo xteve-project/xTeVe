@@ -307,7 +307,7 @@
       "description": "Updates all playlists, tuner and XMLTV files at startup."
     },
     "cacheImages": {
-      "title": "Image caching",
+      "title": "Image Caching",
       "description": "All images from the XMLTV file are cached, allowing faster rendering of the grid in the client.<br>Downloading the images may take a while and will be done in the background."
     },
     "replaceEmptyImages": {
@@ -320,7 +320,32 @@
     },
     "streamBuffering": {
       "title": "Stream Buffer",
-      "description": "- The stream is passed from xTeVe to Plex / Emby / M3U Player<br>- Small jerking of the streams can be compensated<br>- HLS / M3U8 support<br>- Re-streaming<br>- Separate tuner limit for each playlist"
+      "description": "Functions of the buffer:<br>- The stream is passed from xTeVe, FFmpeg or VLC to Plex, Emby or M3U Player<br>- Small jerking of the streams can be compensated<br>- HLS / M3U8 support<br>- RTP / RTPS support (only FFmpeg or VLC)<br>- Re-streaming<br>- Separate tuner limit for each playlist",
+      "info_false": "No Buffer (Client connects to the streaming server)",
+      "info_xteve": "xTeVe connects to the streaming server",
+      "info_ffmpeg": "FFmpeg connects to the streaming server",
+      "info_vlc": "VLC connects to the streaming server"
+
+    },
+    "ffmpegPath": {
+      "title": "FFmpeg Binary Path",
+      "description": "Path to FFmpeg binary.",
+      "placeholder": "/path/to/ffmpeg"
+    },
+    "ffmpegOptions": {
+      "title": "FFmpeg Options",
+      "description": "FFmpeg options.<br>Only change if you know what you are doing.<br>Leave blank to set default settings.",
+      "placeholder": "Leave blank to set default settings"
+    },
+    "vlcPath": {
+      "title": "VLC / CVLC Binary Path",
+      "description": "Path to VLC / CVLC binary.",
+      "placeholder": "/path/to/cvlc"
+    },
+    "vlcOptions": {
+      "title": "VLC / CVLC Options",
+      "description": "VLC / CVLC options.<br>Only change if you know what you are doing.<br>Leave blank to set default settings.",
+      "placeholder": "Leave blank to set default settings"
     },
     "bufferSize": {
       "title": "Buffer Size",
@@ -332,8 +357,8 @@
       "placeholder": "100"
     },
     "userAgent": {
-      "title": "User agent",
-      "description": "User Agent for HTTP requests",
+      "title": "User Agent",
+      "description": "User Agent for HTTP requests. Only used if xTeVe is selected as the buffer.",
       "placeholder": "xTeVe"
     },
     "backupPath": {
