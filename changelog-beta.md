@@ -1,3 +1,11 @@
+#### 2.0.3.0035-beta
+```diff
++ FFmpeg support
++ VLC support
+```
+**Version 2.0.3.0035 changes the settings.json.**  
+Settings from the current beta can not be used for the current master version 2.0.3
+
 #### 2.0.2.0024-beta
 ```diff
 + Improved monitoring of the buffer process
