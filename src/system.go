@@ -165,8 +165,8 @@ func loadSettings() (settings SettingsStrcut, err error) {
 		settings.FFmpegPath = searchFileInOS("ffmpeg")
 	}
 
-	if len(settings.FFmpegPath) == 0 {
-		settings.FFmpegPath = searchFileInOS("cvlc")
+	if len(settings.VLCPath) == 0 {
+		settings.VLCPath = searchFileInOS("cvlc")
 	}
 
 	settings.Version = System.DBVersion
