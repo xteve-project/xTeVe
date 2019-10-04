@@ -1,3 +1,10 @@
+#### 2.0.3.0042-beta
+**Version 2.0.3.0042 changes the settings.json.**  
+Settings from the current beta can not be used for the current master version 2.0.3  
+- New default options for VLC and FFmpeg  
+- VLC and FFmpeg log entries in the xTeVe log  
+- Less CPU load with VLC and FFmpeg  
+
 #### 2.0.3.0035-beta
 ```diff
 + FFmpeg support
