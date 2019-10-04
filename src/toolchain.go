@@ -130,7 +130,13 @@ func searchFileInOS(file string) (path string) {
 
 		out, err := cmd.CombinedOutput()
 		if err == nil {
-			path = strings.Trim(string(out), "\r\n")
+
+			var slice = strings.Split(strings.Replace(string(out), "\r\n", "\n", -1), "\n")
+
+			if len(slice) > 0 {
+				path = strings.Trim(slice[0], "\r\n")
+			}
+
 		}
 
 	default:

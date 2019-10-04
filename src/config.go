@@ -48,7 +48,7 @@ func Init() (err error) {
 
 	// FFmpeg Default Einstellungen
 	System.FFmpeg.DefaultOptions = "-hide_banner -loglevel panic -i [URL] -c copy -f mpegts pipe:1"
-	System.VLC.DefaultOptions = "[URL] --sout #std{mux=ts,access=file,dst=-}"
+	System.VLC.DefaultOptions = "-I dummy [URL] --sout #std{mux=ts,access=file,dst=-}"
 
 	// Default Logeinträge, wird später von denen aus der settings.json überschrieben. Muss gemacht werden, damit die ersten Einträge auch im Log (webUI aangezeigt werden)
 	Settings.LogEntriesRAM = 500

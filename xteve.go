@@ -35,11 +35,11 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
 	Update: Automatic updates from the GitHub repository [true|false]
 */
 
-// Name : Programname
+// Name : Programmname
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.0.3.0036"
+const Version = "2.0.3.0041"
 
 // DBVersion : Datanbank Version
 const DBVersion = "2.1.0"

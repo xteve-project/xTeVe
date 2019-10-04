@@ -355,6 +355,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("This error message comes from the provider")
 	case 4005:
 		errMsg = fmt.Sprintf("Temporary buffer files could not be deleted")
+	case 4006:
+		errMsg = fmt.Sprintf("Server connection timeout")
 
 	// Buffer (M3U8)
 	case 4050:

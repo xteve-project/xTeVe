@@ -147,7 +147,7 @@ class Content {
             var cell:Cell = new Cell()
             cell.child = true
             cell.childType = "P"
-            if (SERVER["settings"]["buffer"] == true) {
+            if (SERVER["settings"]["buffer"] != "-") {
               cell.value = data[key]["tuner"] 
             } else {
               cell.value = "-"
