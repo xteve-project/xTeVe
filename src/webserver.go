@@ -129,20 +129,31 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if strings.Index(streamInfo.URL, "rtsp://") != -1 || strings.Index(streamInfo.URL, "rtp://") != -1 {
-		err = errors.New("RTSP and RTP streams are not supported")
-		ShowError(err, 2004)
+	switch Settings.Buffer {
 
-		showInfo("Streaming URL:" + streamInfo.URL)
-		http.Redirect(w, r, streamInfo.URL, 302)
+	case "-":
+		showInfo(fmt.Sprintf("Buffer:false", Settings.Buffer))
 
-		showInfo("Streaming Info:URL was passed to the client")
-		return
+	case "xteve":
+		if strings.Index(streamInfo.URL, "rtsp://") != -1 || strings.Index(streamInfo.URL, "rtp://") != -1 {
+			err = errors.New("RTSP and RTP streams are not supported")
+			ShowError(err, 2004)
+
+			showInfo("Streaming URL:" + streamInfo.URL)
+			http.Redirect(w, r, streamInfo.URL, 302)
+
+			showInfo("Streaming Info:URL was passed to the client")
+			return
+		}
+
+		showInfo(fmt.Sprintf("Buffer:true [%s]", Settings.Buffer))
+
+	default:
+		showInfo(fmt.Sprintf("Buffer:true [%s]", Settings.Buffer))
+
 	}
 
-	showInfo(fmt.Sprintf("Buffer:%t", Settings.Buffer))
-
-	if Settings.Buffer == true {
+	if Settings.Buffer != "-" {
 		showInfo(fmt.Sprintf("Buffer Size:%d KB", Settings.BufferSize))
 	}
 
@@ -152,15 +163,15 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 	// Prüfen ob der Buffer verwendet werden soll
 	switch Settings.Buffer {
 
-	case true:
-		bufferingStream(streamInfo.PlaylistID, streamInfo.URL, streamInfo.Name, w, r)
-
-	case false:
+	case "-":
 		showInfo("Streaming URL:" + streamInfo.URL)
 		http.Redirect(w, r, streamInfo.URL, 302)
 
 		showInfo("Streaming Info:URL was passed to the client.")
 		showInfo("Streaming Info:xTeVe is no longer involved, the client connects directly to the streaming server.")
+
+	default:
+		bufferingStream(streamInfo.PlaylistID, streamInfo.URL, streamInfo.Name, w, r)
 
 	}
 

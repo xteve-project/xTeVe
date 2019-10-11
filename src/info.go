@@ -85,7 +85,7 @@ func ShowSystemInfo() {
   println("---")
 
   fmt.Println("Settings [Streaming]")
-  fmt.Println(fmt.Sprintf("Buffer:              %t", Settings.Buffer))
+  fmt.Println(fmt.Sprintf("Buffer:              %s", Settings.Buffer))
   fmt.Println(fmt.Sprintf("Buffer Size:         %d KB", Settings.BufferSize))
   fmt.Println(fmt.Sprintf("Timeout:             %d ms", int(Settings.BufferTimeout)))
   fmt.Println(fmt.Sprintf("User Agent:          %s", Settings.UserAgent))

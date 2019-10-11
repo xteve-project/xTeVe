@@ -25,11 +25,15 @@ type RequestStruct struct {
 		AuthenticationXML        *bool     `json:"authentication.xml,omitempty"`
 		BackupKeep               *int      `json:"backup.keep,omitempty"`
 		BackupPath               *string   `json:"backup.path,omitempty"`
-		Buffer                   *bool     `json:"buffer,omitempty"`
+		Buffer                   *string   `json:"buffer,omitempty"`
 		BufferSize               *int      `json:"buffer.size.kb, omitempty"`
 		BufferTimeout            *float64  `json:"buffer.timeout,omitempty"`
 		CacheImages              *bool     `json:"cache.images,omitempty"`
 		EpgSource                *string   `json:"epgSource,omitempty"`
+		FFmpegOptions            *string   `json:"ffmpeg.options,omitempty"`
+		FFmpegPath               *string   `json:"ffmpeg.path,omitempty"`
+		VLCOptions               *string   `json:"vlc.options,omitempty"`
+		VLCPath                  *string   `json:"vlc.path,omitempty"`
 		FilesUpdate              *bool     `json:"files.update,omitempty"`
 		TempPath                 *string   `json:"temp.path,omitempty"`
 		Tuner                    *int      `json:"tuner,omitempty"`

@@ -85,6 +85,50 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "ffmpeg.path":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.ffmpegPath.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createInput("text", "ffmpeg.path", data);
+                input.setAttribute("placeholder", "{{.settings.ffmpegPath.placeholder}}");
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "ffmpeg.options":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.ffmpegOptions.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createInput("text", "ffmpeg.options", data);
+                input.setAttribute("placeholder", "{{.settings.ffmpegOptions.placeholder}}");
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "vlc.path":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.vlcPath.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createInput("text", "vlc.path", data);
+                input.setAttribute("placeholder", "{{.settings.vlcPath.placeholder}}");
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "vlc.options":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.vlcOptions.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createInput("text", "vlc.options", data);
+                input.setAttribute("placeholder", "{{.settings.vlcOptions.placeholder}}");
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             // Checkboxen
             case "authentication.web":
                 var tdLeft = document.createElement("TD");
@@ -185,17 +229,6 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
-            case "buffer":
-                var tdLeft = document.createElement("TD");
-                tdLeft.innerHTML = "{{.settings.streamBuffering.title}}" + ":";
-                var tdRight = document.createElement("TD");
-                var input = content.createCheckbox(settingsKey);
-                input.checked = data;
-                input.setAttribute("onchange", "javascript: this.className = 'changed'");
-                tdRight.appendChild(input);
-                setting.appendChild(tdLeft);
-                setting.appendChild(tdRight);
-                break;
             case "api":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.api.title}}" + ":";
@@ -260,6 +293,18 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "buffer":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.streamBuffering.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var text = ["{{.settings.streamBuffering.info_false}}", "xTeVe: ({{.settings.streamBuffering.info_xteve}})", "FFmpeg: ({{.settings.streamBuffering.info_ffmpeg}})", "VLC: ({{.settings.streamBuffering.info_vlc}})"];
+                var values = ["-", "xteve", "ffmpeg", "vlc"];
+                var select = content.createSelect(text, values, data, settingsKey);
+                select.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(select);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
         }
         return setting;
     };
@@ -307,6 +352,18 @@ var SettingsCategory = /** @class */ (function () {
                 break;
             case "user.agent":
                 text = "{{.settings.userAgent.description}}";
+                break;
+            case "ffmpeg.path":
+                text = "{{.settings.ffmpegPath.description}}";
+                break;
+            case "ffmpeg.options":
+                text = "{{.settings.ffmpegOptions.description}}";
+                break;
+            case "vlc.path":
+                text = "{{.settings.vlcPath.description}}";
+                break;
+            case "vlc.options":
+                text = "{{.settings.vlcOptions.description}}";
                 break;
             case "epgSource":
                 text = "{{.settings.epgSource.description}}";

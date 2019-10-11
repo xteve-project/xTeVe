@@ -10,8 +10,11 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"os/exec"
 	"os/user"
 	"path/filepath"
+	"runtime"
+	"strings"
 	"text/template"
 )
 
@@ -42,13 +45,25 @@ func checkFolder(path string) (err error) {
 	return nil
 }
 
-// Prüft ob die datei im Dateisystem existiert
+// Prüft ob die Datei im Dateisystem existiert
 func checkFile(filename string) (err error) {
 
 	var file = getPlatformFile(filename)
 
 	if _, err = os.Stat(file); os.IsNotExist(err) {
-		return
+		return err
+	}
+
+	fi, err := os.Stat(file)
+	if err != nil {
+		return err
+	}
+
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		err = fmt.Errorf("%s: %s", file, getErrMsg(1072))
+	case mode.IsRegular():
+		break
 	}
 
 	return
@@ -77,6 +92,7 @@ func GetUserHomeDirectory() (userHomeDirectory string) {
 	return
 }
 
+// Prüft Dateiberechtigung
 func checkFilePermission(dir string) (err error) {
 
 	var filename = dir + "permission.test"
@@ -113,6 +129,34 @@ func getFilenameFromPath(path string) (file string) {
 func removeOldSystemData() {
 	// Temporären Ordner löschen
 	os.RemoveAll(System.Folder.Temp)
+}
+
+// Sucht eine Datei im OS
+func searchFileInOS(file string) (path string) {
+
+	switch runtime.GOOS {
+
+	case "linux", "darwin", "freebsd":
+		var args = file
+		var cmd = exec.Command("which", strings.Split(args, " ")...)
+
+		out, err := cmd.CombinedOutput()
+		if err == nil {
+
+			var slice = strings.Split(strings.Replace(string(out), "\r\n", "\n", -1), "\n")
+
+			if len(slice) > 0 {
+				path = strings.Trim(slice[0], "\r\n")
+			}
+
+		}
+
+	default:
+		return
+
+	}
+
+	return
 }
 
 //
@@ -271,6 +315,22 @@ func resolveHostIP() (err error) {
 			} else {
 				System.IPAddressesV6 = append(System.IPAddressesV6, ip)
 			}
+
+		}
+
+	}
+
+	if len(System.IPAddress) == 0 {
+
+		switch len(System.IPAddressesV4) {
+
+		case 0:
+			if len(System.IPAddressesV6) > 0 {
+				System.IPAddress = System.IPAddressesV6[0]
+			}
+
+		default:
+			System.IPAddress = System.IPAddressesV4[0]
 
 		}
 

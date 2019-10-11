@@ -113,11 +113,13 @@ func loadSettings() (settings SettingsStrcut, err error) {
 	defaults["authentication.xml"] = false
 	defaults["backup.keep"] = 10
 	defaults["backup.path"] = System.Folder.Backup
-	defaults["buffer"] = false
+	defaults["buffer"] = "-"
 	defaults["buffer.size.kb"] = 1024
 	defaults["buffer.timeout"] = 500
 	defaults["cache.images"] = false
 	defaults["epgSource"] = "PMS"
+	defaults["ffmpeg.options"] = System.FFmpeg.DefaultOptions
+	defaults["vlc.options"] = System.VLC.DefaultOptions
 	defaults["files"] = dataMap
 	defaults["files.update"] = true
 	defaults["filter"] = make(map[string]interface{})
@@ -159,9 +161,26 @@ func loadSettings() (settings SettingsStrcut, err error) {
 		showInfo(fmt.Sprintf("Git Branch:Switching Git Branch to -> %s", settings.Branch))
 	}
 
+	if len(settings.FFmpegPath) == 0 {
+		settings.FFmpegPath = searchFileInOS("ffmpeg")
+	}
+
+	if len(settings.VLCPath) == 0 {
+		settings.VLCPath = searchFileInOS("cvlc")
+	}
+
 	settings.Version = System.DBVersion
 
 	err = saveSettings(settings)
+
+	// Warung wenn FFmpeg nicht gefunden wurde
+	if len(Settings.FFmpegPath) == 0 && Settings.Buffer == "ffmpeg" {
+		showWarning(2020)
+	}
+
+	if len(Settings.VLCPath) == 0 && Settings.Buffer == "vlc" {
+		showWarning(2021)
+	}
 
 	return
 }

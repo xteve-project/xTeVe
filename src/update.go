@@ -41,8 +41,8 @@ func BinaryUpdate() (err error) {
 
 		resp, err := http.Get(gitInfo)
 		if err != nil {
-			ShowError(err, 0)
-			return err
+			ShowError(err, 6003)
+			return nil
 		}
 
 		if resp.StatusCode != http.StatusOK {
@@ -169,6 +169,13 @@ checkVersion:
 
 	if settingsVersion, ok := settingsMap["version"].(string); ok {
 
+		if settingsVersion > System.DBVersion {
+			showInfo("Settings DB Version:" + settingsVersion)
+			showInfo("System DB Version:" + System.DBVersion)
+			err = errors.New(getErrMsg(1031))
+			return
+		}
+
 		// Letzte Kompatible Version (1.4.4)
 		if settingsVersion < System.Compatibility {
 			err = errors.New(getErrMsg(1013))
@@ -204,10 +211,37 @@ checkVersion:
 			}
 
 		case "2.0.0":
+
+			if oldBuffer, ok := settingsMap["buffer"].(bool); ok {
+
+				var newBuffer string
+				switch oldBuffer {
+				case true:
+					newBuffer = "xteve"
+				case false:
+					newBuffer = "-"
+				}
+
+				settingsMap["buffer"] = newBuffer
+
+				settingsMap["version"] = "2.1.0"
+
+				err = saveMapToJSONFile(System.File.Settings, settingsMap)
+				if err != nil {
+					return
+				}
+
+				goto checkVersion
+
+			} else {
+				err = errors.New(getErrMsg(1030))
+				return
+			}
+
+		case "2.1.0":
 			// Falls es in einem späteren Update Änderungen an der Datenbank gibt, geht es hier weiter
 
 			break
-
 		}
 
 	} else {

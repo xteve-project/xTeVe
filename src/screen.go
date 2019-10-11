@@ -254,12 +254,13 @@ func getErrMsg(errCode int) (errMsg string) {
 	// Datenbank Update
 	case 1030:
 		errMsg = fmt.Sprintf("Invalid settings file (%s)", System.File.Settings)
+	case 1031:
+		errMsg = fmt.Sprintf("Database error. The database version of your settings is not compatible with this version.")
 
 	// M3U Parser
 	case 1050:
 		errMsg = fmt.Sprintf("Invalid duration specification in the M3U8 playlist.")
 
-	// M3U Parser
 	case 1060:
 		errMsg = fmt.Sprintf("Invalid characters found in the tvg parameters, streams with invalid parameters were skipped.")
 
@@ -268,6 +269,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Folder could not be created.")
 	case 1071:
 		errMsg = fmt.Sprintf("File could not be created")
+	case 1072:
+		errMsg = fmt.Sprintf("File not found")
 
 	// Backup
 	case 1090:
@@ -292,6 +295,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Steaming URL could not be found in any playlist")
 	case 1203:
 		errMsg = fmt.Sprintf("Steaming URL could not be found in any playlist")
+	case 1204:
+		errMsg = fmt.Sprintf("Streaming was stopped by third party transcoder (FFmpeg / VLC)")
 
 	// Warnings
 	case 2000:
@@ -308,6 +313,10 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("There are no channels mapped, use the mapping menu to assign EPG data to the channels.")
 	case 2010:
 		errMsg = fmt.Sprintf("No valid streaming URL")
+	case 2020:
+		errMsg = fmt.Sprintf("FFmpeg binary was not found. Check the FFmpeg binary path in the xTeVe settings.")
+	case 2021:
+		errMsg = fmt.Sprintf("VLC binary was not found. Check the VLC path binary in the xTeVe settings.")
 
 	case 2099:
 		errMsg = fmt.Sprintf("Updates have been disabled by the developer")
@@ -347,6 +356,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("This error message comes from the provider")
 	case 4005:
 		errMsg = fmt.Sprintf("Temporary buffer files could not be deleted")
+	case 4006:
+		errMsg = fmt.Sprintf("Server connection timeout")
 
 	// Buffer (M3U8)
 	case 4050:
@@ -370,7 +381,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 6002:
 		errMsg = fmt.Sprintf("Update failed")
 	case 6003:
-		errMsg = fmt.Sprintf("Server not available")
+		errMsg = fmt.Sprintf("Update server not available")
 	case 6004:
 		errMsg = fmt.Sprintf("xTeVe update available")
 

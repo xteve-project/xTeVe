@@ -127,7 +127,7 @@ var Content = /** @class */ (function () {
                         var cell = new Cell();
                         cell.child = true;
                         cell.childType = "P";
-                        if (SERVER["settings"]["buffer"] == true) {
+                        if (SERVER["settings"]["buffer"] != "-") {
                             cell.value = data[key]["tuner"];
                         }
                         else {
@@ -901,7 +901,7 @@ function openPopUp(dataType, element) {
             input.setAttribute("placeholder", "{{.playlist.fileM3U.placeholder}}");
             content.appendRow("{{.playlist.fileM3U.title}}", input);
             // Tuner
-            if (SERVER["settings"]["buffer"] == true) {
+            if (SERVER["settings"]["buffer"] != "-") {
                 var text = new Array();
                 var values = new Array();
                 for (var i = 1; i <= 100; i++) {
@@ -971,7 +971,7 @@ function openPopUp(dataType, element) {
             input.setAttribute("placeholder", "{{.playlist.fileHDHR.placeholder}}");
             content.appendRow("{{.playlist.fileHDHR.title}}", input);
             // Tuner
-            if (SERVER["settings"]["buffer"] == true) {
+            if (SERVER["settings"]["buffer"] != "-") {
                 var text = new Array();
                 var values = new Array();
                 for (var i = 1; i <= 100; i++) {

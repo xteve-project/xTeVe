@@ -22,6 +22,16 @@ type SystemStruct struct {
 	Domain              string
 	DVRLimit            int
 
+	FFmpeg struct {
+		DefaultOptions string
+		Path           string
+	}
+
+	VLC struct {
+		DefaultOptions string
+		Path           string
+	}
+
 	File struct {
 		Authentication string
 		M3U            string
@@ -242,11 +252,15 @@ type SettingsStrcut struct {
 	BackupKeep        int      `json:"backup.keep"`
 	BackupPath        string   `json:"backup.path"`
 	Branch            string   `json:"git.branch,omitempty"`
-	Buffer            bool     `json:"buffer"`
+	Buffer            string   `json:"buffer"`
 	BufferSize        int      `json:"buffer.size.kb"`
 	BufferTimeout     float64  `json:"buffer.timeout"`
 	CacheImages       bool     `json:"cache.images"`
 	EpgSource         string   `json:"epgSource"`
+	FFmpegOptions     string   `json:"ffmpeg.options"`
+	FFmpegPath        string   `json:"ffmpeg.path"`
+	VLCOptions        string   `json:"vlc.options"`
+	VLCPath           string   `json:"vlc.path"`
 	FileM3U           []string `json:"file,omitempty"`  // Beim Wizard wird die M3U in ein Slice gespeichert
 	FileXMLTV         []string `json:"xmltv,omitempty"` // Altes Speichersystem der Provider XML Datei Slice (Wird für die Umwandlung auf das neue benötigt)
 
