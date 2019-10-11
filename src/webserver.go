@@ -129,7 +129,12 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
+	switch Settings.Buffer {
+
+	case "-":
+		showInfo(fmt.Sprintf("Buffer:false", Settings.Buffer))
+
+	case "xteve":
 		if strings.Index(streamInfo.URL, "rtsp://") != -1 || strings.Index(streamInfo.URL, "rtp://") != -1 {
 			err = errors.New("RTSP and RTP streams are not supported")
 			ShowError(err, 2004)
@@ -140,12 +145,9 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 			showInfo("Streaming Info:URL was passed to the client")
 			return
 		}
-	*/
 
-	switch Settings.Buffer {
+		showInfo(fmt.Sprintf("Buffer:true [%s]", Settings.Buffer))
 
-	case "-":
-		showInfo(fmt.Sprintf("Buffer:false", Settings.Buffer))
 	default:
 		showInfo(fmt.Sprintf("Buffer:true [%s]", Settings.Buffer))
 

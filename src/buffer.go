@@ -213,7 +213,7 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 		case "xteve":
 			go connectToStreamingServer(streamID, playlistID)
 		case "ffmpeg", "vlc":
-			go bufferWithFfmpeg(streamID, playlistID)
+			go thirdPartyBuffer(streamID, playlistID)
 
 		default:
 			break
@@ -1273,12 +1273,6 @@ func parseM3U8(stream *ThisStream) (err error) {
 				break
 			}
 
-			err := checkFile(stream.Folder + "remove")
-			if err == nil {
-				os.RemoveAll(stream.Folder)
-				break
-			}
-
 		}
 
 	}
@@ -1338,7 +1332,7 @@ func switchBandwidth(stream *ThisStream) (err error) {
 }
 
 // Buffer mit FFMPEG
-func bufferWithFfmpeg(streamID int, playlistID string) {
+func thirdPartyBuffer(streamID int, playlistID string) {
 
 	if p, ok := BufferInformation.Load(playlistID); ok {
 
@@ -1353,6 +1347,8 @@ func bufferWithFfmpeg(streamID int, playlistID string) {
 
 		var tmpFolder = playlist.Streams[streamID].Folder
 		var url = playlist.Streams[streamID].URL
+
+		stream.Status = false
 
 		bufferType = strings.ToUpper(Settings.Buffer)
 
@@ -1393,6 +1389,14 @@ func bufferWithFfmpeg(streamID int, playlistID string) {
 			return
 		}
 
+		err = checkFile(path)
+		if err != nil {
+			ShowError(err, 0)
+			addErrorToStream(err)
+			return
+		}
+
+		showInfo(fmt.Sprintf("%s path:%s", bufferType, path))
 		showInfo("Streaming URL:" + stream.URL)
 
 		var tmpFile = fmt.Sprintf("%s%d.ts", tmpFolder, tmpSegment)
@@ -1435,6 +1439,7 @@ func bufferWithFfmpeg(streamID int, playlistID string) {
 		}
 
 		cmd.Start()
+		defer cmd.Wait()
 
 		go func() {
 
@@ -1444,7 +1449,7 @@ func bufferWithFfmpeg(streamID int, playlistID string) {
 
 			for scanner.Scan() {
 
-				debug = fmt.Sprintf("%s:%s", bufferType, strings.TrimSpace(scanner.Text()))
+				debug = fmt.Sprintf("%s log:%s", bufferType, strings.TrimSpace(scanner.Text()))
 
 				select {
 				case <-streamStatus:
@@ -1475,7 +1480,7 @@ func bufferWithFfmpeg(streamID int, playlistID string) {
 
 			var timeout = 0
 			for {
-				time.Sleep(time.Duration(100) * time.Millisecond)
+				time.Sleep(time.Duration(1000) * time.Millisecond)
 				timeout++
 
 				select {
@@ -1545,9 +1550,11 @@ func bufferWithFfmpeg(streamID int, playlistID string) {
 				f.Close()
 				tmpSegment++
 
-				stream.Status = true
-				playlist.Streams[streamID] = stream
-				BufferInformation.Store(playlistID, playlist)
+				if stream.Status == false {
+					stream.Status = true
+					playlist.Streams[streamID] = stream
+					BufferInformation.Store(playlistID, playlist)
+				}
 
 				tmpFile = fmt.Sprintf("%s%d.ts", tmpFolder, tmpSegment)
 

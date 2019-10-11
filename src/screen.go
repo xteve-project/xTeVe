@@ -261,7 +261,6 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1050:
 		errMsg = fmt.Sprintf("Invalid duration specification in the M3U8 playlist.")
 
-	// M3U Parser
 	case 1060:
 		errMsg = fmt.Sprintf("Invalid characters found in the tvg parameters, streams with invalid parameters were skipped.")
 
@@ -270,6 +269,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Folder could not be created.")
 	case 1071:
 		errMsg = fmt.Sprintf("File could not be created")
+	case 1072:
+		errMsg = fmt.Sprintf("File not found")
 
 	// Backup
 	case 1090:

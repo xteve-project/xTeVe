@@ -45,13 +45,25 @@ func checkFolder(path string) (err error) {
 	return nil
 }
 
-// Prüft ob die datei im Dateisystem existiert
+// Prüft ob die Datei im Dateisystem existiert
 func checkFile(filename string) (err error) {
 
 	var file = getPlatformFile(filename)
 
 	if _, err = os.Stat(file); os.IsNotExist(err) {
-		return
+		return err
+	}
+
+	fi, err := os.Stat(file)
+	if err != nil {
+		return err
+	}
+
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		err = fmt.Errorf("%s: %s", file, getErrMsg(1072))
+	case mode.IsRegular():
+		break
 	}
 
 	return

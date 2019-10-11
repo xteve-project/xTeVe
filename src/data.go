@@ -503,8 +503,20 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 	if System.ScanInProgress == 0 {
 
+		System.ScanInProgress = 1
 		cleanupXEPG()
-		buildXEPG(true)
+		//buildXEPG(true)
+
+		go func() {
+
+			createXMLTVFile()
+			createM3UFile()
+			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
+			go cachingImages()
+
+			System.ScanInProgress = 0
+
+		}()
 
 	} else {
 
@@ -525,8 +537,17 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 			}
 
+			System.ScanInProgress = 1
+
 			cleanupXEPG()
-			buildXEPG(false)
+			//buildXEPG(false)
+
+			createXMLTVFile()
+			createM3UFile()
+			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
+			go cachingImages()
+
+			System.ScanInProgress = 0
 
 			System.BackgroundProcess = false
 
