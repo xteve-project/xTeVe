@@ -316,11 +316,6 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 	var newToken string
 
-	if r.Header.Get("Origin") != "http://"+r.Host {
-		httpStatusError(w, r, 403)
-		return
-	}
-
 	conn, err := websocket.Upgrade(w, r, w.Header(), 1024, 1024)
 	if err != nil {
 		ShowError(err, 0)
