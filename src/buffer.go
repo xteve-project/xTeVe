@@ -228,7 +228,7 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 	}
 
-	w.WriteHeader(200)
+	//w.WriteHeader(200)
 
 	for { // Loop 1: Warten bis das erste Segment durch den Buffer heruntergeladen wurde
 
@@ -330,10 +330,10 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 									if streaming == false {
 
-										contentType := http.DetectContentType(buffer)
-										_ = contentType
+										contentType := http.DetectContentType(buffer) + "; name=stream.ts"
+										//_ = contentType
 										//w.Header().Set("Content-type", "video/mpeg")
-										w.Header().Set("Content-type", contentType)
+										w.Header().Add("Content-type", contentType)
 										w.Header().Set("Content-Length", "0")
 										w.Header().Set("Connection", "close")
 
@@ -346,6 +346,7 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 										w.Header().Set("transferMode.dlna.org", "Streaming")
 									*/
 
+									w.WriteHeader(200)
 									_, err := w.Write(buffer)
 
 									if err != nil {
