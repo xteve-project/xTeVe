@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"../src/internal/authentication"
+	"github.com/xteve-project/xTeVe/src/internal/authentication"
 )
 
 // Einstellungen ändern (WebUI)

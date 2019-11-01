@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"../src/internal/authentication"
+	"github.com/xteve-project/xTeVe/src/internal/authentication"
 )
 
 func activatedSystemAuthentication() (err error) {

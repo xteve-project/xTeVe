@@ -126,15 +126,9 @@ When the branch is changed, an update is only performed if there is a new versio
 
 #### Build
 1. Download source code
-2. Install dependencies
+2. Build xTeVe (make sure git is installed)
 ```
-go get github.com/koron/go-ssdp
-go get github.com/gorilla/websocket
-go get github.com/kardianos/osext
-```
-3. Build xTeVe
-```
-go build xteve.go
+go build
 ```
 
 ---
