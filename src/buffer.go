@@ -261,7 +261,9 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 				var oldSegments []string
 
 				for { // Loop 2: Temporäre Datein sind vorhanden, Daten können zum Client gesendet werden
+
 					// HTTP Clientverbindung überwachen
+
 					cn, ok := w.(http.CloseNotifier)
 					if ok {
 
@@ -449,6 +451,9 @@ func getTmpFiles(stream *ThisStream) (tmpFiles []string) {
 
 func killClientConnection(streamID int, playlistID string, force bool) {
 
+	Lock.Lock()
+	defer Lock.Unlock()
+
 	if p, ok := BufferInformation.Load(playlistID); ok {
 
 		var playlist = p.(Playlist)
@@ -493,6 +498,8 @@ func killClientConnection(streamID int, playlistID string, force bool) {
 func clientConnection(stream ThisStream) (status bool) {
 
 	status = true
+	Lock.Lock()
+	defer Lock.Unlock()
 
 	if _, ok := BufferClients.Load(stream.PlaylistID + stream.MD5); !ok {
 
@@ -901,6 +908,8 @@ func connectToStreamingServer(streamID int, playlistID string) {
 					// Buffer auf die Festplatte speichern
 					if fileSize >= tmpFileSize/2 || n == 0 {
 
+						Lock.Lock()
+
 						bandwidth.Stop = time.Now()
 						bandwidth.Size += fileSize
 
@@ -919,6 +928,7 @@ func connectToStreamingServer(streamID int, playlistID string) {
 						stream.Status = true
 						playlist.Streams[streamID] = stream
 						BufferInformation.Store(playlistID, playlist)
+						Lock.Unlock()
 
 						tmpSegment++
 
@@ -1551,9 +1561,11 @@ func thirdPartyBuffer(streamID int, playlistID string) {
 				tmpSegment++
 
 				if stream.Status == false {
+					Lock.Lock()
 					stream.Status = true
 					playlist.Streams[streamID] = stream
 					BufferInformation.Store(playlistID, playlist)
+					Lock.Unlock()
 				}
 
 				tmpFile = fmt.Sprintf("%s%d.ts", tmpFolder, tmpSegment)

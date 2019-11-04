@@ -29,6 +29,9 @@ var BufferInformation sync.Map
 // BufferClients : Anzahl der Clients die einen Stream über den Buffer abspielen
 var BufferClients sync.Map
 
+// Lock : Lock Map
+var Lock = sync.RWMutex{}
+
 // Init : Systeminitialisierung
 func Init() (err error) {
 
