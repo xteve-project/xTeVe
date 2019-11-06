@@ -31,7 +31,7 @@ Documentation for setup and configuration is [here](https://github.com/xteve-pro
 * Merge external M3U files
 * Merge external XMLTV files
 * Automatic M3U and XMLTV update
-* M3U und XMLTV export
+* M3U and XMLTV export
 
 #### Channel management
 * Filtering streams
@@ -84,7 +84,7 @@ Including:
 ---
 
 ### xTeVe Beta branch
-New features and bug fixes are only available in beta brunch. Only after successful testing, they are merged into the master branch.
+New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the master branch.
 
 **It is not recommended to use the beta version in a production system.**  
 
