@@ -1,3 +1,8 @@
+#### 2.1.0.0101-beta
+```diff
++ Reverse proxy fix
+```
+
 #### 2.0.3.0042-beta
 **Version 2.0.3.0042 changes the settings.json.**  
 Settings from the current beta can not be used for the current master version 2.0.3  
