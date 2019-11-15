@@ -509,6 +509,7 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 		go func() {
 
+			mapping()
 			createXMLTVFile()
 			createM3UFile()
 			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
@@ -541,7 +542,7 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 			cleanupXEPG()
 			//buildXEPG(false)
-
+			mapping()
 			createXMLTVFile()
 			createM3UFile()
 			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
