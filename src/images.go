@@ -45,7 +45,7 @@ func getCacheImageURL(imageURL string) (cacheImageURL string) {
 
   if indexOfString(urlMD5+fileExtension, Data.Cache.ImagesCache) != -1 {
 
-    cacheImageURL = fmt.Sprintf("%s://%s/images/%s%s", System.ServerProtocol.WEB, System.Domain, urlMD5, fileExtension)
+    cacheImageURL = fmt.Sprintf("%s://%s/images/%s%s", System.ServerProtocol.XML, System.Domain, urlMD5, fileExtension)
 
   } else {
 
@@ -163,7 +163,7 @@ func uploadLogo(input, filename string) (logoURL string, err error) {
     return
   }
 
-  logoURL = fmt.Sprintf("%s://%s/data_images/%s", System.ServerProtocol.WEB, System.Domain, filename)
+  logoURL = fmt.Sprintf("%s://%s/data_images/%s", System.ServerProtocol.XML, System.Domain, filename)
 
   return
 

@@ -305,6 +305,30 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "scheme.m3u":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.schemeM3U.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var text = ["HTTP", "HTTPS"];
+                var values = ["HTTP", "HTTPS"];
+                var select = content.createSelect(text, values, data, settingsKey);
+                select.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(select);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "scheme.xml":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.schemeXML.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var text = ["HTTP", "HTTPS"];
+                var values = ["HTTP", "HTTPS"];
+                var select = content.createSelect(text, values, data, settingsKey);
+                select.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(select);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
         }
         return setting;
     };
@@ -385,6 +409,12 @@ var SettingsCategory = /** @class */ (function () {
                 break;
             case "xepg.replace.missing.images":
                 text = "{{.settings.replaceEmptyImages.description}}";
+                break;
+            case "scheme.m3u":
+                text = "{{.settings.schemeM3U.description}}";
+                break;
+            case "scheme.xml":
+                text = "{{.settings.schemeXML.description}}";
                 break;
             default:
                 text = "";

@@ -302,6 +302,14 @@
       "title": "Number of Tuners",
       "description": "Number of parallel connections that can be established to the provider.<br>Available for: Plex, Emby (HDHR), M3U (with active buffer).<br>After a change, xTeVe must be delete in the Plex / Emby DVR settings and set up again."
     },
+    "schemeM3U":{
+      "title": "URL protocol for xteve.m3u",
+      "description": "Determines which URL protocol is used for the xTeVe streaming URLs. If you using a reverse proxy over HTTPS, set this to HTTPS."
+    },
+    "schemeXML":{
+      "title": "URL protocol for xteve.xml",
+      "description": "Determines which URL protocol is used for the xTeVe image URLs. If you using a reverse proxy over HTTPS, set this to HTTPS."
+    },
     "filesUpdate": {
       "title": "Updates all files at startup",
       "description": "Updates all playlists, tuner and XMLTV files at startup."

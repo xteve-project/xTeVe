@@ -717,6 +717,9 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Live
 			program.Live = xmltvProgram.Live
 
+			// Premiere
+			program.Premiere = xmltvProgram.Premiere
+
 			xepgXML.Program = append(xepgXML.Program, program)
 
 		}

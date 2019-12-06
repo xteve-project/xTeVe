@@ -48,6 +48,7 @@ type Program struct {
 	PreviouslyShown *PreviouslyShown `xml:"previously-shown"`
 	New             *New             `xml:"new"`
 	Live            *Live            `xml:"live"`
+	Premiere        *Live            `xml:"premiere"`
 }
 
 // Title : Programmtitel
