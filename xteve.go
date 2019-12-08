@@ -39,7 +39,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.1.0.0105"
+const Version = "2.1.0.0106"
 
 // DBVersion : Datanbank Version
 const DBVersion = "2.1.0"
@@ -48,7 +48,7 @@ const DBVersion = "2.1.0"
 const APIVersion = "1.1.0"
 
 // Dev : Aktiviert den Entwicklungsmodus. Für den Webserver werden dann die lokalen Dateien verwendet.
-const Dev = true
+const Dev = false
 
 var homeDirectory = fmt.Sprintf("%s%s.%s%s", src.GetUserHomeDirectory(), string(os.PathSeparator), strings.ToLower(Name), string(os.PathSeparator))
 var samplePath = fmt.Sprintf("%spath%sto%sxteve%s", string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator))
