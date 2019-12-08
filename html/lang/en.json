@@ -366,7 +366,7 @@
     },
     "userAgent": {
       "title": "User Agent",
-      "description": "User Agent for HTTP requests. Only used if xTeVe is selected as the buffer.",
+      "description": "User Agent for HTTP requests. For every HTTP connection, this value is used for the user agent. Should only be changed if xTeVe is blocked.",
       "placeholder": "xTeVe"
     },
     "backupPath": {

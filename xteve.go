@@ -48,7 +48,7 @@ const DBVersion = "2.1.0"
 const APIVersion = "1.1.0"
 
 // Dev : Aktiviert den Entwicklungsmodus. Für den Webserver werden dann die lokalen Dateien verwendet.
-const Dev = false
+const Dev = true
 
 var homeDirectory = fmt.Sprintf("%s%s.%s%s", src.GetUserHomeDirectory(), string(os.PathSeparator), strings.ToLower(Name), string(os.PathSeparator))
 var samplePath = fmt.Sprintf("%spath%sto%sxteve%s", string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator))

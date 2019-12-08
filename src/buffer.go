@@ -1418,8 +1418,38 @@ func thirdPartyBuffer(streamID int, playlistID string) {
 			return
 		}
 
-		var args = strings.Replace(options, "[URL]", url, -1)
-		var cmd = exec.Command(path, strings.Split(args, " ")...)
+		//args = strings.Replace(args, "[USER-AGENT]", Settings.UserAgent, -1)
+
+		// User-Agent setzen
+		var args []string
+
+		for i, a := range strings.Split(options, " ") {
+
+			fmt.Println(a)
+			switch bufferType {
+			case "FFMPEG":
+				a = strings.Replace(a, "[URL]", url, -1)
+				if i == 0 {
+					args = []string{"-user-agent", Settings.UserAgent}
+				}
+
+				args = append(args, a)
+
+			case "VLC":
+				if a == "[URL]" {
+					a = strings.Replace(a, "[URL]", url, -1)
+					args = append(args, a)
+					args = append(args, fmt.Sprintf(":http-user-agent=%s", Settings.UserAgent))
+
+				} else {
+					args = append(args, a)
+				}
+
+			}
+
+		}
+
+		var cmd = exec.Command(path, args...)
 
 		debug = fmt.Sprintf("%s:%s %s", bufferType, path, args)
 		showDebug(debug, 1)
