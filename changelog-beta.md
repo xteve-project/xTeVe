@@ -1,3 +1,8 @@
+#### 2.1.0.0106-beta
+```diff
++ User-Agent is now also used by VLC and FFmpeg.
+```
+
 #### 2.1.0.0105-beta
 ```diff
 + Fixed wrong buffer value in log
