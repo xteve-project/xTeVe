@@ -1253,6 +1253,12 @@ function openPopUp(dataType, element) {
             }
             content.appendRow("{{.mapping.channelName.title}}", input);
             content.description(data["name"]);
+            // Beschreibung 
+            var dbKey = "x-description";
+            var input = content.createInput("text", dbKey, data[dbKey]);
+            input.setAttribute("placeholder", "{{.mapping.description.placeholder}}");
+            input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            content.appendRow("{{.mapping.description.title}}", input);
             // Aktualisierung des Kanalnamens
             if (data.hasOwnProperty("_uuid.key")) {
                 if (data["_uuid.key"] != "") {

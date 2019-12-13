@@ -1425,7 +1425,6 @@ func thirdPartyBuffer(streamID int, playlistID string) {
 
 		for i, a := range strings.Split(options, " ") {
 
-			fmt.Println(a)
 			switch bufferType {
 			case "FFMPEG":
 				a = strings.Replace(a, "[URL]", url, -1)

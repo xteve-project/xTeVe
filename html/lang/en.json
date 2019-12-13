@@ -190,6 +190,11 @@
       "placeholder": "",
       "description": ""      
     },
+    "description": {
+      "title": "Channel Description",
+      "placeholder": "Used by the Dummy as an XML description",
+      "description": ""      
+    },
     "updateChannelName": {
       "title": "Update Channel Name",
       "placeholder": "",
