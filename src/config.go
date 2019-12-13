@@ -29,6 +29,9 @@ var BufferInformation sync.Map
 // BufferClients : Anzahl der Clients die einen Stream über den Buffer abspielen
 var BufferClients sync.Map
 
+// Lock : Lock Map
+var Lock = sync.RWMutex{}
+
 // Init : Systeminitialisierung
 func Init() (err error) {
 
@@ -219,6 +222,8 @@ func StartSystem(updateProviderFiles bool) (err error) {
 	if System.ScanInProgress == 1 {
 		return
 	}
+
+	setURLScheme()
 
 	// Systeminformationen in der Konsole ausgeben
 	showInfo(fmt.Sprintf("UUID:%s", Settings.UUID))

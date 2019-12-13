@@ -107,6 +107,9 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 
 				}
 
+			case "scheme.m3u", "scheme.xml":
+				createXEPGFiles = true
+
 			}
 
 			oldSettings[key] = value
@@ -140,6 +143,8 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 	if err != nil {
 		return
 	}
+
+	setURLScheme()
 
 	if Settings.AuthenticationWEB == false {
 
@@ -505,7 +510,7 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 		System.ScanInProgress = 1
 		cleanupXEPG()
-		//buildXEPG(true)
+		buildXEPG(true)
 
 		go func() {
 
@@ -540,8 +545,7 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 			System.ScanInProgress = 1
 
 			cleanupXEPG()
-			//buildXEPG(false)
-
+			buildXEPG(false)
 			createXMLTVFile()
 			createM3UFile()
 			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))

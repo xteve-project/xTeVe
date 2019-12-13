@@ -132,7 +132,7 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 	switch Settings.Buffer {
 
 	case "-":
-		showInfo(fmt.Sprintf("Buffer:false", Settings.Buffer))
+		showInfo(fmt.Sprintf("Buffer:false [%s]", Settings.Buffer))
 
 	case "xteve":
 		if strings.Index(streamInfo.URL, "rtsp://") != -1 || strings.Index(streamInfo.URL, "rtp://") != -1 {
@@ -316,10 +316,12 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 	var newToken string
 
-	if r.Header.Get("Origin") != "http://"+r.Host {
-		httpStatusError(w, r, 403)
-		return
-	}
+	/*
+		if r.Header.Get("Origin") != "http://"+r.Host {
+			httpStatusError(w, r, 403)
+			return
+		}
+	*/
 
 	conn, err := websocket.Upgrade(w, r, w.Header(), 1024, 1024)
 	if err != nil {

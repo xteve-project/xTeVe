@@ -187,6 +187,7 @@ type XEPGChannelStruct struct {
 	XName              string `json:"x-name,required"`
 	XUpdateChannelIcon bool   `json:"x-update-channel-icon,required"`
 	XUpdateChannelName bool   `json:"x-update-channel-name,required"`
+	XDescription       string `json:"x-description,required"`
 }
 
 // M3UChannelStructXEPG : M3U Struktur für XEPG
@@ -279,6 +280,8 @@ type SettingsStrcut struct {
 	MappingFirstChannel       float64               `json:"mapping.first.channel"`
 	Port                      string                `json:"port"`
 	SSDP                      bool                  `json:"ssdp"`
+	SchemeM3U                 string                `json:"scheme.m3u"`
+	SchemeXML                 string                `json:"scheme.xml"`
 	TempPath                  string                `json:"temp.path"`
 	Tuner                     int                   `json:"tuner"`
 	Update                    []string              `json:"update"`
