@@ -1,8 +1,8 @@
 package src
 
 /*
-	Tuner-Limit Bild als Video rendern [ffmpeg]
-	-loop 1 -i stream-limit.jpg -c:v libx264 -t 1 -pix_fmt yuv420p -vf scale=1920:1080  stream-limit.ts
+  Tuner-Limit Bild als Video rendern [ffmpeg]
+  -loop 1 -i stream-limit.jpg -c:v libx264 -t 1 -pix_fmt yuv420p -vf scale=1920:1080  stream-limit.ts
 */
 
 import (
@@ -228,7 +228,7 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 	}
 
-	//w.WriteHeader(200)
+	w.WriteHeader(200)
 
 	for { // Loop 1: Warten bis das erste Segment durch den Buffer heruntergeladen wurde
 
@@ -332,23 +332,22 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 									if streaming == false {
 
-										contentType := http.DetectContentType(buffer) + "; name=stream.ts"
-										//_ = contentType
+										contentType := http.DetectContentType(buffer)
+										_ = contentType
 										//w.Header().Set("Content-type", "video/mpeg")
-										w.Header().Add("Content-type", contentType)
+										w.Header().Set("Content-type", contentType)
 										w.Header().Set("Content-Length", "0")
 										w.Header().Set("Connection", "close")
 
 									}
 
 									/*
-										// HDHR Header
-										w.Header().Set("Cache-Control", "no-cache")
-										w.Header().Set("Pragma", "no-cache")
-										w.Header().Set("transferMode.dlna.org", "Streaming")
+									   // HDHR Header
+									   w.Header().Set("Cache-Control", "no-cache")
+									   w.Header().Set("Pragma", "no-cache")
+									   w.Header().Set("transferMode.dlna.org", "Streaming")
 									*/
 
-									w.WriteHeader(200)
 									_, err := w.Write(buffer)
 
 									if err != nil {
