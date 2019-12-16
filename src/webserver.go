@@ -216,7 +216,6 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 	// XMLTV Datei
 	if strings.Contains(path, "xmltv/") {
 
-		w.Header().Set("Content-Type", "application/xml")
 		requestType = "xml"
 
 		file = System.Folder.Data + getFilenameFromPath(path)
@@ -226,6 +225,8 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 			httpStatusError(w, r, 404)
 			return
 		}
+
+		w.Header().Set("Content-Type", http.DetectContentType([]byte(content)))
 
 	}
 

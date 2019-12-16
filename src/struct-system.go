@@ -42,6 +42,10 @@ type SystemStruct struct {
 		XML            string
 	}
 
+	Compressed struct {
+		GZxml string
+	}
+
 	Flag struct {
 		Branch  string
 		Debug   int

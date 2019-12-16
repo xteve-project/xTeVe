@@ -641,9 +641,10 @@ func createXMLTVFile() (err error) {
 	var xmlOutput = []byte(xml.Header + string(content))
 	writeByteToFile(System.File.XML, xmlOutput)
 
-	xepgXML = XMLTV{}
+	showInfo("XEPG:" + fmt.Sprintf("Compress XMLTV file (%s)", System.Compressed.GZxml))
+	err = compressGZIP(&xmlOutput, System.Compressed.GZxml)
 
-	//saveMapToJSONFile(System.File.Images, Data.Cache.ImageCache)
+	xepgXML = XMLTV{}
 
 	return
 }
