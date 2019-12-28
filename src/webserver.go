@@ -206,7 +206,7 @@ func Auto(w http.ResponseWriter, r *http.Request) {
 // xTeVe : Web Server /xmltv/ und /m3u/
 func xTeVe(w http.ResponseWriter, r *http.Request) {
 
-	var requestType, groupTitle, file, content string
+	var requestType, groupTitle, file, content, contentType string
 	var err error
 	var path = strings.TrimPrefix(r.URL.Path, "/")
 	var groups = []string{}
@@ -225,8 +225,6 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 			httpStatusError(w, r, 404)
 			return
 		}
-
-		w.Header().Set("Content-Type", http.DetectContentType([]byte(content)))
 
 	}
 
@@ -260,6 +258,13 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 		httpStatusError(w, r, 403)
 		return
 	}
+
+	contentType = http.DetectContentType([]byte(content))
+	if strings.Contains(strings.ToLower(contentType), "xml") {
+		contentType = "application/xml; charset=utf-8"
+	}
+
+	w.Header().Set("Content-Type", contentType)
 
 	if err == nil {
 		w.Write([]byte(content))
