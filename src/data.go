@@ -56,6 +56,10 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 
 				}
 
+				if len(newUpdateTimes) == 0 {
+					newUpdateTimes = append(newUpdateTimes, "0000")
+				}
+
 				value = newUpdateTimes
 
 			case "cache.images":
@@ -143,8 +147,6 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 	if err != nil {
 		return
 	}
-
-	setURLScheme()
 
 	if Settings.AuthenticationWEB == false {
 

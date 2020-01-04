@@ -225,8 +225,6 @@ func StartSystem(updateProviderFiles bool) (err error) {
 		return
 	}
 
-	setURLScheme()
-
 	// Systeminformationen in der Konsole ausgeben
 	showInfo(fmt.Sprintf("UUID:%s", Settings.UUID))
 	showInfo(fmt.Sprintf("Tuner (Plex / Emby):%d", Settings.Tuner))

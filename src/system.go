@@ -138,8 +138,6 @@ func loadSettings() (settings SettingsStrcut, err error) {
 	defaults["version"] = System.DBVersion
 	defaults["xteveAutoUpdate"] = true
 	defaults["temp.path"] = System.Folder.Temp
-	defaults["scheme.M3U"] = "HTTP"
-	defaults["scheme.XML"] = "HTTP"
 
 	// Default Werte setzen
 	for key, value := range defaults {
@@ -250,14 +248,6 @@ func setGlobalDomain(domain string) {
 		System.Addresses.M3U = getErrMsg(2106)
 		System.Addresses.XML = getErrMsg(2106)
 	}
-
-	return
-}
-
-func setURLScheme() {
-
-	System.ServerProtocol.M3U = strings.ToLower(Settings.SchemeM3U)
-	System.ServerProtocol.XML = strings.ToLower(Settings.SchemeXML)
 
 	return
 }

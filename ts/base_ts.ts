@@ -21,8 +21,7 @@ menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.p
 
 // Kategorien für die Einstellungen
 var settingsCategory = new Array()
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "xteveAutoUpdate,tuner,epgSource,api,scheme.m3u,scheme.xml"))
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "xteveAutoUpdate,tuner,epgSource,api"));settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,buffer.size.kb,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.backup}}", "backup.path,backup.keep"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.authentication}}", "authentication.web,authentication.pms,authentication.m3u,authentication.xml,authentication.api"))
