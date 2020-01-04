@@ -585,6 +585,8 @@ func Web(w http.ResponseWriter, r *http.Request) {
 
 	var language LanguageUI
 
+	setGlobalDomain(r.Host)
+
 	if System.Dev == true {
 
 		lang, err = loadJSONFileToMap(fmt.Sprintf("html/lang/%s.json", Settings.Language))
