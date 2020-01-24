@@ -1429,7 +1429,9 @@ func thirdPartyBuffer(streamID int, playlistID string) {
 			case "FFMPEG":
 				a = strings.Replace(a, "[URL]", url, -1)
 				if i == 0 {
-					args = []string{"-user-agent", Settings.UserAgent}
+					if len(Settings.UserAgent) != 0 {
+						args = []string{"-user-agent", Settings.UserAgent}
+					}
 				}
 
 				args = append(args, a)
@@ -1438,7 +1440,10 @@ func thirdPartyBuffer(streamID int, playlistID string) {
 				if a == "[URL]" {
 					a = strings.Replace(a, "[URL]", url, -1)
 					args = append(args, a)
-					args = append(args, fmt.Sprintf(":http-user-agent=%s", Settings.UserAgent))
+
+					if len(Settings.UserAgent) != 0 {
+						args = append(args, fmt.Sprintf(":http-user-agent=%s", Settings.UserAgent))
+					}
 
 				} else {
 					args = append(args, a)
