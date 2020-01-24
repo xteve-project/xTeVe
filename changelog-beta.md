@@ -1,3 +1,6 @@
+#### 2.1.1.0116-beta
+If no user agent is specified, the default FFmpeg or VLC user agent is used.
+
 #### 2.1.1.0115-beta
 ```diff
 + GZIP compression for xteve.xml file. (http://xteve.ip:34400/xmltv/xteve.xml.gz)
