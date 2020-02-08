@@ -1430,7 +1430,7 @@ func thirdPartyBuffer(streamID int, playlistID string) {
 				a = strings.Replace(a, "[URL]", url, -1)
 				if i == 0 {
 					if len(Settings.UserAgent) != 0 {
-						args = []string{"-user-agent", Settings.UserAgent}
+						args = []string{"-user_agent", Settings.UserAgent}
 					}
 				}
 
