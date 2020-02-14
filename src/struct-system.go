@@ -42,6 +42,10 @@ type SystemStruct struct {
 		XML            string
 	}
 
+	Compressed struct {
+		GZxml string
+	}
+
 	Flag struct {
 		Branch  string
 		Debug   int
@@ -280,8 +284,6 @@ type SettingsStrcut struct {
 	MappingFirstChannel       float64               `json:"mapping.first.channel"`
 	Port                      string                `json:"port"`
 	SSDP                      bool                  `json:"ssdp"`
-	SchemeM3U                 string                `json:"scheme.m3u"`
-	SchemeXML                 string                `json:"scheme.xml"`
 	TempPath                  string                `json:"temp.path"`
 	Tuner                     int                   `json:"tuner"`
 	Update                    []string              `json:"update"`
