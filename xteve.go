@@ -39,7 +39,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.1.1.0117"
+const Version = "2.1.2.0120"
 
 // DBVersion : Datanbank Version
 const DBVersion = "2.1.0"
