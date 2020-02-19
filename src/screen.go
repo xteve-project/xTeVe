@@ -232,7 +232,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1004:
 		errMsg = fmt.Sprintf("File not found")
 	case 1005:
-		errMsg = fmt.Sprintf("Invalide m3u")
+		errMsg = fmt.Sprintf("Invalid M3U file, an extended M3U file is required.")
 	case 1006:
 		errMsg = fmt.Sprintf("No playlist!")
 	case 1007:
