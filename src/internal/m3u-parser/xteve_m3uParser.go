@@ -163,7 +163,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
   } else {
 
-    err = errors.New("No valid m3u file")
+    err = errors.New("Invalid M3U file, an extended M3U file is required.")
 
   }
 
