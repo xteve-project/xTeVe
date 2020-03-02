@@ -333,6 +333,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ShowError(err, 0)
 		http.Error(w, "Could not open websocket connection", http.StatusBadRequest)
+		return
 	}
 
 	setGlobalDomain(r.Host)
