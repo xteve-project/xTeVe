@@ -153,22 +153,20 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 				showInfo(fmt.Sprintf("Streaming Status:Playlist: %s - No new connections available. Tuner = %d", playlist.PlaylistName, playlist.Tuner))
 
-				if value, ok := webUI["html/video/stream-limit.ts"]; ok {
-
-					var content string
-					content = GetHTMLString(value.(string))
-
-					w.WriteHeader(200)
-					w.Header().Set("Content-type", "video/mpeg")
-					w.Header().Set("Content-Length:", "0")
-
-					for i := 1; i < 60; i++ {
-						_ = i
-						w.Write([]byte(content))
-						time.Sleep(time.Duration(500) * time.Millisecond)
-					}
-
+				value, err := FSString(System.Dev, "/html/video/stream-limit.ts")
+				if err != nil {
+					ShowError(err, 0)
 					return
+				}
+
+				w.WriteHeader(200)
+				w.Header().Set("Content-type", "video/mpeg")
+				w.Header().Set("Content-Length:", "0")
+
+				for i := 1; i < 60; i++ {
+					_ = i
+					w.Write([]byte(value))
+					time.Sleep(time.Duration(500) * time.Millisecond)
 				}
 
 				return

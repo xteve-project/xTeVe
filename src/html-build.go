@@ -31,28 +31,6 @@ func HTMLInit(name, pkg, folder, file string) {
 
 }
 
-// BuildGoFile : Erstellt das GO Dokument
-func BuildGoFile() error {
-
-	var err = checkHTMLFile(htmlFolder)
-
-	if err != nil {
-		return err
-	}
-
-	var content string
-	content += `package ` + packageName + "\n\n"
-	content += `var ` + mapName + ` = make(map[string]interface{})` + "\n\n"
-	content += "func loadHTMLMap() {" + "\n\n"
-
-	content += createMapFromFiles(htmlFolder) + "\n"
-
-	content += "}" + "\n\n"
-	writeStringToFile(goFile, content)
-
-	return nil
-}
-
 // GetHTMLString : base64 -> string
 func GetHTMLString(base string) string {
 	content, _ := base64.StdEncoding.DecodeString(base)

@@ -586,7 +586,7 @@ func Web(w http.ResponseWriter, r *http.Request) {
 	var lang = make(map[string]interface{})
 	var err error
 
-	var requestFile = strings.Replace(r.URL.Path, "/web", "html", -1)
+	var requestFile = strings.Replace(r.URL.Path, "/web", "/html", -1)
 	var content, contentType, file string
 
 	var language LanguageUI
@@ -595,19 +595,21 @@ func Web(w http.ResponseWriter, r *http.Request) {
 
 	if System.Dev == true {
 
-		lang, err = loadJSONFileToMap(fmt.Sprintf("html/lang/%s.json", Settings.Language))
+		lang, err = loadJSONFileToMap(fmt.Sprintf("/html/lang/%s.json", Settings.Language))
 		if err != nil {
 			ShowError(err, 000)
 		}
 
 	} else {
 
-		var languageFile = "html/lang/en.json"
+		var languageFile = "/html/lang/en.json"
 
-		if value, ok := webUI[languageFile].(string); ok {
-			content = GetHTMLString(value)
-			lang = jsonToMap(content)
+		content, err := FSString(System.Dev, languageFile)
+		if err != nil {
+			ShowError(err, 000)
+			return
 		}
+		lang = jsonToMap(content)
 
 	}
 
@@ -724,37 +726,30 @@ func Web(w http.ResponseWriter, r *http.Request) {
 
 		requestFile = file
 
-		if value, ok := webUI[requestFile]; ok {
-
-			content = GetHTMLString(value.(string))
-
-			if contentType == "text/plain" {
-				w.Header().Set("Content-Disposition", "attachment; filename="+getFilenameFromPath(requestFile))
-			}
-
-		} else {
-
+		if content, err = FSString(System.Dev, requestFile); err != nil {
+			ShowError(err, 000)
 			httpStatusError(w, r, 404)
 			return
 		}
 
-	}
-
-	if value, ok := webUI[requestFile].(string); ok {
-
-		content = GetHTMLString(value)
 		contentType = getContentType(requestFile)
-
 		if contentType == "text/plain" {
 			w.Header().Set("Content-Disposition", "attachment; filename="+getFilenameFromPath(requestFile))
 		}
 
-	} else {
+	}
+
+	if content, err = FSString(System.Dev, requestFile); err != nil {
+		ShowError(err, 000)
 		httpStatusError(w, r, 404)
 		return
 	}
 
 	contentType = getContentType(requestFile)
+
+	if contentType == "text/plain" {
+		w.Header().Set("Content-Disposition", "attachment; filename="+getFilenameFromPath(requestFile))
+	}
 
 	if System.Dev == true {
 		// Lokale Webserver Dateien werden geladen, nur für die Entwicklung
