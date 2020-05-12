@@ -22,7 +22,7 @@ menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.p
 // Kategorien für die Einstellungen
 var settingsCategory = new Array()
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "xteveAutoUpdate,tuner,epgSource,api"));settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"))
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,buffer.size.kb,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,udpxy,buffer.size.kb,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.backup}}", "backup.path,backup.keep"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.authentication}}", "authentication.web,authentication.pms,authentication.m3u,authentication.xml,authentication.api"))
 
@@ -408,7 +408,7 @@ function changeChannelNumber(element) {
   })
 
   for (var i = 0; i < channelNumbers.length; i++) {
-     
+
     if (channelNumbers.indexOf(newNumber) == -1) {
       break
     }
@@ -422,7 +422,7 @@ function changeChannelNumber(element) {
     }
 
   }
- 
+
   data[dbID]["x-channelID"] = newNumber.toString()
   element.value = newNumber
 
@@ -461,7 +461,7 @@ function toggleChannelStatus(id:string) {
     var checkbox = (document.getElementById("active") as HTMLInputElement)
     status = (checkbox).checked
   }
-  
+
 
   var ids:string[] = getAllSelectedChannels()
   if (ids.length == 0) {
@@ -482,9 +482,9 @@ function toggleChannelStatus(id:string) {
             alert(channel["x-name"] + ": Missing XMLTV file / channel")
             checkbox.checked = false
           }
-          
+
           channel["x-active"] = false
-        
+
         }
 
         break
@@ -621,9 +621,9 @@ function checkUndo(key:string) {
         UNDO[key] = JSON.parse(JSON.stringify(SERVER["xepg"][key]));
       }
       break;
-    
+
     default:
-    
+
       break;
   }
 
@@ -646,9 +646,9 @@ function sortSelect(elem) {
 
       elem.options[i] = tmpAry[i];
       if(elem.options[i].value == selectedValue) newSelectedIndex = i;
-  
+
   }
-  
+
   elem.selectedIndex = newSelectedIndex; // Set new selected index after sorting
   return;
 }

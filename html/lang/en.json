@@ -183,52 +183,52 @@
     "active": {
       "title": "Active",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "channelName": {
       "title": "Channel Name",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "description": {
       "title": "Channel Description",
       "placeholder": "Used by the Dummy as an XML description",
-      "description": ""      
+      "description": ""
     },
     "updateChannelName": {
       "title": "Update Channel Name",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "channelLogo": {
       "title": "Logo URL",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "updateChannelLogo": {
       "title": "Update Channel Logo",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "epgCategory": {
       "title": "EPG Category",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "m3uGroupTitle": {
       "title": "Group Title (xteve.m3u)",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "xmltvFile": {
       "title": "XMLTV File",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     },
     "xmltvChannel": {
       "title": "XMLTV Channel",
       "placeholder": "",
-      "description": ""      
+      "description": ""
     }
   },
   "users": {
@@ -331,6 +331,11 @@
       "info_ffmpeg": "FFmpeg connects to the streaming server",
       "info_vlc": "VLC connects to the streaming server"
 
+    },
+    "udpxy": {
+      "title": "UDPxy address",
+      "description": "The address of your UDPxy server. If set, and the channel URLs in the m3u is multicast, xTeVe will rewrite it so that it is accessed via the UDPxy service.",
+      "placeholder": "host:port"
     },
     "ffmpegPath": {
       "title": "FFmpeg Binary Path",
