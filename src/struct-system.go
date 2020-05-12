@@ -99,6 +99,7 @@ type SystemStruct struct {
 	}
 
 	URLBase string
+	UDPxy   string
 	Version string
 	WEB     struct {
 		Menu []string
@@ -246,8 +247,8 @@ type Notification struct {
 	Type     string `json:"type,required"`
 }
 
-// SettingsStrcut : Inhalt der settings.json
-type SettingsStrcut struct {
+// SettingsStruct : Inhalt der settings.json
+type SettingsStruct struct {
 	API               bool     `json:"api"`
 	AuthenticationAPI bool     `json:"authentication.api"`
 	AuthenticationM3U bool     `json:"authentication.m3u"`
@@ -290,6 +291,7 @@ type SettingsStrcut struct {
 	UpdateURL                 string                `json:"update.url,omitempty"`
 	UserAgent                 string                `json:"user.agent"`
 	UUID                      string                `json:"uuid"`
+	UDPxy                     string                `json:"udpxy"`
 	Version                   string                `json:"version"`
 	XepgReplaceMissingImages  bool                  `json:"xepg.replace.missing.images"`
 	XteveAutoUpdate           bool                  `json:"xteveAutoUpdate"`

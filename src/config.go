@@ -15,7 +15,7 @@ var System SystemStruct
 var WebScreenLog WebScreenLogStruct
 
 // Settings : Inhalt der settings.json
-var Settings SettingsStrcut
+var Settings SettingsStruct
 
 // Data : Alle Daten werden hier abgelegt. (Lineup, XMLTV)
 var Data DataStruct

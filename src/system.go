@@ -90,7 +90,7 @@ func createSystemFiles() (err error) {
 }
 
 // Einstellungen laden und default Werte setzen (xTeVe)
-func loadSettings() (settings SettingsStrcut, err error) {
+func loadSettings() (settings SettingsStruct, err error) {
 
 	settingsMap, err := loadJSONFileToMap(System.File.Settings)
 	if err != nil {
@@ -135,6 +135,7 @@ func loadSettings() (settings SettingsStrcut, err error) {
 	defaults["update"] = []string{"0000"}
 	defaults["user.agent"] = System.Name
 	defaults["uuid"] = createUUID()
+	defaults["udpxy"] = ""
 	defaults["version"] = System.DBVersion
 	defaults["xteveAutoUpdate"] = true
 	defaults["temp.path"] = System.Folder.Temp
@@ -186,7 +187,7 @@ func loadSettings() (settings SettingsStrcut, err error) {
 }
 
 // Einstellungen speichern (xTeVe)
-func saveSettings(settings SettingsStrcut) (err error) {
+func saveSettings(settings SettingsStruct) (err error) {
 
 	if settings.BackupKeep == 0 {
 		settings.BackupKeep = 10
