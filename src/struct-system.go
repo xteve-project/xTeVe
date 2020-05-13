@@ -20,7 +20,8 @@ type SystemStruct struct {
 	Dev                 bool
 	DeviceID            string
 	Domain              string
-	DVRLimit            int
+	PlexChannelLimit    int
+	UnfilteredChannelLimit  int
 
 	FFmpeg struct {
 		DefaultOptions string
