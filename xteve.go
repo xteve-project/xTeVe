@@ -47,9 +47,6 @@ const DBVersion = "2.1.0"
 // APIVersion : API Version
 const APIVersion = "1.1.0"
 
-// Dev : Aktiviert den Entwicklungsmodus. Für den Webserver werden dann die lokalen Dateien verwendet.
-const Dev = false
-
 var homeDirectory = fmt.Sprintf("%s%s.%s%s", src.GetUserHomeDirectory(), string(os.PathSeparator), strings.ToLower(Name), string(os.PathSeparator))
 var samplePath = fmt.Sprintf("%spath%sto%sxteve%s", string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator))
 var sampleRestore = fmt.Sprintf("%spath%sto%sfile%s", string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator), string(os.PathSeparator))
@@ -63,6 +60,9 @@ var debug = flag.Int("debug", 0, ": Debug level          [0 - 3] (default: 0)")
 var info = flag.Bool("info", false, ": Show system info")
 var h = flag.Bool("h", false, ": Show help")
 
+// Aktiviert den Entwicklungsmodus. Für den Webserver werden dann die lokalen Dateien verwendet.
+var dev = flag.Bool("dev", false, ": Activates the developer mode, the source code must be available. The local files for the web interface are used.")
+
 func main() {
 
 	// Build-Nummer von der Versionsnummer trennen
@@ -73,7 +73,6 @@ func main() {
 	system.Branch = GitHub.Branch
 	system.Build = build[len(build)-1:][0]
 	system.DBVersion = DBVersion
-	system.Dev = Dev
 	system.GitHub = GitHub
 	system.Name = Name
 	system.Version = strings.Join(build[0:len(build)-1], ".")
@@ -121,6 +120,8 @@ func main() {
 		flag.Usage()
 		return
 	}
+
+	system.Dev = *dev
 
 	// Systeminformationen anzeigen
 	if *info {
