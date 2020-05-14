@@ -305,6 +305,17 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "udpxy":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.udpxy.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createInput("text", "udpxy", data);
+                input.setAttribute("placeholder", "{{.settings.udpxy.placeholder}}");
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
         }
         return setting;
     };
@@ -385,6 +396,9 @@ var SettingsCategory = /** @class */ (function () {
                 break;
             case "xepg.replace.missing.images":
                 text = "{{.settings.replaceEmptyImages.description}}";
+                break;
+            case "udpxy":
+                text = "{{.settings.udpxy.description}}";
                 break;
             default:
                 text = "";

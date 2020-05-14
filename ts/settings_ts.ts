@@ -372,19 +372,34 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
+    case "udpxy":
+
+        var tdLeft = document.createElement("TD");
+        tdLeft.innerHTML = "{{.settings.udpxy.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createInput("text", "udpxy", data)
+        input.setAttribute("placeholder", "{{.settings.udpxy.placeholder}}")
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
     }
 
     return setting
 
   }
 
-  
+
   createDescription(settingsKey:string):any {
 
     var description = document.createElement("TR")
     var text:string
     switch (settingsKey) {
-      
+
       case "authentication.web":
         text = "{{.settings.authenticationWEB.description}}"
         break
@@ -483,10 +498,14 @@ class SettingsCategory {
         text = "{{.settings.replaceEmptyImages.description}}"
         break
 
+      case "udpxy":
+        text = "{{.settings.udpxy.description}}"
+        break
+
       default:
         text = ""
         break
-  
+
     }
 
     var tdLeft = document.createElement("TD")
@@ -499,7 +518,7 @@ class SettingsCategory {
 
     description.appendChild(tdLeft)
     description.appendChild(tdRight)
-    
+
     return description
 
   }
@@ -519,12 +538,12 @@ class SettingsCategoryItem extends SettingsCategory {
   createCategory():void {
     var headline = this.createCategoryHeadline(this.headline)
     var settingsKeys = this.settingsKeys
-    
+
     var doc = document.getElementById(this.DocumentID)
     doc.appendChild(headline)
 
     // Tabelle für die Kategorie erstellen
-      
+
     var table = document.createElement("TABLE")
 
     var keys = settingsKeys.split(",")
@@ -565,7 +584,7 @@ function showSettings() {
   for (let i = 0; i < settingsCategory.length; i++) {
     settingsCategory[i].createCategory()
   }
-  
+
 }
 
 function saveSettings() {
@@ -627,7 +646,7 @@ function saveSettings() {
         break
 
     }
-    
+
   }
 
   var data = new Object()

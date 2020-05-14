@@ -15,7 +15,7 @@ import (
 )
 
 // Einstellungen ändern (WebUI)
-func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err error) {
+func updateServerSettings(request RequestStruct) (settings SettingsStruct, err error) {
 
 	var oldSettings = jsonToMap(mapToJSON(Settings))
 	var newSettings = jsonToMap(mapToJSON(request.Settings))
@@ -408,7 +408,7 @@ func deleteLocalProviderFiles(dataID, fileType string) {
 }
 
 // Filtereinstellungen speichern (WebUI)
-func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
+func saveFilter(request RequestStruct) (settings SettingsStruct, err error) {
 
 	var filterMap = make(map[int64]interface{})
 	var newData = make(map[int64]interface{})

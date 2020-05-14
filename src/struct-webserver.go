@@ -37,6 +37,7 @@ type RequestStruct struct {
 		FilesUpdate              *bool     `json:"files.update,omitempty"`
 		TempPath                 *string   `json:"temp.path,omitempty"`
 		Tuner                    *int      `json:"tuner,omitempty"`
+		UDPxy                    *string   `json:"udpxy,omitempty"`
 		Update                   *[]string `json:"update,omitempty"`
 		UserAgent                *string   `json:"user.agent,omitempty"`
 		XepgReplaceMissingImages *bool     `json:"xepg.replace.missing.images,omitempty"`
@@ -109,7 +110,7 @@ type ResponseStruct struct {
 	OpenLink            string                 `json:"openLink,omitempty"`
 	OpenMenu            string                 `json:"openMenu,omitempty"`
 	Reload              bool                   `json:"reload,omitempty"`
-	Settings            SettingsStrcut         `json:"settings,required"`
+	Settings            SettingsStruct         `json:"settings,required"`
 	Status              bool                   `json:"status,required"`
 	Token               string                 `json:"token,omitempty"`
 	Users               map[string]interface{} `json:"users,omitempty"`

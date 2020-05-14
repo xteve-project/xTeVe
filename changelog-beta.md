@@ -1,3 +1,12 @@
+#### 2.1.1.0116-beta
+If no user agent is specified, the default FFmpeg or VLC user agent is used.
+
+#### 2.1.1.0115-beta
+```diff
++ GZIP compression for xteve.xml file. (http://xteve.ip:34400/xmltv/xteve.xml.gz)
+- Removed protocol setting for reverse proxy. HTTPS can also be configured in the proxy, where it makes more sense.
+```
+
 #### 2.1.0.0106-beta
 ```diff
 + User-Agent is now also used by VLC and FFmpeg.
