@@ -282,7 +282,7 @@ func createXEPGDatabase() (err error) {
 
 		var firstFreeNumber float64 = Settings.MappingFirstChannel
 
-		if len(allChannelNumbers) > 0 {
+		if len(allChannelNumbers) > 0 && indexOfFloat64(firstFreeNumber, allChannelNumbers) >= 0 { //channels exist and first channel number is taken
 			firstFreeNumber = allChannelNumbers[len(allChannelNumbers)-1] //Start with last assigned channel number.  Avoids checking from the beginning each time
 			firstFreeNumber++
 		}
