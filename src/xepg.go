@@ -253,8 +253,9 @@ func createXEPGMapping() {
 // XEPG Datenbank erstellen / aktualisieren
 func createXEPGDatabase() (err error) {
 
-	var allChannelNumbers []float64
-	Data.Cache.Streams.Active = []string{}
+	var allChannelNumbers = make([]float64, 0, System.UnfilteredChannelLimit)
+	Data.Cache.Streams.Active = make([]string, 0, System.UnfilteredChannelLimit)
+	Data.XEPG.Channels = make(map[string]interface{}, System.UnfilteredChannelLimit)
 
 	Data.XEPG.Channels, err = loadJSONFileToMap(System.File.XEPG)
 	if err != nil {
@@ -281,6 +282,11 @@ func createXEPGDatabase() (err error) {
 
 		var firstFreeNumber float64 = Settings.MappingFirstChannel
 
+		if len(allChannelNumbers) > 0 && indexOfFloat64(firstFreeNumber, allChannelNumbers) >= 0 { //channels exist and first channel number is taken
+			firstFreeNumber = allChannelNumbers[len(allChannelNumbers)-1] //Start with last assigned channel number.  Avoids checking from the beginning each time
+			firstFreeNumber++
+		}
+
 	newNumber:
 
 		if indexOfFloat64(firstFreeNumber, allChannelNumbers) == -1 {
@@ -296,7 +302,7 @@ func createXEPGDatabase() (err error) {
 
 	showInfo("XEPG:" + "Update database")
 
-	// Kanal mit fehlenden Kanalnummern löschen
+	// Kanal mit fehlenden Kanalnummern löschen.  Delete channel with missing channel numbers
 	for id, dxc := range Data.XEPG.Channels {
 
 		var xepgChannel XEPGChannelStruct
@@ -315,17 +321,24 @@ func createXEPGDatabase() (err error) {
 
 	}
 
-	var xepgChannels = make(map[string]interface{})
+	// Make a map of the db channels based on their previously downloaded attributes -- filename, group, title, etc
+	var xepgChannelsValuesMap = make(map[string]XEPGChannelStruct, System.UnfilteredChannelLimit)
+	for _, v := range Data.XEPG.Channels {
+		var channel XEPGChannelStruct
+		err = json.Unmarshal([]byte(mapToJSON(v)), &channel)
+		if err != nil {
+			return
+		}
 
-	for k, v := range Data.XEPG.Channels {
-		xepgChannels[k] = v
+		xepgChannelsValuesMap[channel.FileM3UID+channel.Name+channel.GroupTitle+channel.TvgID+channel.TvgName+channel.TvgLogo] = channel
 	}
 
 	for _, dsa := range Data.Streams.Active {
 
-		var channelExists = false  // Entscheidet ob ein Kanal neu zu Datenbank hinzugefügt werden soll.
-		var channelHasUUID = false // Überprüft, ob der Kanal (Stream) eindeutige ID's besitzt
-		var currentXEPGID string   // Aktuelle Datenbank ID (XEPG). Wird verwendet, um den Kanal in der Datenbank mit dem Stream der M3u zu aktualisieren
+		var channelExists = false  // Entscheidet ob ein Kanal neu zu Datenbank hinzugefügt werden soll.  Decides whether a channel should be added to the database
+		var channelHasUUID = false // Überprüft, ob der Kanal (Stream) eindeutige ID's besitzt.  Checks whether the channel (stream) has unique IDs
+		var currentXEPGID string   // Aktuelle Datenbank ID (XEPG). Wird verwendet, um den Kanal in der Datenbank mit dem Stream der M3u zu aktualisieren. Current database ID (XEPG) Used to update the channel in the database with the stream of the M3u
+
 		var m3uChannel M3UChannelStructXEPG
 
 		err = json.Unmarshal([]byte(mapToJSON(dsa)), &m3uChannel)
@@ -335,41 +348,40 @@ func createXEPGDatabase() (err error) {
 
 		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name)
 
-		// XEPG Datenbank durchlaufen um nach dem Kanal zu suchen.
-		for xepg, dxc := range xepgChannels {
+		// Try to find the channel based on matching all known values.  If that fails, then move to full channel scan
+		if val, ok := xepgChannelsValuesMap[m3uChannel.FileM3UID+m3uChannel.Name+m3uChannel.GroupTitle+m3uChannel.TvgID+m3uChannel.TvgName+m3uChannel.TvgLogo]; ok {
+			channelExists = true
+			channelHasUUID = false
+			currentXEPGID = val.XEPG
+		} else {
 
-			var xepgChannel XEPGChannelStruct
-			err = json.Unmarshal([]byte(mapToJSON(dxc)), &xepgChannel)
-			if err != nil {
-				return
-			}
+			// XEPG Datenbank durchlaufen um nach dem Kanal zu suchen.  Run through the XEPG database to search for the channel (full scan)
+			for _, dxc := range xepgChannelsValuesMap {
 
-			// Vergleichen des Streams anhand einer UUID in der M3U mit dem Kanal in der Databank
-			if len(xepgChannel.UUIDValue) > 0 && len(m3uChannel.UUIDValue) > 0 {
+				// Vergleichen des Streams anhand einer UUID in der M3U mit dem Kanal in der Databank.  Compare the stream using a UUID in the M3U with the channel in the database
+				if len(dxc.UUIDValue) > 0 && len(m3uChannel.UUIDValue) > 0 {
 
-				if xepgChannel.UUIDValue == m3uChannel.UUIDValue && xepgChannel.UUIDKey == m3uChannel.UUIDKey {
+					if dxc.UUIDValue == m3uChannel.UUIDValue && dxc.UUIDKey == m3uChannel.UUIDKey {
 
-					channelExists = true
-					channelHasUUID = true
-					currentXEPGID = xepg
-					break
+						channelExists = true
+						channelHasUUID = true
+						currentXEPGID = dxc.XEPG
+						break
+
+					}
+
+				} else {
+					// Vergleichen des Streams mit dem Kanal in der Databank anhand des Kanalnamens.  Compare the stream to the channel in the database using the channel name
+					if dxc.Name == m3uChannel.Name {
+						channelExists = true
+						currentXEPGID = dxc.XEPG
+						break
+					}
 
 				}
 
-			} else {
-				// Vergleichen des Streams mit dem Kanal in der Databank anhand des Kanalnamens
-				//fmt.Println(xepgChannel.Name, xepgChannel.UUIDKey, xepgChannel.UUIDValue)
-				if xepgChannel.Name == m3uChannel.Name {
-					channelExists = true
-					currentXEPGID = xepg
-					break
-				}
-
 			}
-
 		}
-
-		//os.Exit(0)
 
 		switch channelExists {
 
@@ -435,7 +447,7 @@ func createXEPGDatabase() (err error) {
 		}
 
 	}
-
+	showInfo("XEPG:" + "Save DB file")
 	err = saveMapToJSONFile(System.File.XEPG, Data.XEPG.Channels)
 	if err != nil {
 		return
