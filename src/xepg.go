@@ -9,6 +9,8 @@ import (
 	"path"
 	"runtime"
 
+	"crypto/md5"
+	"encoding/hex"
 	"strconv"
 	"strings"
 	"time"
@@ -300,6 +302,11 @@ func createXEPGDatabase() (err error) {
 		return
 	}
 
+	var generateHashForChannel = func(m3uID string, groupTitle string, tvgID string, tvgName string, uuidKey string, uuidValue string) string {
+		hash := md5.Sum([]byte(m3uID + groupTitle + tvgID + tvgName + uuidKey + uuidValue))
+		return hex.EncodeToString(hash[:])
+	}
+
 	showInfo("XEPG:" + "Update database")
 
 	// Kanal mit fehlenden Kanalnummern löschen.  Delete channel with missing channel numbers
@@ -329,8 +336,8 @@ func createXEPGDatabase() (err error) {
 		if err != nil {
 			return
 		}
-
-		xepgChannelsValuesMap[channel.FileM3UID+channel.Name+channel.GroupTitle+channel.TvgID+channel.TvgName+channel.TvgLogo] = channel
+		channelHash := generateHashForChannel(channel.FileM3UID, channel.GroupTitle, channel.TvgID, channel.TvgName, channel.UUIDKey, channel.UUIDValue)
+		xepgChannelsValuesMap[channelHash] = channel
 	}
 
 	for _, dsa := range Data.Streams.Active {
@@ -349,10 +356,13 @@ func createXEPGDatabase() (err error) {
 		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name)
 
 		// Try to find the channel based on matching all known values.  If that fails, then move to full channel scan
-		if val, ok := xepgChannelsValuesMap[m3uChannel.FileM3UID+m3uChannel.Name+m3uChannel.GroupTitle+m3uChannel.TvgID+m3uChannel.TvgName+m3uChannel.TvgLogo]; ok {
+		m3uChannelHash := generateHashForChannel(m3uChannel.FileM3UID, m3uChannel.GroupTitle, m3uChannel.TvgID, m3uChannel.TvgName, m3uChannel.UUIDKey, m3uChannel.UUIDValue)
+		if val, ok := xepgChannelsValuesMap[m3uChannelHash]; ok {
 			channelExists = true
-			channelHasUUID = false
 			currentXEPGID = val.XEPG
+			if len(m3uChannel.UUIDValue) > 0 {
+				channelHasUUID = true
+			}
 		} else {
 
 			// XEPG Datenbank durchlaufen um nach dem Kanal zu suchen.  Run through the XEPG database to search for the channel (full scan)
