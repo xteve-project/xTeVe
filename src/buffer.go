@@ -824,7 +824,7 @@ func connectToStreamingServer(streamID int, playlistID string) {
 				}
 
 			// Video Stream (TS)
-			case "video/mpeg", "video/mp4", "video/mp2t", "video/m2ts", "application/octet-stream", "binary/octet-stream", "application/mp2t":
+			case "video/mpeg", "video/mp4", "video/mp2t", "video/m2ts", "application/octet-stream", "binary/octet-stream", "application/mp2t", "video/x-matroska":
 
 				var fileSize int
 
