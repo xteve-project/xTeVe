@@ -231,7 +231,7 @@ func StartSystem(updateProviderFiles bool) (err error) {
 	showInfo(fmt.Sprintf("Tuner (Plex / Emby):%d", Settings.Tuner))
 	showInfo(fmt.Sprintf("EPG Source:%s", Settings.EpgSource))
 	showInfo(fmt.Sprintf("Plex Channel Limit:%d", System.PlexChannelLimit))
-	showInfo(fmt.Sprintf("Unfiltered Channel Limit:%d", System.UnfilteredChannelLimit))
+	showInfo(fmt.Sprintf("Unfiltered Chan. Limit:%d", System.UnfilteredChannelLimit))
 
 	// Providerdaten aktualisieren
 	if len(Settings.Files.M3U) > 0 && Settings.FilesUpdate == true || updateProviderFiles == true {

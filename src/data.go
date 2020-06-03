@@ -40,7 +40,7 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 
 			case "update":
 				// Leerzeichen aus den Werten entfernen und Formatierung der Uhrzeit überprüfen (0000 - 2359)
-				var newUpdateTimes []string
+				var newUpdateTimes = make([]string, 0)
 
 				for _, v := range value.([]interface{}) {
 
@@ -57,7 +57,7 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 				}
 
 				if len(newUpdateTimes) == 0 {
-					newUpdateTimes = append(newUpdateTimes, "0000")
+					//newUpdateTimes = append(newUpdateTimes, "0000")
 				}
 
 				value = newUpdateTimes

@@ -16,7 +16,7 @@ func showInfo(str string) {
 		return
 	}
 
-	var max = 22
+	var max = 23
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
 	var space string
@@ -48,7 +48,7 @@ func showDebug(str string, level int) {
 		return
 	}
 
-	var max = 22
+	var max = 23
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
 	var space string
@@ -78,7 +78,7 @@ func showDebug(str string, level int) {
 
 func showHighlight(str string) {
 
-	var max = 22
+	var max = 23
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
 	var space string
