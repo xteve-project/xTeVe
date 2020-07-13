@@ -39,7 +39,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.1.2.0125"
+const Version = "2.1.2.0126"
 
 // DBVersion : Datanbank Version
 const DBVersion = "2.1.0"
@@ -190,7 +190,6 @@ func main() {
 	err = src.BinaryUpdate()
 	if err != nil {
 		src.ShowError(err, 0)
-		os.Exit(0)
 	}
 
 	err = src.StartSystem(false)
