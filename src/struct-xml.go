@@ -42,6 +42,9 @@ type Program struct {
 	Country         []*Country       `xml:"country"`
 	EpisodeNum      []*EpisodeNum    `xml:"episode-num"`
 	Poster          []Poster         `xml:"icon"`
+	Credits         Credits          `xml:"credits,omitempty"` //`xml:",innerxml,omitempty"`
+	Rating          []Rating         `xml:"rating"`
+	StarRating      []StarRating     `xml:"star-rating"`
 	Language        []*Language      `xml:"language"`
 	Video           Video            `xml:"video"`
 	Date            string           `xml:"date"`
@@ -75,6 +78,19 @@ type Category struct {
 	Value string `xml:",chardata"`
 }
 
+// Rating : Bewertung
+type Rating struct {
+	System string `xml:"system,attr"`
+	Value  string `xml:"value"`
+	Icon   []Icon `xml:"icon"`
+}
+
+// StarRating : Bewertung / Kritiken
+type StarRating struct {
+	Value  string `xml:"value"`
+	System string `xml:"system,attr"`
+}
+
 // Language : Sprachen
 type Language struct {
 	Value string `xml:",chardata"`
@@ -98,6 +114,41 @@ type Poster struct {
 	Src    string `xml:"src,attr"`
 	Value  string `xml:",chardata"`
 	Width  string `xml:"width,attr"`
+}
+
+// Credits : Credits
+type Credits struct {
+	Director  []Director  `xml:"director,omitempty"`
+	Actor     []Actor     `xml:"actor,omitempty"`
+	Writer    []Writer    `xml:"writer,omitempty"`
+	Presenter []Presenter `xml:"presenter,omitempty"`
+	Producer  []Producer  `xml:"producer,omitempty"`
+}
+
+// Director : Director
+type Director struct {
+	Value string `xml:",chardata"`
+}
+
+// Actor : Actor
+type Actor struct {
+	Value string `xml:",chardata"`
+	Role  string `xml:"role,attr,omitempty"`
+}
+
+// Writer : Writer
+type Writer struct {
+	Value string `xml:",chardata"`
+}
+
+// Presenter : Presenter
+type Presenter struct {
+	Value string `xml:",chardata"`
+}
+
+// Producer : Producer
+type Producer struct {
+	Value string `xml:",chardata"`
 }
 
 // Video : Video Metadaten

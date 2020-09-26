@@ -713,6 +713,15 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Category (Kategorie)
 			getCategory(program, xmltvProgram, xepgChannel)
 
+			// Credits : (Credits)
+			program.Credits = xmltvProgram.Credits
+
+			// Rating (Bewertung)
+			program.Rating = xmltvProgram.Rating
+
+			// StarRating (Bewertung / Kritiken)
+			program.StarRating = xmltvProgram.StarRating
+
 			// Country (Länder)
 			program.Country = xmltvProgram.Country
 
