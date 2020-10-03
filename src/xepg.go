@@ -14,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"../src/internal/imgcache"
 )
 
 // Provider XMLTV Datei überprüfen
@@ -44,6 +46,13 @@ func buildXEPG(background bool) {
 
 	System.ScanInProgress = 1
 
+	var err error
+
+	Data.Cache.Images, err = imgcache.New(System.Folder.ImagesCache, fmt.Sprintf("%s://%s/images/", System.ServerProtocol.WEB, System.Domain), Settings.CacheImages)
+	if err != nil {
+		ShowError(err, 0)
+	}
+
 	if Settings.EpgSource == "XEPG" {
 
 		switch background {
@@ -58,9 +67,28 @@ func buildXEPG(background bool) {
 				cleanupXEPG()
 				createXMLTVFile()
 				createM3UFile()
-				go cachingImages()
 
 				showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
+
+				if Settings.CacheImages == true && System.ImageCachingInProgress == 0 {
+
+					go func() {
+
+						System.ImageCachingInProgress = 1
+						showInfo(fmt.Sprintf("Image Caching:Images are cached (%d)", len(Data.Cache.Images.Queue)))
+
+						Data.Cache.Images.Image.Caching()
+						Data.Cache.Images.Image.Remove()
+						showInfo("Image Caching:Done")
+
+						createXMLTVFile()
+						createM3UFile()
+
+						System.ImageCachingInProgress = 0
+
+					}()
+
+				}
 
 				System.ScanInProgress = 0
 
@@ -84,7 +112,27 @@ func buildXEPG(background bool) {
 
 				createXMLTVFile()
 				createM3UFile()
-				go cachingImages()
+
+				if Settings.CacheImages == true && System.ImageCachingInProgress == 0 {
+
+					go func() {
+
+						System.ImageCachingInProgress = 1
+						showInfo(fmt.Sprintf("Image Caching:Images are cached (%d)", len(Data.Cache.Images.Queue)))
+
+						Data.Cache.Images.Image.Caching()
+						Data.Cache.Images.Image.Remove()
+						showInfo("Image Caching:Done")
+
+						createXMLTVFile()
+						createM3UFile()
+
+						System.ImageCachingInProgress = 0
+
+					}()
+
+				}
+
 				showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
 
 				System.ScanInProgress = 0
@@ -590,6 +638,10 @@ func mapping() (err error) {
 // XMLTV Datei erstellen
 func createXMLTVFile() (err error) {
 
+	// Image Cache
+	// 4edd81ab7c368208cc6448b615051b37.jpg
+	var imgc = Data.Cache.Images
+
 	Data.Cache.ImagesFiles = []string{}
 	Data.Cache.ImagesURLS = []string{}
 	Data.Cache.ImagesCache = []string{}
@@ -637,7 +689,7 @@ func createXMLTVFile() (err error) {
 				// Kanäle
 				var channel Channel
 				channel.ID = xepgChannel.XChannelID
-				channel.Icon = Icon{Src: getCacheImageURL(xepgChannel.TvgLogo)}
+				channel.Icon = Icon{Src: imgc.Image.GetURL(xepgChannel.TvgLogo)}
 				channel.DisplayName = append(channel.DisplayName, DisplayName{Value: xepgChannel.XName})
 
 				xepgXML.Channel = append(xepgXML.Channel, &channel)
@@ -764,6 +816,7 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 // Dummy Daten erstellen (createXMLTVFile)
 func createDummyProgram(xepgChannel XEPGChannelStruct) (dummyXMLTV XMLTV) {
 
+	var imgc = Data.Cache.Images
 	var currentTime = time.Now()
 	var dateArray = strings.Fields(currentTime.String())
 	var offset = " " + dateArray[2]
@@ -802,7 +855,7 @@ func createDummyProgram(xepgChannel XEPGChannelStruct) (dummyXMLTV XMLTV) {
 			}
 
 			if Settings.XepgReplaceMissingImages == true {
-				poster.Src = getCacheImageURL(xepgChannel.TvgLogo)
+				poster.Src = imgc.Image.GetURL(xepgChannel.TvgLogo)
 				epg.Poster = append(epg.Poster, poster)
 			}
 
@@ -849,8 +902,10 @@ func getCategory(program *Program, xmltvProgram *Program, xepgChannel XEPGChanne
 // Programm Poster Cover aus der XMLTV Datei laden
 func getPoster(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelStruct) {
 
+	var imgc = Data.Cache.Images
+
 	for _, poster := range xmltvProgram.Poster {
-		poster.Src = getCacheImageURL(poster.Src)
+		poster.Src = imgc.Image.GetURL(poster.Src)
 		program.Poster = append(program.Poster, poster)
 	}
 
@@ -858,7 +913,7 @@ func getPoster(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelS
 
 		if len(xmltvProgram.Poster) == 0 {
 			var poster Poster
-			poster.Src = getCacheImageURL(xepgChannel.TvgLogo)
+			poster.Src = imgc.Image.GetURL(poster.Src)
 			program.Poster = append(program.Poster, poster)
 		}
 

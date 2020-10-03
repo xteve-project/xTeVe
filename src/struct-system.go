@@ -1,5 +1,7 @@
 package src
 
+import "../src/internal/imgcache"
+
 // SystemStruct : Beinhaltet alle Systeminformationen
 type SystemStruct struct {
 	Addresses struct {
@@ -116,6 +118,7 @@ type GitStruct struct {
 // DataStruct : Alle Daten werden hier abgelegt. (Lineup, XMLTV)
 type DataStruct struct {
 	Cache struct {
+		Images      *imgcache.Cache
 		ImagesCache []string
 		ImagesFiles []string
 		ImagesURLS  []string

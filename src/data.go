@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"../src/internal/authentication"
+	"../src/internal/imgcache"
 )
 
 // Einstellungen ändern (WebUI)
@@ -203,25 +204,38 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 
 		if cacheImages == true {
 
-			if Settings.EpgSource == "XEPG" {
+			if Settings.EpgSource == "XEPG" && System.ImageCachingInProgress == 0 {
 
-				go func() {
+				Data.Cache.Images, err = imgcache.New(System.Folder.ImagesCache, fmt.Sprintf("%s://%s/images/", System.ServerProtocol.WEB, System.Domain), Settings.CacheImages)
+				if err != nil {
+					ShowError(err, 0)
+				}
 
-					if Settings.CacheImages == true {
+				switch Settings.CacheImages {
 
-						createXMLTVFile()
-						cachingImages()
+				case false:
+					createXMLTVFile()
+					createM3UFile()
+
+				case true:
+					go func() {
+
 						createXMLTVFile()
 						createM3UFile()
 
-					} else {
+						System.ImageCachingInProgress = 1
+						showInfo("Image Caching:Images are cached")
 
-						createXMLTVFile()
-						createM3UFile()
+						Data.Cache.Images.Image.Caching()
+						showInfo("Image Caching:Done")
 
-					}
+						System.ImageCachingInProgress = 0
 
-				}()
+						buildXEPG(false)
+
+					}()
+
+				}
 
 			}
 
@@ -496,6 +510,11 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 	var tmp = Data.XEPG
 
+	Data.Cache.Images, err = imgcache.New(System.Folder.ImagesCache, fmt.Sprintf("%s://%s/images/", System.ServerProtocol.WEB, System.Domain), Settings.CacheImages)
+	if err != nil {
+		ShowError(err, 0)
+	}
+
 	err = json.Unmarshal([]byte(mapToJSON(request.EpgMapping)), &tmp)
 	if err != nil {
 		return
@@ -512,18 +531,8 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 		System.ScanInProgress = 1
 		cleanupXEPG()
+		System.ScanInProgress = 0
 		buildXEPG(true)
-
-		go func() {
-
-			createXMLTVFile()
-			createM3UFile()
-			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
-			go cachingImages()
-
-			System.ScanInProgress = 0
-
-		}()
 
 	} else {
 
@@ -545,15 +554,10 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 			}
 
 			System.ScanInProgress = 1
-
 			cleanupXEPG()
-			buildXEPG(false)
-			createXMLTVFile()
-			createM3UFile()
-			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
-			go cachingImages()
-
 			System.ScanInProgress = 0
+			buildXEPG(false)
+			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
 
 			System.BackgroundProcess = false
 
