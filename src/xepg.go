@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"path"
 	"runtime"
+	"sort"
 
 	"crypto/md5"
 	"encoding/hex"
@@ -330,21 +331,20 @@ func createXEPGDatabase() (err error) {
 
 	var getFreeChannelNumber = func() (xChannelID string) {
 
+		sort.Float64s(allChannelNumbers)
+
 		var firstFreeNumber float64 = Settings.MappingFirstChannel
 
-		if len(allChannelNumbers) > 0 && indexOfFloat64(firstFreeNumber, allChannelNumbers) >= 0 { //channels exist and first channel number is taken
-			firstFreeNumber = allChannelNumbers[len(allChannelNumbers)-1] //Start with last assigned channel number.  Avoids checking from the beginning each time
-			firstFreeNumber++
-		}
+		for {
 
-	newNumber:
+			if indexOfFloat64(firstFreeNumber, allChannelNumbers) == -1 {
+				xChannelID = fmt.Sprintf("%g", firstFreeNumber)
+				allChannelNumbers = append(allChannelNumbers, firstFreeNumber)
+				return
+			}
 
-		if indexOfFloat64(firstFreeNumber, allChannelNumbers) == -1 {
-			xChannelID = fmt.Sprintf("%g", firstFreeNumber)
-			allChannelNumbers = append(allChannelNumbers, firstFreeNumber)
-		} else {
 			firstFreeNumber++
-			goto newNumber
+
 		}
 
 		return
@@ -401,7 +401,7 @@ func createXEPGDatabase() (err error) {
 			return
 		}
 
-		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name)
+		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name+m3uChannel.FileM3UID)
 
 		// Try to find the channel based on matching all known values.  If that fails, then move to full channel scan
 		m3uChannelHash := generateHashForChannel(m3uChannel.FileM3UID, m3uChannel.GroupTitle, m3uChannel.TvgID, m3uChannel.TvgName, m3uChannel.UUIDKey, m3uChannel.UUIDValue)
@@ -416,24 +416,31 @@ func createXEPGDatabase() (err error) {
 			// XEPG Datenbank durchlaufen um nach dem Kanal zu suchen.  Run through the XEPG database to search for the channel (full scan)
 			for _, dxc := range xepgChannelsValuesMap {
 
-				// Vergleichen des Streams anhand einer UUID in der M3U mit dem Kanal in der Databank.  Compare the stream using a UUID in the M3U with the channel in the database
-				if len(dxc.UUIDValue) > 0 && len(m3uChannel.UUIDValue) > 0 {
+				if m3uChannel.FileM3UID == dxc.FileM3UID {
 
-					if dxc.UUIDValue == m3uChannel.UUIDValue && dxc.UUIDKey == m3uChannel.UUIDKey {
+					dxc.FileM3UID = m3uChannel.FileM3UID
+					dxc.FileM3UName = m3uChannel.FileM3UName
 
-						channelExists = true
-						channelHasUUID = true
-						currentXEPGID = dxc.XEPG
-						break
+					// Vergleichen des Streams anhand einer UUID in der M3U mit dem Kanal in der Databank.  Compare the stream using a UUID in the M3U with the channel in the database
+					if len(dxc.UUIDValue) > 0 && len(m3uChannel.UUIDValue) > 0 {
 
-					}
+						if dxc.UUIDValue == m3uChannel.UUIDValue && dxc.UUIDKey == m3uChannel.UUIDKey {
 
-				} else {
-					// Vergleichen des Streams mit dem Kanal in der Databank anhand des Kanalnamens.  Compare the stream to the channel in the database using the channel name
-					if dxc.Name == m3uChannel.Name {
-						channelExists = true
-						currentXEPGID = dxc.XEPG
-						break
+							channelExists = true
+							channelHasUUID = true
+							currentXEPGID = dxc.XEPG
+							break
+
+						}
+
+					} else {
+						// Vergleichen des Streams mit dem Kanal in der Databank anhand des Kanalnamens.  Compare the stream to the channel in the database using the channel name
+						if dxc.Name == m3uChannel.Name {
+							channelExists = true
+							currentXEPGID = dxc.XEPG
+							break
+						}
+
 					}
 
 				}
@@ -1024,6 +1031,18 @@ func createM3UFile() {
 // XEPG Datenbank bereinigen
 func cleanupXEPG() {
 
+	//fmt.Println(Settings.Files.M3U)
+
+	var sourceIDs []string
+
+	for source := range Settings.Files.M3U {
+		sourceIDs = append(sourceIDs, source)
+	}
+
+	for source := range Settings.Files.HDHR {
+		sourceIDs = append(sourceIDs, source)
+	}
+
 	showInfo("XEPG:" + fmt.Sprintf("Cleanup database"))
 	Data.XEPG.XEPGCount = 0
 
@@ -1033,12 +1052,16 @@ func cleanupXEPG() {
 		err := json.Unmarshal([]byte(mapToJSON(dxc)), &xepgChannel)
 		if err == nil {
 
-			if indexOfString(xepgChannel.Name, Data.Cache.Streams.Active) == -1 {
+			if indexOfString(xepgChannel.Name+xepgChannel.FileM3UID, Data.Cache.Streams.Active) == -1 {
 				delete(Data.XEPG.Channels, id)
 			} else {
 				if xepgChannel.XActive == true {
 					Data.XEPG.XEPGCount++
 				}
+			}
+
+			if indexOfString(xepgChannel.FileM3UID, sourceIDs) == -1 {
+				delete(Data.XEPG.Channels, id)
 			}
 
 		}
