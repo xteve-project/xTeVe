@@ -283,7 +283,7 @@ func createXEPGMapping() {
 
 	// Auswahl für den Dummy erstellen
 	var dummy = make(map[string]interface{})
-	var times = []string{"30", "60", "90", "120"}
+	var times = []string{"30", "60", "90", "120", "180", "240", "360"}
 
 	for _, i := range times {
 

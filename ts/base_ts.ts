@@ -309,7 +309,7 @@ function createSearchObj() {
   var data = SERVER["xepg"]["epgMapping"]
   var channels = getObjKeys(data)
 
-  var channelKeys:string[] = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title"]
+  var channelKeys:string[] = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"]
 
   channels.forEach(id => {
 
@@ -330,7 +330,17 @@ function createSearchObj() {
 
       } else {
 
-        SEARCH_MAPPING[id] = SEARCH_MAPPING[id] + data[id][key] + " "
+        if (key == "x-xmltv-file") {
+          var xmltvFile = getValueFromProviderFile(data[id][key], "xmltv", "name")
+
+          if (xmltvFile != undefined) {
+            SEARCH_MAPPING[id] = SEARCH_MAPPING[id] + xmltvFile + " "
+          }
+
+        } else {
+          SEARCH_MAPPING[id] = SEARCH_MAPPING[id] + data[id][key] + " "
+        }
+
 
       }
 
