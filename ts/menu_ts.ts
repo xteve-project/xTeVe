@@ -1568,7 +1568,7 @@ function openPopUp(dataType, element) {
       // Erweitern der EPG Kategorie
       var dbKey:string = "x-category"
       var text:string[] = ["-", "Kids (Emby only)", "News", "Movie", "Series", "Sports"]
-      var values:string[] = ["-", "Kids", "News", "Movie", "Series", "Sports"]
+      var values:string[] = ["", "Kids", "News", "Movie", "Series", "Sports"]
       var select = content.createSelect(text, values, data[dbKey], dbKey)
       select.setAttribute("onchange", "javascript: this.className = 'changed'")  
       content.appendRow("{{.mapping.epgCategory.title}}", select)
