@@ -206,7 +206,8 @@ func Auto(w http.ResponseWriter, r *http.Request) {
 // xTeVe : Web Server /xmltv/ und /m3u/
 func xTeVe(w http.ResponseWriter, r *http.Request) {
 
-	var requestType, groupTitle, file, content, contentType string
+	var keepServerUrl = false
+	var requestType, groupTitle, file, content, contentType, keepServerUrlStr string
 	var err error
 	var path = strings.TrimPrefix(r.URL.Path, "/")
 	var groups = []string{}
@@ -233,7 +234,11 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 
 		requestType = "m3u"
 		groupTitle = r.URL.Query().Get("group-title")
-
+		keepServerUrlStr = r.URL.Query().Get("keepServerUrl")
+		if len(keepServerUrlStr) > 0 {
+			keepServerUrl,err = strconv.ParseBool(keepServerUrlStr)
+		}
+		
 		if System.Dev == false {
 			// false: Dateiname wird im Header gesetzt
 			// true: M3U wird direkt im Browser angezeigt
@@ -244,7 +249,7 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 			groups = strings.Split(groupTitle, ",")
 		}
 
-		content, err = buildM3U(groups)
+		content, err = buildM3U(groups,keepServerUrl)
 		if err != nil {
 			ShowError(err, 000)
 		}

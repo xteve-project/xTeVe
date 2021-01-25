@@ -179,7 +179,7 @@ func checkConditions(streamValues, conditions, coType string) (status bool) {
 }
 
 // xTeVe M3U Datei erstellen
-func buildM3U(groups []string) (m3u string, err error) {
+func buildM3U(groups []string, keepServerUrl bool) (m3u string, err error) {
 
 	var m3uChannels = make(map[float64]XEPGChannelStruct)
 	var channelNumbers []float64
@@ -226,7 +226,12 @@ func buildM3U(groups []string) (m3u string, err error) {
 		var parameter = fmt.Sprintf(`#EXTINF:0 channelID="%s" tvg-chno="%s" tvg-name="%s" tvg-id="%s" tvg-logo="%s" group-title="%s",%s`+"\n", channel.XEPG, channel.XChannelID, channel.XName, channel.XChannelID, getCacheImageURL(channel.TvgLogo), channel.XGroupTitle, channel.XName)
 		var stream, err = createStreamingURL("M3U", channel.FileM3UID, channel.XChannelID, channel.XName, channel.URL)
 		if err == nil {
-			m3u = m3u + parameter + stream + "\n"
+			if(keepServerUrl == true){
+				m3u = m3u + parameter + channel.URL + "\n"
+			}else{
+				m3u = m3u + parameter + stream + "\n"
+			}
+			
 		}
 
 	}
