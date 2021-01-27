@@ -1,8 +1,16 @@
-FROM alpine:3.11.6
+FROM alpine:latest
 LABEL maintainer="No one special <noone@gmail.com>"
 
+RUN apk update
+RUN apk upgrade
+RUN apk add --no-cache ca-certificates
+
 # Dependencies
-RUN apk --no-cache add curl=7.67.0-r0 vlc=3.0.8-r7 ffmpeg=4.2.1-r3 tzdata=2020a-r0 bash=5.0.11-r1
+RUN apk add --no-cache curl bash tzdata
+ENV TZ=Europe/Stockholm
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apk add ffmpeg
+RUN apk add vlc
 
 # Remove APK cache
 RUN rm -rf /var/cache/apk/*
