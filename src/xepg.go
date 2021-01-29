@@ -616,7 +616,11 @@ func createXMLTVFile() (err error) {
 				var channel Channel
 				channel.ID = xepgChannel.XChannelID
 				channel.Icon = Icon{Src: getCacheImageURL(xepgChannel.TvgLogo)}
-				channel.DisplayName = append(channel.DisplayName, DisplayName{Value: xepgChannel.XName})
+				channel.DisplayName = append(channel.DisplayName, 
+					DisplayName{Value: xepgChannel.XName},
+					DisplayName{Value: xepgChannel.XChannelID + " - " + xepgChannel.XName},
+					DisplayName{Value: xepgChannel.XChannelID},
+					DisplayName{Value: xepgChannel.TvgID})
 
 				xepgXML.Channel = append(xepgXML.Channel, &channel)
 
