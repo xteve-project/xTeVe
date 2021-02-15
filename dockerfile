@@ -50,8 +50,8 @@ RUN chown xteve:xteve /tmp/xteve
 RUN chown xteve:xteve /home/xteve/xmltvse
 RUN chown xteve:xteve /home/xteve/.xmltv
 
-COPY tv_grab_se_tvzon.conf /home/xteve/.xmltv/
-COPY grab_xml_tv_se.sh /home/xteve/xmltvse/
+ADD https://raw.githubusercontent.com/martinvillysson/xTeVe/master/tv_grab_se_tvzon.conf /home/xteve/.xmltv/
+ADD https://raw.githubusercontent.com/martinvillysson/xTeVe/master/grab_xml_tv_se.sh /home/xteve/xmltvse/
 
 # Volumes
 VOLUME /home/xteve/.xteve
