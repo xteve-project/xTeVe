@@ -11,9 +11,6 @@ LABEL maintainer="noone"
 # environment settings
 ENV HOME="/config"
 
-RUN apk update
-RUN apk upgrade
-
 RUN \
  echo "**** install build packages ****" && \
  apk add --no-cache \
