@@ -50,6 +50,7 @@ RUN chown xteve:xteve /tmp/xteve
 RUN chown xteve:xteve /home/xteve/xmltvse
 RUN chown xteve:xteve /home/xteve/.xmltv
 
+# ADD conf and script files
 ADD https://raw.githubusercontent.com/martinvillysson/xTeVe/master/tv_grab_se_tvzon.conf /home/xteve/.xmltv/
 ADD https://raw.githubusercontent.com/martinvillysson/xTeVe/master/grab_xml_tv_se.sh /home/xteve/xmltvse/
 
