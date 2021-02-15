@@ -96,3 +96,5 @@ RUN \
  make DESTDIR=/tmp/xmltv-build install
 
  VOLUME /config
+
+ #test
