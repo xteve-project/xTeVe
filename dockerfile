@@ -11,6 +11,7 @@ ENV TZ=Europe/Stockholm
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apk add ffmpeg
 RUN apk add vlc
+RUN apk add xmltv 
 
 # Remove APK cache
 RUN rm -rf /var/cache/apk/*
@@ -39,14 +40,22 @@ USER xteve
 RUN mkdir /home/xteve/.xteve/
 RUN mkdir /home/xteve/.xteve/backup/
 RUN mkdir /tmp/xteve
+RUN mkdir /home/xteve/xmltvse
+RUN mkdir /home/xteve/.xmltv
 
 #Set Permission on folders
 RUN chown xteve:xteve /home/xteve/.xteve/
 RUN chown xteve:xteve /home/xteve/.xteve/backup/
 RUN chown xteve:xteve /tmp/xteve
+RUN chown xteve:xteve /home/xteve/xmltvse
+RUN chown xteve:xteve /home/xteve/.xmltv
+
+ADD tv_grab_se_tvzon.conf /home/xteve/.xmltv/
+ADD grab_xml_tv_se.sh /home/xteve/xmltvse/
 
 # Volumes
 VOLUME /home/xteve/.xteve
+VOLUME /home/xteve/xmltvse
 
 # Expose Ports for Access
 EXPOSE 34400
