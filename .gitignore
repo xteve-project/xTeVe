@@ -6,3 +6,9 @@ update_xteve*.sh
 xteve
 xteve.exe
 de.json
+image
+lab.m3u
+test.m3u
+test.xml
+.vscode/launch.json
+build/xteve_linux_amd64.zip
