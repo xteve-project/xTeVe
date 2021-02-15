@@ -95,6 +95,7 @@ RUN \
  make test && \
  make DESTDIR=/tmp/xmltv-build install
 
+# to be tested
  #COPY /tmp/xmltv-build/usr/ /usr/
 
  VOLUME /config
