@@ -1,0 +1,100 @@
+FROM ghcr.io/linuxserver/baseimage-alpine:3.12
+
+ARG XMLTV_VER="v1.0.0"
+
+# set version label
+ARG BUILD_DATE
+ARG VERSION
+LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="noone"
+
+# environment settings
+ENV HOME="/config"
+
+RUN apk update
+RUN apk upgrade
+
+RUN \
+ echo "**** install build packages ****" && \
+ apk add --no-cache \
+	curl \
+	git \
+	gzip \
+	make \
+  perl \
+  perl-Archive-Zip \
+  perl-CGI \
+  perl-Data-Dump \
+  perl-Date-Calc \
+  perl-Date-Manip \
+  perl-DateTime \
+  perl-DateTime-Format-ISO8601 \
+  perl-DateTime-Format-SQLite \
+  perl-DateTime-Format-Strptime \
+  perl-DBD-SQLite \
+  perl-DBI \
+  perl-File-chdir \
+  perl-File-HomeDir \
+  perl-File-Slurp \
+  perl-File-Which \
+  perl-HTML-Parser \
+  perl-HTML-Tree \
+  perl-HTTP-Cache-Transparent \
+  perl-HTTP-Cookies \
+  perl-HTTP-Message \
+  perl-IO-stringy \
+  perl-JSON \
+  perl-JSON-XS \
+  perl-libwww-perl \
+  perl-Lingua-Preferred \
+  perl-List-MoreUtils \
+  perl-Log-TraceMessages \
+  perl-LWP-Protocol-https \
+  perl-LWP-UserAgent-Determined \
+  perl-PerlIO-gzip \
+  perl-SOAP-Lite \
+  perl-Term-ProgressBar \
+  perl-TermReadKey \
+  perl-TimeDate \
+  perl-Tk \
+  perl-Tk-TableMatrix \
+  perl-Try-Tiny \
+  perl-Unicode-String \
+  perl-URI \
+  perl-URI-Encode \
+  perl-XML-DOM \
+  perl-XML-LibXML \
+  perl-XML-LibXSLT \
+  perl-XML-Parser \
+  perl-XML-Simple \
+  perl-XML-TreePP \
+  perl-XML-Twig \
+  perl-XML-Writer \
+	tar 
+
+RUN \
+ echo "**** install perl modules for xmltv ****" && \
+ curl -s -L https://cpanmin.us | perl - App::cpanminus && \
+ cpanm --installdeps /tmp/patches
+
+  RUN \
+ echo "**** compile XMLTV ****" && \
+ git clone https://github.com/XMLTV/xmltv.git /tmp/xmltv && \
+ cd /tmp/xmltv && \
+ git checkout ${XMLTV_VER} && \
+ echo "**** Perl 5.26 fixes for XMTLV ****" && \
+ sed "s/use POSIX 'tmpnam';//" -i filter/tv_to_latex && \
+ sed "s/use POSIX 'tmpnam';//" -i filter/tv_to_text && \
+ sed "s/\(lib\/set_share_dir.pl';\)/.\/\1/" -i grab/it/tv_grab_it.PL && \
+ sed "s/\(filter\/Grep.pm';\)/.\/\1/" -i filter/tv_grep.PL && \
+ sed "s/\(lib\/XMLTV.pm.in';\)/.\/\1/" -i lib/XMLTV.pm.PL && \
+ sed "s/\(lib\/Ask\/Term.pm';\)/.\/\1/" -i Makefile.PL && \
+ PERL5LIB=`pwd` && \
+ echo -e "yes" | perl Makefile.PL PREFIX=/usr/ INSTALLDIRS=vendor && \
+ make -j 2 && \
+ make test && \
+ make DESTDIR=/tmp/xmltv-build install
+
+ COPY /tmp/xmltv-build/usr/ /usr/
+
+ VOLUME /config
