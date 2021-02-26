@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+
+IFS=" " read -r -a RUN_ARRAY <<< "$RUN_OPTS"
+
+exec \
+        s6-setuidgid abc /usr/bin/xteve -port=34400 -debug=$XTEVE_DEBUG_LEVEL -config=/config/xteve/ "${RUN_ARRAY[@]}"
+		
