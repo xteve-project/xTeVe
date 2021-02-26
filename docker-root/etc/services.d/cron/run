@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+
+/usr/sbin/cron -f -L 1

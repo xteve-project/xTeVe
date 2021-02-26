@@ -1,0 +1,133 @@
+FROM ghcr.io/linuxserver/baseimage-ubuntu:focal
+ARG XMLTV_VER="v1.0.0"
+ARG GO_VERSION="1.15.7"
+
+# set version label
+ARG BUILD_DATE
+ARG VERSION
+LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="noone"
+
+# environment settings
+ENV HOME="/config"
+ENV XMLTV_DAYS=7
+ENV XTEVE_GIT_REPO="https://github.com/martinvillysson/xTeVe.git"
+ENV XTEVE_DEBUG_LEVEL=0
+
+RUN \
+ echo "**** install build deps ****" && \
+ apt-get update && apt-get -y install \
+    libarchive-zip-perl \
+    libcgi-pm-perl \
+    libdata-dump-perl \
+    libdate-calc-perl \
+    libdate-manip-perl \
+    libdatetime-format-iso8601-perl \
+    libdatetime-format-sqlite-perl \
+    libdatetime-format-strptime-perl \
+    libdatetime-perl \
+    libdatetime-timezone-perl \
+    libdbd-sqlite3-perl \
+    libdbi-perl \
+    libfile-chdir-perl \
+    libfile-homedir-perl \
+    libfile-slurp-perl \
+    libfile-which-perl \
+    libhtml-parser-perl \
+    libhtml-tree-perl \
+    libhttp-cache-transparent-perl \
+    libhttp-cookies-perl \
+    libhttp-message-perl \
+    libio-stringy-perl \
+    libjson-perl \
+    libjson-xs-perl \
+    liblingua-preferred-perl \
+    liblinux-dvb-perl \
+    liblist-moreutils-perl \
+    liblog-tracemessages-perl \
+    liblwp-protocol-https-perl \
+    liblwp-useragent-determined-perl \
+    libperlio-gzip-perl \
+    libsoap-lite-perl \
+    libterm-progressbar-perl \
+    libterm-readkey-perl \
+    libtimedate-perl \
+    libtk-tablematrix-perl \
+    libtry-tiny-perl \
+    libunicode-string-perl \
+    liburi-encode-perl \
+    liburi-perl \
+    libwww-perl \
+    libxml-dom-perl \
+    libxml-libxml-perl \
+    libxml-libxslt-perl \
+    libxml-parser-perl \
+    libxml-simple-perl \
+    libxml-treepp-perl \
+    libxml-twig-perl \
+    libxml-writer-perl \
+    make \
+    perl \
+    perl-tk \
+    tzdata \
+    git \
+    cron \
+    --no-install-recommends
+
+# Add GoLang
+RUN \
+ echo "Installing golang" && \
+ curl -o /tmp/golang.tar.gz -L https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz && \
+ tar -C /usr/local -xzf /tmp/golang.tar.gz && \
+ rm /tmp/golang.tar.gz
+
+ENV PATH /usr/local/go/bin:$PATH
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:$PATH
+
+RUN \
+ mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+# Compile xTeVe
+RUN \
+ echo "**** compile xTeVe ****" && \
+ git clone --depth 1 $XTEVE_GIT_REPO /tmp/xteve && \
+ cd /tmp/xteve && \
+ git checkout && \
+ go get -v github.com/koron/go-ssdp && \
+ go get -v github.com/gorilla/websocket && \
+ go get -v github.com/kardianos/osext && \
+ go build -v -o /usr/bin/xteve xteve.go && \
+ chmod +x /usr/bin/xteve && \
+ mkdir /config/xteve && \
+ rm -rf /tmp/xteve && \
+ rm -rf /usr/local/go && \
+ rm -rf /go
+
+RUN \
+ echo "**** compile XMLTV ****" && \
+ git clone --depth 1 --branch ${XMLTV_VER} https://github.com/XMLTV/xmltv.git /tmp/xmltv && \
+ cd /tmp/xmltv && \
+ git checkout && \
+ echo "y" | perl Makefile.PL && \
+ make -j 2 && \
+ make install && \
+ rm -rf /tmp/xmltv
+
+# Copy root folder
+COPY docker-root/ /
+
+# Clean up
+RUN \
+ echo "**** Cleanup ****" && \
+ apt-get clean && \
+ apt-get autoremove --purge && \
+ rm -rf \
+	/tmp/* \
+	/var/lib/apt/lists/* \
+	/var/tmp/* \
+
+# Expose Port for xTeVe
+EXPOSE 34400
+
+VOLUME /config

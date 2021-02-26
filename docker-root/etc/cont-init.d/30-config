@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv bash
+
+printenv > /etc/environment
+
+mkdir /config/.xmltv/
+
+cp /defaults/tv_grab_eu_xmltvse.conf /config/.xmltv/tv_grab_eu_xmltvse.conf
+
+chmod +x /defaults/grab_xml_tv_se.sh
+
+# copy cronjob to /config
+[[ ! -e /config/grab_cron ]] && \
+cp /defaults/grab_cron /config/grab_cron
+
+crontab /config/grab_cron
+
+# permissions
+chown -R abc:abc \
+	/config
+
+/defaults/grab_xml_tv_se.sh
