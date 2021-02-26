@@ -12,3 +12,4 @@ test.xml
 .vscode/launch.json
 build/xteve_linux_amd64.zip
 build/xteve
+guide_tmp.xml
