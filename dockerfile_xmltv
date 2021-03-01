@@ -10,7 +10,7 @@ LABEL maintainer="noone"
 
 # environment settings
 ENV HOME="/config"
-ENV XMLTV_DAYS=7
+ENV XMLTV_DAYS=5
 ENV XTEVE_GIT_REPO="https://github.com/martinvillysson/xTeVe.git"
 ENV XTEVE_DEBUG_LEVEL=0
 
@@ -72,6 +72,7 @@ RUN \
     tzdata \
     git \
     cron \
+    xz-utils \
     --no-install-recommends
 
 # Add GoLang

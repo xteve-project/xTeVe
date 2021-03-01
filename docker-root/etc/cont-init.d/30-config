@@ -5,17 +5,16 @@ printenv > /etc/environment
 mkdir /config/.xmltv/
 
 cp /defaults/tv_grab_eu_xmltvse.conf /config/.xmltv/tv_grab_eu_xmltvse.conf
+cp /defaults/rytec_files /config/rytec_files
 
 chmod +x /defaults/grab_xml_tv_se.sh
+chmod +x /defaults/grab_rytec_xmltv.sh
 
-# copy cronjob to /config
-[[ ! -e /config/grab_cron ]] && \
-cp /defaults/grab_cron /config/grab_cron
-
-crontab /config/grab_cron
+crontab /defaults/cron_schedule
 
 # permissions
 chown -R abc:abc \
 	/config
 
 /defaults/grab_xml_tv_se.sh
+/defaults/grab_rytec_xmltv.sh /config/rytec_files
