@@ -49,6 +49,7 @@ type Program struct {
 	New             *New             `xml:"new"`
 	Live            *Live            `xml:"live"`
 	Premiere        *Live            `xml:"premiere"`
+	StarRating      []*StarRating    `xml:"star-rating"`
 }
 
 // Title : Programmtitel
@@ -90,6 +91,12 @@ type Country struct {
 type EpisodeNum struct {
 	System string `xml:"system,attr"`
 	Value  string `xml:",chardata"`
+}
+
+// StarRating : star-rating
+type StarRating struct {
+	System string `xml:"system,attr"`
+	Value  string `xml:"value,omitempty"`
 }
 
 // Poster : Programmposter / Cover

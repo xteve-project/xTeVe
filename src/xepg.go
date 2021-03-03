@@ -695,6 +695,9 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Country (Länder)
 			program.Country = xmltvProgram.Country
 
+			// Episodes numbers (Episodennummern)
+			getEpisodeNum(program, xmltvProgram, xepgChannel)
+
 			// Category (Kategorie)
 			getCategory(program, xmltvProgram, xepgChannel, xmltv.Generator)
 
@@ -703,9 +706,6 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 
 			// Language (Sprache)
 			program.Language = xmltvProgram.Language
-
-			// Episodes numbers (Episodennummern)
-			getEpisodeNum(program, xmltvProgram, xepgChannel)
 
 			// Video (Videoparameter)
 			getVideo(program, xmltvProgram, xepgChannel)
@@ -799,9 +799,15 @@ func findNamedMatches(regex *regexp.Regexp, str string) map[string]string {
 	match := regex.FindAllStringSubmatch(str, -1)
 
 	results := map[string]string{}
-	for i, name := range match {
-		results[regex.SubexpNames()[i+1]] = name[i+1]
+	for _, name := range match {
+		//results[regex.SubexpNames()[i+1]] = name[i+1]
+		for index, groupName := range regex.SubexpNames() {
+			if len(results[groupName]) < 1 {
+				results[groupName] = name[index]
+			}
+		}
 	}
+
 	return results
 }
 
@@ -838,7 +844,6 @@ func getCategory(program *Program, xmltvProgram *Program, xepgChannel XEPGChanne
 					country.Lang = i.Lang
 					program.Country = append(program.Country, country)
 				}
-				//year,ok := foundMatches["year"]
 				episodeValue, ok := foundMatches["episode"]
 				if ok == true && len(episodeValue) > 0 {
 
@@ -847,6 +852,14 @@ func getCategory(program *Program, xmltvProgram *Program, xepgChannel XEPGChanne
 					episode.System = "onscreen"
 					program.EpisodeNum = append(program.EpisodeNum, episode)
 					//<episode-num system="xmltv_ns">s.e.p/t</episode-num>
+				}
+				ratingValue, ok := foundMatches["rating"]
+				if ok == true && len(ratingValue) > 0 {
+
+					starRating := &StarRating{}
+					starRating.Value = ratingValue + "/10"
+					starRating.System = "imdb"
+					program.StarRating = append(program.StarRating, starRating)
 				}
 			}
 		}
