@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"regexp"
 	"runtime"
 
 	"strconv"
@@ -616,7 +617,7 @@ func createXMLTVFile() (err error) {
 				var channel Channel
 				channel.ID = xepgChannel.XChannelID
 				channel.Icon = Icon{Src: getCacheImageURL(xepgChannel.TvgLogo)}
-				channel.DisplayName = append(channel.DisplayName, 
+				channel.DisplayName = append(channel.DisplayName,
 					DisplayName{Value: xepgChannel.XName},
 					DisplayName{Value: xepgChannel.XChannelID + " - " + xepgChannel.XName},
 					DisplayName{Value: xepgChannel.XChannelID},
@@ -691,12 +692,11 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 
 			// Description (Beschreibung)
 			program.Desc = xmltvProgram.Desc
-
-			// Category (Kategorie)
-			getCategory(program, xmltvProgram, xepgChannel)
-
 			// Country (Länder)
 			program.Country = xmltvProgram.Country
+
+			// Category (Kategorie)
+			getCategory(program, xmltvProgram, xepgChannel, xmltv.Generator)
 
 			// Program icon (Poster / Cover)
 			getPoster(program, xmltvProgram, xepgChannel)
@@ -795,8 +795,18 @@ func createDummyProgram(xepgChannel XEPGChannelStruct) (dummyXMLTV XMLTV) {
 	return
 }
 
+func findNamedMatches(regex *regexp.Regexp, str string) map[string]string {
+	match := regex.FindAllStringSubmatch(str, -1)
+
+	results := map[string]string{}
+	for i, name := range match {
+		results[regex.SubexpNames()[i+1]] = name[i+1]
+	}
+	return results
+}
+
 // Kategorien erweitern (createXMLTVFile)
-func getCategory(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelStruct) {
+func getCategory(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelStruct, generator string) {
 
 	for _, i := range xmltvProgram.Category {
 
@@ -805,6 +815,41 @@ func getCategory(program *Program, xmltvProgram *Program, xepgChannel XEPGChanne
 		category.Lang = i.Lang
 		program.Category = append(program.Category, category)
 
+	}
+
+	if len(xmltvProgram.SubTitle) > 0 && strings.Contains(generator, "Rytec") {
+		for _, i := range xmltvProgram.SubTitle {
+			re, err := regexp.Compile(`^\[(?P<category>.*?)\]|\((?P<year>\d*)\)|\[(?P<rating>\d.\d)\]|\((?P<episode>S\d+E\d+.*?)\)|\[(?P<country>.*?)\]`)
+			if err == nil {
+				foundMatches := findNamedMatches(re, i.Value)
+				categoryValues, ok := foundMatches["category"]
+				if ok == true && len(categoryValues) > 0 {
+					for _, categoryValue := range strings.Split(categoryValues, ",") {
+						category := &Category{}
+						category.Value = strings.TrimSpace(categoryValue)
+						category.Lang = i.Lang
+						program.Category = append(program.Category, category)
+					}
+				}
+				countryValue, ok := foundMatches["country"]
+				if ok == true && len(countryValue) > 0 {
+					country := &Country{}
+					country.Value = countryValue
+					country.Lang = i.Lang
+					program.Country = append(program.Country, country)
+				}
+				//year,ok := foundMatches["year"]
+				episodeValue, ok := foundMatches["episode"]
+				if ok == true && len(episodeValue) > 0 {
+
+					episode := &EpisodeNum{}
+					episode.Value = episodeValue
+					episode.System = "onscreen"
+					program.EpisodeNum = append(program.EpisodeNum, episode)
+					//<episode-num system="xmltv_ns">s.e.p/t</episode-num>
+				}
+			}
+		}
 	}
 
 	if len(xepgChannel.XCategory) > 0 {
@@ -842,7 +887,9 @@ func getPoster(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelS
 // Episodensystem übernehmen, falls keins vorhanden ist und eine Kategorie im Mapping eingestellt wurden, wird eine Episode erstellt
 func getEpisodeNum(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelStruct) {
 
-	program.EpisodeNum = xmltvProgram.EpisodeNum
+	for _, episode := range xmltvProgram.EpisodeNum {
+		program.EpisodeNum = append(program.EpisodeNum, episode)
+	}
 
 	if len(xepgChannel.XCategory) > 0 && xepgChannel.XCategory != "Movie" {
 
@@ -929,7 +976,7 @@ func getLocalXMLTV(file string, xmltv *XMLTV) (err error) {
 func createM3UFile() {
 
 	showInfo("XEPG:" + fmt.Sprintf("Create M3U file (%s)", System.File.M3U))
-	_, err := buildM3U([]string{},false)
+	_, err := buildM3U([]string{}, false)
 	if err != nil {
 		ShowError(err, 000)
 	}
