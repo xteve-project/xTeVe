@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	m3u "../src/internal/m3u-parser"
+	m3u "xteve/src/internal/m3u-parser"
 )
 
 // Playlisten parsen

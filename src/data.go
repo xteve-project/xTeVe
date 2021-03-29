@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"../src/internal/authentication"
-	"../src/internal/imgcache"
+	"xteve/src/internal/authentication"
+	"xteve/src/internal/imgcache"
 )
 
 // Einstellungen ändern (WebUI)

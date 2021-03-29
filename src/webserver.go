@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"../src/internal/authentication"
+	"xteve/src/internal/authentication"
 
 	"github.com/gorilla/websocket"
 )

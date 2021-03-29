@@ -13,7 +13,7 @@ import (
 	"runtime"
 	"strings"
 
-	"./src"
+	"xteve/src"
 )
 
 // GitHubStruct : GitHub Account. Über diesen Account werden die Updates veröffentlicht
