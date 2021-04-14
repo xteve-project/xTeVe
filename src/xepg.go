@@ -507,6 +507,9 @@ func createXEPGDatabase() (err error) {
 			newChannel.XEPG = xepg
 			newChannel.XChannelID = xChannelID
 
+			newChannel.XUpdateChannelIcon = Settings.ChannelDefaults.XUpdateChannelIcon
+			newChannel.XUpdateChannelName = Settings.ChannelDefaults.XUpdateChannelName
+
 			Data.XEPG.Channels[xepg] = newChannel
 
 		}
