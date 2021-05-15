@@ -103,7 +103,6 @@ func buildXEPG(background bool) {
 			}()
 
 		case false:
-
 			createXEPGMapping()
 			createXEPGDatabase()
 			mapping()
@@ -402,10 +401,15 @@ func createXEPGDatabase() (err error) {
 		}
 
 		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name+m3uChannel.FileM3UID)
-
+		var useHash = true
 		// Try to find the channel based on matching all known values.  If that fails, then move to full channel scan
+		//Workaround if all the Hash Parameters are Empty
+		if m3uChannel.FileM3UID == "" && m3uChannel.GroupTitle == "" && m3uChannel.TvgID == "" && m3uChannel.TvgName == "" && m3uChannel.UUIDKey == "" && m3uChannel.UUIDValue == ""{
+			useHash = false
+		}
 		m3uChannelHash := generateHashForChannel(m3uChannel.FileM3UID, m3uChannel.GroupTitle, m3uChannel.TvgID, m3uChannel.TvgName, m3uChannel.UUIDKey, m3uChannel.UUIDValue)
-		if val, ok := xepgChannelsValuesMap[m3uChannelHash]; ok {
+
+		if val, ok := xepgChannelsValuesMap[m3uChannelHash]; ok && useHash {
 			channelExists = true
 			currentXEPGID = val.XEPG
 			if len(m3uChannel.UUIDValue) > 0 {
