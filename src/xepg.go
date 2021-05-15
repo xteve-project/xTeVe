@@ -405,7 +405,7 @@ func createXEPGDatabase() (err error) {
 		// Try to find the channel based on matching all known values.  If that fails, then move to full channel scan
 		//Workaround if all the Hash Parameters are Empty
 		if m3uChannel.FileM3UID == "" && m3uChannel.GroupTitle == "" && m3uChannel.TvgID == "" && m3uChannel.TvgName == "" && m3uChannel.UUIDKey == "" && m3uChannel.UUIDValue == ""{
-			useHash = true
+			useHash = false
 		}
 		m3uChannelHash := generateHashForChannel(m3uChannel.FileM3UID, m3uChannel.GroupTitle, m3uChannel.TvgID, m3uChannel.TvgName, m3uChannel.UUIDKey, m3uChannel.UUIDValue)
 
