@@ -82,7 +82,7 @@ func readFilesToMap(path string, info os.FileInfo, err error) error {
 
 	if info.IsDir() == false {
 		var base64Str = fileToBase64(getLocalPath(path))
-		blankMap[path] = base64Str
+		blankMap[filepath.ToSlash(path)] = base64Str
 	}
 
 	return nil
@@ -110,7 +110,7 @@ func fileToBase64(file string) string {
 func getLocalPath(filename string) string {
 
 	path, file := filepath.Split(filename)
-	var newPath = filepath.Dir(path)
+	var newPath = filepath.ToSlash(filepath.Dir(path))
 
 	var newFileName = newPath + "/" + file
 
