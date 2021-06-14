@@ -493,6 +493,11 @@ func createXEPGDatabase() (err error) {
 			newChannel.TvgID = m3uChannel.TvgID
 			newChannel.TvgLogo = m3uChannel.TvgLogo
 			newChannel.TvgName = m3uChannel.TvgName
+			if m3uChannel.TvgShift == "" {
+				newChannel.TvgShift = "0"
+			} else {
+				newChannel.TvgShift = m3uChannel.TvgShift
+			}
 			newChannel.URL = m3uChannel.URL
 			newChannel.XmltvFile = ""
 			newChannel.XMapping = ""
@@ -506,6 +511,7 @@ func createXEPGDatabase() (err error) {
 			newChannel.XGroupTitle = m3uChannel.GroupTitle
 			newChannel.XEPG = xepg
 			newChannel.XChannelID = xChannelID
+			newChannel.XTimeshift = newChannel.TvgShift
 
 			Data.XEPG.Channels[xepg] = newChannel
 
@@ -757,8 +763,15 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 
 			// Channel ID
 			program.Channel = xepgChannel.XChannelID
-			program.Start = xmltvProgram.Start
-			program.Stop = xmltvProgram.Stop
+			timeshift, _ := strconv.Atoi(xepgChannel.XTimeshift)
+			progStart := strings.Split(xmltvProgram.Start, " ")
+			progStop := strings.Split(xmltvProgram.Stop, " ")
+			tzStart, _ := strconv.Atoi(progStart[1])
+			tzStop, _ := strconv.Atoi(progStop[1])
+			progStart[1] = fmt.Sprintf("%+05d", tzStart+timeshift*100)
+			progStop[1] = fmt.Sprintf("%+05d", tzStop+timeshift*100)
+			program.Start = strings.Join(progStart, " ")
+			program.Stop = strings.Join(progStop, " ")
 
 			// Title
 			program.Title = xmltvProgram.Title

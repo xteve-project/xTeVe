@@ -63,7 +63,7 @@ var MainMenuItem = /** @class */ (function (_super) {
                 this.tableHeader = ["{{.users.table.username}}", "{{.users.table.password}}", "{{.users.table.web}}", "{{.users.table.pms}}", "{{.users.table.m3u}}", "{{.users.table.xml}}", "{{.users.table.api}}"];
                 break;
             case "mapping":
-                this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}"];
+                this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}", "{{.mapping.table.timeshift}}"];
                 break;
         }
         //console.log(this.menuKey, this.tableHeader);
@@ -412,6 +412,16 @@ var Content = /** @class */ (function () {
                     if (value.length > 20) {
                         value = data[key]["x-mapping"].substring(0, 20) + "...";
                     }
+                    cell.value = value;
+                     var td = cell.createCell();
+                    td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
+                    td.id = key;
+                    tr.appendChild(td);
+                    // Timeshift
+                    var cell = new Cell();
+                    cell.child = true;
+                    cell.childType = "P";
+                    var value = data[key]["x-timeshift"];
                     cell.value = value;
                     var td = cell.createCell();
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
@@ -1316,6 +1326,13 @@ function openPopUp(dataType, element) {
             select.setAttribute("onchange", "javascript: this.className = 'changed'; checkXmltvChannel('" + id + "',this,'" + xmlFile + "');");
             sortSelect(select);
             content.appendRow("{{.mapping.xmltvChannel.title}}", select);
+            // Timeshift
+            var dbKey = "x-timeshift";
+            var input = content.createInput("text", dbKey, data[dbKey]);
+            input.setAttribute("placeholder", "{{.mapping.timeshift.placeholder}}");
+            input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            input.setAttribute("id", "timeshift");
+            content.appendRow("{{.mapping.timeshift.title}}", input);
             // Interaktion
             content.createInteraction();
             // Logo hochladen
@@ -1700,6 +1717,9 @@ function donePopupData(dataType, idsStr) {
                         input["x-active"] = false;
                     }
                     document.getElementById(id).childNodes[7].firstChild.innerHTML = value;
+                    break;
+                case "x-timeshift":
+                    document.getElementById(id).childNodes[8].firstChild.innerHTML = value;
                     break;
                 default:
             }

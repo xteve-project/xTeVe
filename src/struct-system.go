@@ -182,6 +182,7 @@ type XEPGChannelStruct struct {
 	TvgID              string `json:"tvg-id,required"`
 	TvgLogo            string `json:"tvg-logo,required"`
 	TvgName            string `json:"tvg-name,required"`
+	TvgShift           string `json:"tvg-shift,required"`
 	URL                string `json:"url,required"`
 	UUIDKey            string `json:"_uuid.key,required"`
 	UUIDValue          string `json:"_uuid.value,omitempty"`
@@ -197,6 +198,7 @@ type XEPGChannelStruct struct {
 	XUpdateChannelIcon bool   `json:"x-update-channel-icon,required"`
 	XUpdateChannelName bool   `json:"x-update-channel-name,required"`
 	XDescription       string `json:"x-description,required"`
+	XTimeshift         string `json:"x-timeshift,required"`
 }
 
 // M3UChannelStructXEPG : M3U Struktur für XEPG
@@ -209,6 +211,7 @@ type M3UChannelStructXEPG struct {
 	TvgID       string `json:"tvg-id,required"`
 	TvgLogo     string `json:"tvg-logo,required"`
 	TvgName     string `json:"tvg-name,required"`
+	TvgShift    string `json:"tvg-shift,required"`
 	URL         string `json:"url,required"`
 	UUIDKey     string `json:"_uuid.key,required"`
 	UUIDValue   string `json:"_uuid.value,required"`

@@ -11,3 +11,6 @@ http://example.com/stream/3
  
 #EXTINF:321,Example Artist - Example title
 http://example.com/stream/4
+
+#EXTINF:-1 tvg-id="tvg.id.3" tvg-name="Channel.3" tvg-logo="https://example/logo.png" tvg-chno="3" channel-id="3" tvg-shift="-3" group-title="Group 3",Channel 3 West
+http://example.com/stream/5
