@@ -496,6 +496,17 @@ class Content {
 
           tr.appendChild(td)
 
+          // TimeShift
+          var cell:Cell = new Cell()
+          cell.child = true
+          cell.childType = "P"
+          var value = data[key]["x-timeshift"]
+          cell.value = value
+          var td = cell.createCell()
+          td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)')
+          td.id = key
+          tr.appendChild(td)
+
           rows.push(tr)
         });
 
@@ -1605,6 +1616,14 @@ function openPopUp(dataType, element) {
       sortSelect(select)
       content.appendRow("{{.mapping.xmltvChannel.title}}", select)
 
+      // Timeshift
+      var dbKey:string = "x-timeshift"
+      var input = content.createInput("text", dbKey, data[dbKey])
+      input.setAttribute("onchange", "javascript: this.className = 'changed'")
+      input.setAttribute("placeholder", "{{.mapping.timeshift.placeholder}}")
+      input.setAttribute("id", "timeshift")
+      content.appendRow("{{.mapping.timeshift.title}}", input)
+      
       // Interaktion
       content.createInteraction()
 
