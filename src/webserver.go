@@ -15,7 +15,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// StartWebserver : Startet den Webserver
+// StartWebserver : Start the Webserver
 func StartWebserver() (err error) {
 
 	var port = Settings.Port
@@ -167,7 +167,7 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 	showInfo(fmt.Sprintf("Channel Name:%s", streamInfo.Name))
 	showInfo(fmt.Sprintf("Client User-Agent:%s", r.Header.Get("User-Agent")))
 
-	// Prüfen ob der Buffer verwendet werden soll
+	// Check whether the Buffer should be used
 	switch Settings.Buffer {
 
 	case "-":
@@ -185,7 +185,7 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Auto : HDHR routing (wird derzeit nicht benutzt)
+// Auto : HDHR routing (is currently not used)
 func Auto(w http.ResponseWriter, r *http.Request) {
 
 	var channelID = strings.Replace(r.RequestURI, "/auto/v", "", 1)
@@ -210,7 +210,7 @@ func Auto(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// xTeVe : Web Server /xmltv/ und /m3u/
+// xTeVe : Web Server /xmltv/ and /m3u/
 func xTeVe(w http.ResponseWriter, r *http.Request) {
 
 	var requestType, groupTitle, file, content, contentType string
@@ -220,7 +220,7 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 
 	setGlobalDomain(r.Host)
 
-	// XMLTV Datei
+	// XMLTV File
 	if strings.Contains(path, "xmltv/") {
 
 		requestType = "xml"
@@ -235,15 +235,15 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	// M3U Datei
+	// M3U File
 	if strings.Contains(path, "m3u/") {
 
 		requestType = "m3u"
 		groupTitle = r.URL.Query().Get("group-title")
 
 		if System.Dev == false {
-			// false: Dateiname wird im Header gesetzt
-			// true: M3U wird direkt im Browser angezeigt
+			// false: File name is set in the header
+			// true: M3U is displayed directly in the browser
 			w.Header().Set("Content-Disposition", "attachment; filename="+getFilenameFromPath(path))
 		}
 
@@ -258,7 +258,7 @@ func xTeVe(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	// Authentifizierung überprüfen
+	// Check Authentication
 	err = urlAuth(r, requestType)
 	if err != nil {
 		ShowError(err, 000)
@@ -300,7 +300,7 @@ func Images(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// DataImages : Image Pfad für Logos / Bilder die hochgeladen wurden /data_images/
+// DataImages : Image path for Logos / Images that have been uploaded / data_images /
 func DataImages(w http.ResponseWriter, r *http.Request) {
 
 	var path = strings.TrimPrefix(r.URL.Path, "/")
@@ -392,7 +392,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 		}
 
 		switch request.Cmd {
-		// Daten lesen
+		// Read Data
 		case "getServerConfig":
 			//response.Config = Settings
 
@@ -409,7 +409,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 		case "loadFiles":
 			//response.Response = Settings.Files
 
-		// Daten schreiben
+		// Save Data
 		case "saveSettings":
 			var authenticationUpdate = Settings.AuthenticationWEB
 			response.Settings, err = updateServerSettings(request)
@@ -665,7 +665,7 @@ func Web(w http.ResponseWriter, r *http.Request) {
 					confirm = r.FormValue("confirm")
 				}
 
-				// Erster Benutzer wird angelegt (Passwortbestätigung ist vorhanden)
+				// First user is created (Password confirmation is available)
 				if len(confirm) > 0 {
 
 					var token, err = createFirstUserForAuthentication(username, password)
@@ -673,14 +673,14 @@ func Web(w http.ResponseWriter, r *http.Request) {
 						httpStatusError(w, r, 429)
 						return
 					}
-					// Redirect, damit die Daten aus dem Browser gelöscht werden.
+					// Redirect so that the Data is deleted from the Browser.
 					w = authentication.SetCookieToken(w, token)
 					http.Redirect(w, r, "/web", 301)
 					return
 
 				}
 
-				// Benutzername und Passwort vorhanden, wird jetzt überprüft
+				// Username and Password available, will now be checked
 				if len(username) > 0 && len(password) > 0 {
 
 					var token, err = authentication.UserAuthentication(username, password)
@@ -691,11 +691,11 @@ func Web(w http.ResponseWriter, r *http.Request) {
 					}
 
 					w = authentication.SetCookieToken(w, token)
-					http.Redirect(w, r, "/web", 301) // Redirect, damit die Daten aus dem Browser gelöscht werden.
+					http.Redirect(w, r, "/web", 301) // Redirect so that the Data is deleted from the Browser.
 
 				} else {
 					w = authentication.SetCookieToken(w, "-")
-					http.Redirect(w, r, "/web", 301) // Redirect, damit die Daten aus dem Browser gelöscht werden.
+					http.Redirect(w, r, "/web", 301) // Redirect so that the Data is deleted from the Browser.
 				}
 
 				return
@@ -765,7 +765,7 @@ func Web(w http.ResponseWriter, r *http.Request) {
 	contentType = getContentType(requestFile)
 
 	if System.Dev == true {
-		// Lokale Webserver Dateien werden geladen, nur für die Entwicklung
+		// Local web server Files are loaded, only for Development
 		content, _ = readStringFromFile(requestFile)
 	}
 
@@ -783,37 +783,37 @@ func Web(w http.ResponseWriter, r *http.Request) {
 func API(w http.ResponseWriter, r *http.Request) {
 
 	/*
-			API Bedingungen (ohne Authentifizierung):
-			- API muss in den Einstellungen aktiviert sein
+			API conditions (without Authentication):
+			- API must be activated in the Settings
 
-			Beispiel API Request mit curl
+			Example API Request with curl
 			Status:
 			curl -X POST -H "Content-Type: application/json" -d '{"cmd":"status"}' http://localhost:34400/api/
 
 			- - - - -
 
-			API Bedingungen (mit Authentifizierung):
-			- API muss in den Einstellungen aktiviert sein
-			- API muss bei den Authentifizierungseinstellungen aktiviert sein
-			- Benutzer muss die Berechtigung API haben
+			API conditions (with Authentication):
+			- API must be activated in the Settings
+			- API must be activated in the Authentication Settings
+			- User must have API authorization
 
-			Nach jeder API Anfrage wird ein Token generiert, dieser ist einmal in 60 Minuten gültig.
-			In jeder Antwort ist ein neuer Token enthalten
+			A Token is generated after each API request, which is valid once every 60 minutes.
+			A new Token is included in every answer
 
-			Beispiel API Request mit curl
-			Login:
+			Example API Request with curl
+			Login request:
 			curl -X POST -H "Content-Type: application/json" -d '{"cmd":"login","username":"plex","password":"123"}' http://localhost:34400/api/
 
-			Antwort:
+			Response:
 			{
 		  	"status": true,
 		  	"token": "U0T-NTSaigh-RlbkqERsHvUpgvaaY2dyRGuwIIvv"
 			}
 
-			Status mit Verwendung eines Tokens:
+			Status Request using a Token:
 			curl -X POST -H "Content-Type: application/json" -d '{"cmd":"status","token":"U0T-NTSaigh-RlbkqERsHvUpgvaaY2dyRGuwIIvv"}' http://localhost:4400/api/
 
-			Antwort:
+			Response:
 			{
 			  "epg.source": "XEPG",
 			  "status": true,
@@ -912,7 +912,7 @@ func API(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch request.Cmd {
-	case "login": // Muss nichts übergeben werden
+	case "login": // Nothing has to be handed over
 
 	case "status":
 
@@ -972,7 +972,7 @@ func API(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Download : Datei Download
+// Download : File Download
 func Download(w http.ResponseWriter, r *http.Request) {
 
 	var path = r.URL.Path
@@ -994,7 +994,7 @@ func setDefaultResponseData(response ResponseStruct, data bool) (defaults Respon
 
 	defaults = response
 
-	// Folgende Daten immer an den Client übergeben
+	// Always transfer the following Data to the Client
 	defaults.ClientInfo.ARCH = System.ARCH
 	defaults.ClientInfo.EpgSource = Settings.EpgSource
 	defaults.ClientInfo.DVR = System.Addresses.DVR
