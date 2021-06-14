@@ -2,7 +2,7 @@ package src
 
 import "time"
 
-// Playlist : Enthält allen Playlistinformationen, die der Buffer benötigr
+// Playlist : Contains all Playlist Information that the Buffer needs
 type Playlist struct {
 	Folder       string
 	PlaylistID   string
@@ -13,12 +13,12 @@ type Playlist struct {
 	Streams map[int]ThisStream
 }
 
-// ThisClient : Clientinfos
+// ThisClient : Client Information
 type ThisClient struct {
 	Connection int
 }
 
-// ThisStream : Enthält Informationen zu dem abzuspielenden Stream einer Playlist
+// ThisStream : Contains Information about the Playlist Stream to be played
 type ThisStream struct {
 	ChannelName      string
 	Error            string
@@ -32,7 +32,7 @@ type ThisStream struct {
 
 	Segment []Segment
 
-	// Serverinformationen
+	// Server information
 	Location           string
 	URLFile            string
 	URLHost            string
@@ -41,7 +41,7 @@ type ThisStream struct {
 	URLScheme          string
 	URLStreamingServer string
 
-	// Wird nur für HLS / M3U8 verwendet
+	// Is only used for HLS / M3U8
 	Body             string
 	Difference       float64
 	Duration         float64
@@ -62,11 +62,11 @@ type ThisStream struct {
 
 	DynamicStream map[int]DynamicStream
 
-	// Lokale Temp Datein
+	// Local Temp Files
 	OldSegments []string
 }
 
-// Segment : URL Segmente (HLS / M3U8)
+// Segment : URL Segments (HLS / M3U8)
 type Segment struct {
 	Duration     float64
 	Info         bool
@@ -85,7 +85,7 @@ type Segment struct {
 	}
 }
 
-// DynamicStream : Streaminformationen bei dynamischer Bandbreite
+// DynamicStream : Stream Information with dynamic Bandwidth
 type DynamicStream struct {
 	AverageBandwidth int
 	Bandwidth        int
@@ -94,13 +94,13 @@ type DynamicStream struct {
 	URL              string
 }
 
-// ClientConnection : Client Verbindungen
+// ClientConnection : Client Connections
 type ClientConnection struct {
 	Connection int
 	Error      error
 }
 
-// BandwidthCalculation : Bandbreitenberechnung für den Stream
+// BandwidthCalculation : Bandwidth Calculation for the Stream
 type BandwidthCalculation struct {
 	NetworkBandwidth int
 	Size             int

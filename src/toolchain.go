@@ -20,14 +20,14 @@ import (
 
 // --- System Tools ---
 
-// Prüft ob der Ordner existiert, falls nicht, wir der Ordner erstellt
+// Checks whether the Folder exists, if not, the Folder is created
 func checkFolder(path string) (err error) {
 
 	var debug string
 	_, err = os.Stat(filepath.Dir(path))
 
 	if os.IsNotExist(err) {
-		// Ordner existiert nicht, wird jetzt erstellt
+		// Folder does not exist, will now be created
 
 		err = os.MkdirAll(getPlatformPath(path), 0755)
 		if err == nil {
@@ -45,7 +45,7 @@ func checkFolder(path string) (err error) {
 	return nil
 }
 
-// Prüft ob die Datei im Dateisystem existiert
+// Checks whether the File exists in the Filesystem
 func checkFile(filename string) (err error) {
 
 	var file = getPlatformFile(filename)
@@ -69,7 +69,7 @@ func checkFile(filename string) (err error) {
 	return
 }
 
-// GetUserHomeDirectory : Benutzer Homer Verzeichnis
+// GetUserHomeDirectory : User Home Directory
 func GetUserHomeDirectory() (userHomeDirectory string) {
 
 	usr, err := user.Current()
@@ -92,7 +92,7 @@ func GetUserHomeDirectory() (userHomeDirectory string) {
 	return
 }
 
-// Prüft Dateiberechtigung
+// Checks File Permissions
 func checkFilePermission(dir string) (err error) {
 
 	var filename = dir + "permission.test"
@@ -105,12 +105,12 @@ func checkFilePermission(dir string) (err error) {
 	return
 }
 
-// Ordnerpfad für das laufende OS generieren
+// Generate folder path for the running OS
 func getPlatformPath(path string) string {
 	return filepath.Dir(path) + string(os.PathSeparator)
 }
 
-// Dateipfad für das laufende OS generieren
+// Generate File Path for the running OS
 func getPlatformFile(filename string) (osFilePath string) {
 
 	path, file := filepath.Split(filename)
@@ -120,18 +120,18 @@ func getPlatformFile(filename string) (osFilePath string) {
 	return
 }
 
-// Dateinamen aus dem Dateipfad ausgeben
+// Output Filenames from the File Path
 func getFilenameFromPath(path string) (file string) {
 	return filepath.Base(path)
 }
 
-// Nicht mehr verwendete Systemdaten löschen
+// Delete System Data that is no longer used
 func removeOldSystemData() {
-	// Temporären Ordner löschen
+	// Delete Temporary folder
 	os.RemoveAll(System.Folder.Temp)
 }
 
-// Sucht eine Datei im OS
+// Searches for a File in the OS
 func searchFileInOS(file string) (path string) {
 
 	switch runtime.GOOS {
@@ -287,7 +287,7 @@ func readStringFromFile(file string) (str string, err error) {
 	return
 }
 
-// Netzwerk
+// Network
 func resolveHostIP() (err error) {
 
 	netInterfaceAddresses, err := net.InterfaceAddrs()
@@ -344,7 +344,7 @@ func resolveHostIP() (err error) {
 	return
 }
 
-// Sonstiges
+// Miscellaneous
 func randomString(n int) string {
 
 	const alphanum = "AB1CD2EF3GH4IJ5KL6MN7OP8QR9ST0UVWXYZ"
