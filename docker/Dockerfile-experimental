@@ -1,0 +1,146 @@
+# -----------------------------------------------------------------------------
+# winguru/xteve-experimental
+#
+# Builds a docker image for building an xTeVe server
+# (https://xteve.de/)
+#
+# -----------------------------------------------------------------------------
+# First-stage build for xteve builder image
+# -----------------------------------------------------------------------------
+
+# Base image for builder is the latest Alpine release, version 3
+FROM alpine:3 as builder
+
+# Update base system and add dependencies for Go development environment
+RUN apk update && apk upgrade && apk add --no-cache ca-certificates
+RUN apk add --no-cache git make musl-dev go
+
+# Configure Go
+ENV GOROOT /usr/lib/go
+ENV GOPATH /go
+ENV PATH /go/bin:${PATH}
+RUN mkdir -p ${GOPATH}/src ${GOPATH}/bin
+
+# Checkout experimental xTeVe branch and compile
+RUN git clone -b experimental https://github.com/winguru/xTeVe.git /src
+WORKDIR /src
+RUN go build xteve
+
+# -----------------------------------------------------------------------------
+# Second-stage build for xteve image
+# -----------------------------------------------------------------------------
+
+FROM alpine:latest
+RUN apk update && apk upgrade && apk add --no-cache ca-certificates
+
+# Most of the docker build options are taken from https://github.com/dnsforge-repo/xteve
+ARG BUILD_DATE
+ARG VCS_REF
+ARG XTEVE_VERSION
+
+LABEL org.label-schema.build-date="{$BUILD_DATE}" \
+      org.label-schema.name="xTeVe Docker Edition" \
+      org.label-schema.description="Experimental Dockerized xTeVe v2.1.x" \
+      org.label-schema.url="https://hub.docker.com/r/winguru/xteve-experimental/" \
+      org.label-schema.vcs-ref="{$VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/winguru/xteve" \
+      org.label-schema.vendor="WinGuru" \
+      org.label-schema.version="{$XTEVE_VERSION}" \
+      org.label-schema.schema-version="1.0" \
+      MAINTAINER="github@geoffthornton.me" \
+      DISCORD_URL="https://discord.gg/mqHtSBSSNC"
+
+ENV XTEVE_USER=xteve
+ENV XTEVE_UID=31337
+ENV XTEVE_GID=31337
+ENV XTEVE_HOME=/home/xteve
+ENV XTEVE_TEMP=/tmp/xteve
+ENV XTEVE_BIN=/home/xteve/bin
+ENV XTEVE_CACHE=/home/xteve/cache
+ENV XTEVE_CONF=/home/xteve/conf
+ENV XTEVE_PORT=34400
+ENV XTEVE_LOG=/var/log/xteve.log
+ENV XTEVE_BRANCH=experimental
+ENV XTEVE_DEBUG=0
+ENV XTEVE_API=1
+ENV XTEVE_URL="https://github.com/winguru/xTeVe-Downloads/blob/experimental/xteve_linux_amd64.tar.gz?raw=true"
+ENV XTEVE_VERSION=1.0.9
+#ENV GUIDE2GO_HOME=/home/xteve/guide2go
+#ENV GUIDE2GO_CONF=/home/xteve/guide2go/conf
+
+# Create the user and group to run inside the container
+RUN adduser -g "$XTEVE_USER" -u $XTEVE_UID -D $XTEVE_USER
+RUN addgroup -g $XTEVE_GID $XTEVE_USER $XTEVE_USER
+
+#ENV PERL_MM_USE_DEFAULT=1
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$XTEVE_BIN
+
+# Set working directory
+WORKDIR $XTEVE_HOME
+
+# Add Bash shell & dependancies
+#RUN apk add --no-cache bash busybox-suid curl su-exec
+
+# Timezone (TZ):  Add the tzdata package and configure for EST timezone.
+# This will override the default container time in UTC.
+RUN apk update && apk add --no-cache tzdata
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Add VideoLAN & ffmpeg support
+RUN apk add --no-cache vlc ffmpeg
+
+# Install Perl Dependancies
+#RUN apk add --no-cache \
+#perl-dev \
+#build-base \
+#perl-html-parser \
+#perl-http-cookies \
+#perl-json \
+#perl-lwp-protocol-https \
+#perl-lwp-useragent-determined \
+#perl-digest-sha1
+
+# Pull the required binaries for xTeVe, Guide2go and Zap2XML from the repos.
+COPY --from=builder [ "/src/xteve", "${XTEVE_BIN}/" ]
+#ADD /bin/xteve_starter.pl $XTEVE_BIN/xteve_starter.pl
+#RUN wget $XTEVE_URL -O xteve_linux_amd64.tar.gz \
+#&& tar zxfvp xteve_linux_amd64.tar.gz -C $XTEVE_BIN && rm -f $XTEVE_HOME/xteve_linux_amd64.tar.gz
+#ADD /bin/guide2go $XTEVE_BIN/guide2go
+#ADD /bin/guide2conf $XTEVE_BIN/guide2conf
+#ADD /bin/zap2xml.pl $XTEVE_BIN/zap2xml.pl
+
+# Create XML cache directory
+#RUN mkdir $XTEVE_HOME/cache && mkdir $XTEVE_HOME/cache/guide2go
+RUN mkdir $XTEVE_HOME/cache
+
+# Set binary executable permissions.
+#RUN chmod +x $XTEVE_BIN/xteve_starter.pl
+RUN chmod +rx $XTEVE_BIN/xteve
+#RUN chmod +rx $XTEVE_BIN/guide2go
+#RUN chmod +rx $XTEVE_BIN/guide2conf
+#RUN chmod +rx $XTEVE_BIN/zap2xml.pl
+
+# Create working directories for xTeVe
+RUN mkdir $XTEVE_CONF
+RUN chmod a+rwX $XTEVE_CONF
+RUN mkdir $XTEVE_TEMP
+RUN chmod a+rwX $XTEVE_TEMP
+
+# Configure container volume mappings
+VOLUME $XTEVE_CONF
+VOLUME $XTEVE_TEMP
+#VOLUME $GUIDE2GO_CONF
+
+# Ensure the container user has ownership of home dir
+RUN chown -R $XTEVE_USER $XTEVE_HOME
+
+# Set default container port
+EXPOSE $XTEVE_PORT
+
+# Switch users to the xTeVe container user
+USER $XTEVE_USER
+
+# Run the xTeVe init script / executable
+#ENTRYPOINT $XTEVE_BIN/xteve_starter.pl
+ENTRYPOINT ${XTEVE_BIN}/xteve -config ${XTEVE_CONF}
