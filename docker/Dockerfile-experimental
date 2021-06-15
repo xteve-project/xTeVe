@@ -68,9 +68,8 @@ ENV XTEVE_VERSION=1.0.9
 #ENV GUIDE2GO_HOME=/home/xteve/guide2go
 #ENV GUIDE2GO_CONF=/home/xteve/guide2go/conf
 
-# Create the user and group to run inside the container
+# Create the user to run inside the container
 RUN adduser -g "$XTEVE_USER" -u $XTEVE_UID -D $XTEVE_USER
-RUN addgroup -g $XTEVE_GID $XTEVE_USER $XTEVE_USER
 
 #ENV PERL_MM_USE_DEFAULT=1
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$XTEVE_BIN
