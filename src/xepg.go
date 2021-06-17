@@ -555,19 +555,13 @@ func mapping() (err error) {
 		if xepgChannel.XActive == false {
 
 			// Values can be "-", therefore len <1
-			if len(xepgChannel.XmltvFile) < 1 && len(xepgChannel.XmltvFile) < 1 {
+			if len(xepgChannel.XmltvFile) < 1 && len(xepgChannel.XMapping) < 1 {
 
 				var tvgID = xepgChannel.TvgID
 
 				// Set default for new Channel
-				if len(xepgChannel.DefaultMissingEPG) > 1 {
-					xepgChannel.XmltvFile = "xTeVe Dummy"
-					xepgChannel.XMapping = xepgChannel.DefaultMissingEPG
-					xepgChannel.XActive = true
-				} else {
-					xepgChannel.XmltvFile = "-"
-					xepgChannel.XMapping = "-"
-				}
+				xepgChannel.XmltvFile = "-"
+				xepgChannel.XMapping = "-"
 
 				Data.XEPG.Channels[xepg] = xepgChannel
 
@@ -650,6 +644,12 @@ func mapping() (err error) {
 			if len(xepgChannel.XMapping) == 0 {
 				xepgChannel.XMapping = "-"
 				xepgChannel.XActive = false
+			}
+
+			if len(xepgChannel.DefaultMissingEPG) > 1 && xepgChannel.XActive == false {
+				xepgChannel.XmltvFile = "xTeVe Dummy"
+				xepgChannel.XMapping = xepgChannel.DefaultMissingEPG
+				xepgChannel.XActive = true
 			}
 
 			Data.XEPG.Channels[xepg] = xepgChannel
