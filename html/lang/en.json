@@ -63,7 +63,7 @@
       "filter": "Filter"
     },
     "custom": "Custom",
-    "group": "Group",
+    "group": "M3U Group",
     "name":
     {
       "title": "Filter Name",
@@ -111,6 +111,24 @@
       "title": "Exclude",
       "placeholder": "ES,IT",
       "description": "Channel name must not contain.<br>(Comma separated) Comma means or"
+    },
+    "preserveMapping":
+    {
+      "title": "Preserve Existing M3U<br>Channel Numbers",
+      "palceholder": "",
+      "description": "Preserve existing M3U playlist channel numbers?"
+    },
+    "startingChannel":
+    {
+      "title": "Starting Channel Number",
+      "placeholder": "",
+      "description": ""
+    },
+    "defaultMissingEPG":
+    {
+      "title": "Fill Missing EPG Data",
+      "placeholder": "",
+      "description": "When there is no matching EPG data for channel, <br>autofill with xTeVe dummy EPG data?"
     }
 
   },

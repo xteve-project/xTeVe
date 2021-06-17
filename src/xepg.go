@@ -329,11 +329,17 @@ func createXEPGDatabase() (err error) {
 		return
 	}
 
-	var getFreeChannelNumber = func() (xChannelID string) {
+	var getFreeChannelNumber = func(startingChannel ...string) (xChannelID string) {
 
 		sort.Float64s(allChannelNumbers)
 
 		var firstFreeNumber float64 = Settings.MappingFirstChannel
+		if startingChannel != nil {
+			var startingChannel, _ = strconv.ParseFloat(startingChannel[0], 64)
+			if startingChannel > 0 {
+				firstFreeNumber = startingChannel
+			}
+		}
 
 		for {
 
@@ -481,8 +487,13 @@ func createXEPGDatabase() (err error) {
 		case false:
 			// Neuer Kanal
 			var xepg = createNewID()
-			var xChannelID = getFreeChannelNumber()
-
+			xChannelID := func() string {
+				if m3uChannel.PreserveMapping == "true" {
+					return getFreeChannelNumber(m3uChannel.UUIDValue)
+				} else {
+					return getFreeChannelNumber(m3uChannel.StartingChannel)
+				}
+			}()
 			var newChannel XEPGChannelStruct
 			newChannel.FileM3UID = m3uChannel.FileM3UID
 			newChannel.FileM3UName = m3uChannel.FileM3UName
@@ -501,6 +512,7 @@ func createXEPGDatabase() (err error) {
 			newChannel.URL = m3uChannel.URL
 			newChannel.XmltvFile = ""
 			newChannel.XMapping = ""
+			newChannel.DefaultMissingEPG = m3uChannel.DefaultMissingEPG
 
 			if len(m3uChannel.UUIDKey) > 0 {
 				newChannel.UUIDKey = m3uChannel.UUIDKey
@@ -548,8 +560,14 @@ func mapping() (err error) {
 				var tvgID = xepgChannel.TvgID
 
 				// Set default for new Channel
-				xepgChannel.XmltvFile = "-"
-				xepgChannel.XMapping = "-"
+				if len(xepgChannel.DefaultMissingEPG) > 1 {
+					xepgChannel.XmltvFile = "xTeVe Dummy"
+					xepgChannel.XMapping = xepgChannel.DefaultMissingEPG
+					xepgChannel.XActive = true
+				} else {
+					xepgChannel.XmltvFile = "-"
+					xepgChannel.XMapping = "-"
+				}
 
 				Data.XEPG.Channels[xepg] = xepgChannel
 

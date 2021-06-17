@@ -60,7 +60,7 @@ function changeButtonAction(element, buttonID, attribute) {
 }
 
 function getLocalData(dataType, id):object {
-  var data = new Object()
+  let data = {}
   switch(dataType) {
     case "m3u":
       data = SERVER["settings"]["files"][dataType][id]
@@ -82,6 +82,9 @@ function getLocalData(dataType, id):object {
         data["include"] = ""
         data["name"] = ""
         data["type"] = "group-title"
+        data["preserveMapping"] = true
+        data["startingChannel"] = SERVER["settings"]["mapping.first.channel"]
+        data["defaultMissingEPG"] = "-"
         SERVER["settings"]["filter"][id] = data
       }
       data = SERVER["settings"]["filter"][id]

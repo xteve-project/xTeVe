@@ -431,6 +431,9 @@ func saveFilter(request RequestStruct) (settings SettingsStruct, err error) {
 
 	defaultFilter.Active = true
 	defaultFilter.CaseSensitive = false
+	defaultFilter.PreserveMapping = true
+	defaultFilter.StartingChannel = strconv.FormatFloat(Settings.MappingFirstChannel, 'f', -1, 64) // 1000
+	defaultFilter.DefaultMissingEPG = "-"
 
 	filterMap = Settings.Filter
 	newData = request.Filter
@@ -781,6 +784,9 @@ func createFilterRules() (err error) {
 			}
 
 			dataFilter.CaseSensitive = filter.CaseSensitive
+			dataFilter.PreserveMapping = filter.PreserveMapping
+			dataFilter.StartingChannel = filter.StartingChannel
+			dataFilter.DefaultMissingEPG = filter.DefaultMissingEPG
 			dataFilter.Rule = fmt.Sprintf("%s%s%s", filter.Filter, include, exclude)
 			dataFilter.Type = filter.Type
 

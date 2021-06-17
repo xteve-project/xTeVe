@@ -105,6 +105,9 @@ func filterThisStream(s interface{}) (status bool) {
 
 			if group == filter.Rule {
 				match = true
+				stream["_preserve-mapping"] = strconv.FormatBool(filter.PreserveMapping)
+				stream["_starting-channel"] = filter.StartingChannel
+				stream["_default-missing-epg"] = filter.DefaultMissingEPG
 			}
 
 		case "custom-filter":
