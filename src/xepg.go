@@ -554,14 +554,22 @@ func mapping() (err error) {
 		// Automatic mapping for new Channels. Is only executed if the Channel is deactivated and no XMLTV file and no XMLTV Channel is assigned.
 		if xepgChannel.XActive == false {
 
-			// Values can be "-", therefore len <1
-			if len(xepgChannel.XmltvFile) < 1 && len(xepgChannel.XMapping) < 1 {
+			// Values can be "-", therefore len <= 1
+			// If either XmltvFile (XMLTV file / EPG source) or XMapping (XMLTV Channel / EPG program) is "-" or null, then look for a matching EPG program.
+			// If nothing matches, look for DefaultMissingEPG (a default Dummy xTeVe preference) and set it
+			if len(xepgChannel.XmltvFile) <= 1 || len(xepgChannel.XMapping) <= 1 {
 
 				var tvgID = xepgChannel.TvgID
 
 				// Set default for new Channel
-				xepgChannel.XmltvFile = "-"
-				xepgChannel.XMapping = "-"
+				if len(xepgChannel.DefaultMissingEPG) > 1 {
+					xepgChannel.XmltvFile = "xTeVe Dummy"
+					xepgChannel.XMapping = xepgChannel.DefaultMissingEPG
+					xepgChannel.XActive = true
+				} else {
+					xepgChannel.XmltvFile = "-"
+					xepgChannel.XMapping = "-"
+				}
 
 				Data.XEPG.Channels[xepg] = xepgChannel
 
