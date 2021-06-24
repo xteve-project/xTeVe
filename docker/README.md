@@ -1,18 +1,22 @@
 <a href="https://hub.docker.com/repository/docker/winguru/xteve-experimental"><img alt="Docker Cloud Automated build" src="https://img.shields.io/docker/cloud/automated/winguru/xteve-experimental?style=for-the-badge"></a>&nbsp;
 <a href="https://hub.docker.com/repository/docker/winguru/xteve-experimental"><img alt="Docker Cloud Build Status" src="https://img.shields.io/docker/cloud/build/winguru/xteve-experimental?style=for-the-badge"></a>
 
-<h1 id="xTeVe><a href="https://xteve.de/">xTeVe Docker Experimental Edition</a></h1>
-<a href="https://xteve.de"></a>
+<h1 id="xTeVe"><a href="https://https://github.com/winguru/xTeVe/tree/experimental">xTeVe Docker Experimental Edition</a></h1>
 <tr>
 
-Image Maintainer:  <b>winguru</b>\<github@geoffthornton.me\></a>
+Image Maintainer:  <b>winguru</b> <github@geoffthornton.me\></a>
 <br>
                           
-For issues, questions, comments, or suggestions regarding this experminal xTeVe build, click below to join my Discord server:
-
-<a href="https://discord.gg/mqHtSBSSNC"><img alt="Discord" src="https://img.shields.io/discord/431853493503131648?style=for-the-badge"></a>
-                                                                                                                                                   
-
+<table style="border: 0">
+<tr style="border: 0">
+<td style="border: 0; padding-left: 0">For issues, questions, comments, or suggestions regarding this experminal xTeVe build, click below to join my Discord server:</td>
+<td style="border: 0">For general xTeVe docker questions or issues, click below to join the official xTeVe docker Discord server.</td>
+</tr>
+<tr style="border: 0">
+<td style="border: 0; padding-left: 0"><a href="https://discord.gg/mqHtSBSSNC"><img alt="Discord" src="https://img.shields.io/discord/431853493503131648?style=for-the-badge"></a></td>
+<td style="border: 0"><a href="https://discord.gg/Up4ZsV6"><img alt="Discord" src="https://img.shields.io/discord/465222357754314767?color=%2367E3FB&style=for-the-badge"></a></td>
+</tr>
+</table>
 Many thanks to all the contributors to xTeVe, including <a href="https://github.com/dnsforge-repo/xteve">LeeD &lt;hostmaster@dnsforge.com&gt;</a>, whom most of this docker build is based on.
 
 <br>
@@ -39,11 +43,16 @@ xTeVe is a M3U proxy server for Plex, Emby and any client and provider which sup
 
 <h2 id="experimental-features">Experimental Features</h2>                  
 <ul>
-<li>Support for Tvg-shift in M3U files (timezone shifting)</li>
-<li>Planned support for different channel number mapping options</li>
-<li>Planned support for automatic xTeVe dummy EPG data for channels with no EPG source</li>
+<li>Per-channel support for "Tvg-shift" field in M3U files (timezone shifting)</li>
+<li>Per-filter support for setting the starting channel for automatic channel number mapping/li>
+<li>Per-filter support for optionally preserving the M3U channel number mappings/li>
+<li>Per-filter support for automatic xTeVe dummy EPG data for channels with no matching EPG source</li>
 </ul>
-                              
+
+<h2 id="bugfixes">Bugfixes</h2>
+<ul>
+<li>Ensured HDHomeRunner lineup.json file is always sorted by channel number</li>
+</ul>
 <br>
                     
 <h2 >Docker 'run' Configuration & container mappings</h2>
