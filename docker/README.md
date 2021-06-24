@@ -1,7 +1,7 @@
 <a href="https://hub.docker.com/repository/docker/winguru/xteve-experimental"><img alt="Docker Cloud Automated build" src="https://img.shields.io/docker/cloud/automated/winguru/xteve-experimental?style=for-the-badge"></a>&nbsp;
 <a href="https://hub.docker.com/repository/docker/winguru/xteve-experimental"><img alt="Docker Cloud Build Status" src="https://img.shields.io/docker/cloud/build/winguru/xteve-experimental?style=for-the-badge"></a>
 
-<h1 id="xTeVe"><a href="https://https://github.com/winguru/xTeVe/tree/experimental">xTeVe Docker Experimental Edition</a></h1>
+<h1 id="xTeVe"><a href="https://github.com/winguru/xTeVe/tree/experimental">xTeVe Docker Experimental Edition</a></h1>
 <tr>
 
 Image Maintainer:  <b>winguru</b> <github@geoffthornton.me\></a>
