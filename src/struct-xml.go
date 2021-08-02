@@ -44,7 +44,7 @@ type Program struct {
 	Poster          []Poster         `xml:"icon"`
 	Credits         Credits          `xml:"credits,omitempty"` //`xml:",innerxml,omitempty"`
 	Rating          []Rating         `xml:"rating"`
-	StarRating      []StarRating     `xml:"star-rating"`
+	StarRating      []*StarRating    `xml:"star-rating"`
 	Language        []*Language      `xml:"language"`
 	Video           Video            `xml:"video"`
 	Date            string           `xml:"date"`
@@ -52,7 +52,6 @@ type Program struct {
 	New             *New             `xml:"new"`
 	Live            *Live            `xml:"live"`
 	Premiere        *Live            `xml:"premiere"`
-	StarRating      []*StarRating    `xml:"star-rating"`
 }
 
 // Title : Programmtitel
@@ -107,12 +106,6 @@ type Country struct {
 type EpisodeNum struct {
 	System string `xml:"system,attr"`
 	Value  string `xml:",chardata"`
-}
-
-// StarRating : star-rating
-type StarRating struct {
-	System string `xml:"system,attr"`
-	Value  string `xml:"value,omitempty"`
 }
 
 // Poster : Programmposter / Cover
