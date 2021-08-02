@@ -15,7 +15,7 @@ var System SystemStruct
 var WebScreenLog WebScreenLogStruct
 
 // Settings : Inhalt der settings.json
-var Settings SettingsStrcut
+var Settings SettingsStruct
 
 // Data : Alle Daten werden hier abgelegt. (Lineup, XMLTV)
 var Data DataStruct
@@ -46,7 +46,8 @@ func Init() (err error) {
 	System.ServerProtocol.M3U = "http"
 	System.ServerProtocol.WEB = "http"
 	System.ServerProtocol.XML = "http"
-	System.DVRLimit = 480
+	System.PlexChannelLimit = 480
+	System.UnfilteredChannelLimit = 480
 	System.Compatibility = "1.4.4"
 
 	// FFmpeg Default Einstellungen
@@ -229,7 +230,8 @@ func StartSystem(updateProviderFiles bool) (err error) {
 	showInfo(fmt.Sprintf("UUID:%s", Settings.UUID))
 	showInfo(fmt.Sprintf("Tuner (Plex / Emby):%d", Settings.Tuner))
 	showInfo(fmt.Sprintf("EPG Source:%s", Settings.EpgSource))
-	showInfo(fmt.Sprintf("Plex Channel Limit:%d", System.DVRLimit))
+	showInfo(fmt.Sprintf("Plex Channel Limit:%d", System.PlexChannelLimit))
+	showInfo(fmt.Sprintf("Unfiltered Chan. Limit:%d", System.UnfilteredChannelLimit))
 
 	// Providerdaten aktualisieren
 	if len(Settings.Files.M3U) > 0 && Settings.FilesUpdate == true || updateProviderFiles == true {

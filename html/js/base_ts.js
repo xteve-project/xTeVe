@@ -20,7 +20,7 @@ menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.p
 var settingsCategory = new Array();
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "xteveAutoUpdate,tuner,epgSource,api"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"));
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,buffer.size.kb,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"));
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,udpxy,buffer.size.kb,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.backup}}", "backup.path,backup.keep"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.authentication}}", "authentication.web,authentication.pms,authentication.m3u,authentication.xml,authentication.api"));
 function showPopUpElement(elm) {
@@ -226,7 +226,7 @@ function createSearchObj() {
     SEARCH_MAPPING = new Object();
     var data = SERVER["xepg"]["epgMapping"];
     var channels = getObjKeys(data);
-    var channelKeys = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title"];
+    var channelKeys = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"];
     channels.forEach(function (id) {
         channelKeys.forEach(function (key) {
             if (key == "x-active") {
@@ -240,7 +240,15 @@ function createSearchObj() {
                 }
             }
             else {
-                SEARCH_MAPPING[id] = SEARCH_MAPPING[id] + data[id][key] + " ";
+                if (key == "x-xmltv-file") {
+                    var xmltvFile = getValueFromProviderFile(data[id][key], "xmltv", "name");
+                    if (xmltvFile != undefined) {
+                        SEARCH_MAPPING[id] = SEARCH_MAPPING[id] + xmltvFile + " ";
+                    }
+                }
+                else {
+                    SEARCH_MAPPING[id] = SEARCH_MAPPING[id] + data[id][key] + " ";
+                }
             }
         });
     });

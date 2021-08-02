@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	up2date "../src/internal/up2date/client"
+	up2date "xteve/src/internal/up2date/client"
 
 	"reflect"
 )

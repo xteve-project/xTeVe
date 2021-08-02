@@ -1,5 +1,7 @@
 package src
 
+import "xteve/src/internal/imgcache"
+
 // SystemStruct : Beinhaltet alle Systeminformationen
 type SystemStruct struct {
 	Addresses struct {
@@ -8,19 +10,20 @@ type SystemStruct struct {
 		XML string
 	}
 
-	APIVersion          string
-	AppName             string
-	ARCH                string
-	BackgroundProcess   bool
-	Branch              string
-	Build               string
-	Compatibility       string
-	ConfigurationWizard bool
-	DBVersion           string
-	Dev                 bool
-	DeviceID            string
-	Domain              string
-	DVRLimit            int
+	APIVersion             string
+	AppName                string
+	ARCH                   string
+	BackgroundProcess      bool
+	Branch                 string
+	Build                  string
+	Compatibility          string
+	ConfigurationWizard    bool
+	DBVersion              string
+	Dev                    bool
+	DeviceID               string
+	Domain                 string
+	PlexChannelLimit       int
+	UnfilteredChannelLimit int
 
 	FFmpeg struct {
 		DefaultOptions string
@@ -99,6 +102,7 @@ type SystemStruct struct {
 	}
 
 	URLBase string
+	UDPxy   string
 	Version string
 	WEB     struct {
 		Menu []string
@@ -114,6 +118,7 @@ type GitStruct struct {
 // DataStruct : Alle Daten werden hier abgelegt. (Lineup, XMLTV)
 type DataStruct struct {
 	Cache struct {
+		Images      *imgcache.Cache
 		ImagesCache []string
 		ImagesFiles []string
 		ImagesURLS  []string
@@ -246,8 +251,8 @@ type Notification struct {
 	Type     string `json:"type,required"`
 }
 
-// SettingsStrcut : Inhalt der settings.json
-type SettingsStrcut struct {
+// SettingsStruct : Inhalt der settings.json
+type SettingsStruct struct {
 	API               bool     `json:"api"`
 	AuthenticationAPI bool     `json:"authentication.api"`
 	AuthenticationM3U bool     `json:"authentication.m3u"`
@@ -290,6 +295,7 @@ type SettingsStrcut struct {
 	UpdateURL                 string                `json:"update.url,omitempty"`
 	UserAgent                 string                `json:"user.agent"`
 	UUID                      string                `json:"uuid"`
+	UDPxy                     string                `json:"udpxy"`
 	Version                   string                `json:"version"`
 	XepgReplaceMissingImages  bool                  `json:"xepg.replace.missing.images"`
 	XteveAutoUpdate           bool                  `json:"xteveAutoUpdate"`

@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"../src/internal/authentication"
+	"xteve/src/internal/authentication"
 
 	"github.com/gorilla/websocket"
 )
@@ -30,6 +30,7 @@ func StartWebserver() (err error) {
 	http.HandleFunc("/api/", API)
 	http.HandleFunc("/images/", Images)
 	http.HandleFunc("/data_images/", DataImages)
+
 	//http.HandleFunc("/auto/", Auto)
 
 	showInfo("DVR IP:" + System.IPAddress + ":" + Settings.Port)
@@ -127,6 +128,12 @@ func Stream(w http.ResponseWriter, r *http.Request) {
 		ShowError(err, 1203)
 		httpStatusError(w, r, 404)
 		return
+	}
+
+	// If an UDPxy host is set, and the stream URL is multicast (i.e. starts with 'udp://@'),
+	// then streamInfo.URL needs to be rewritten to point to UDPxy.
+	if Settings.UDPxy != "" && strings.HasPrefix(streamInfo.URL, "udp://@") {
+		streamInfo.URL = fmt.Sprintf("http://%s/udp/%s/", Settings.UDPxy, strings.TrimPrefix(streamInfo.URL, "udp://@"))
 	}
 
 	switch Settings.Buffer {
@@ -338,6 +345,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		ShowError(err, 0)
 		http.Error(w, "Could not open websocket connection", http.StatusBadRequest)
+		return
 	}
 
 	setGlobalDomain(r.Host)

@@ -117,7 +117,7 @@ When the branch is changed, an update is only performed if there is a new versio
 ## Build from source code [Go / Golang]
 
 #### Requirements
-* [Go](https://golang.org) (go1.12.4 or newer)
+* [Go](https://golang.org) (go1.16.2 or newer)
 
 #### Dependencies
 * [go-ssdp](https://github.com/koron/go-ssdp)

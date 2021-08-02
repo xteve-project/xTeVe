@@ -11,11 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"../src/internal/authentication"
+	"xteve/src/internal/authentication"
+	"xteve/src/internal/imgcache"
 )
 
 // Einstellungen ändern (WebUI)
-func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err error) {
+func updateServerSettings(request RequestStruct) (settings SettingsStruct, err error) {
 
 	var oldSettings = jsonToMap(mapToJSON(Settings))
 	var newSettings = jsonToMap(mapToJSON(request.Settings))
@@ -40,7 +41,7 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 
 			case "update":
 				// Leerzeichen aus den Werten entfernen und Formatierung der Uhrzeit überprüfen (0000 - 2359)
-				var newUpdateTimes []string
+				var newUpdateTimes = make([]string, 0)
 
 				for _, v := range value.([]interface{}) {
 
@@ -57,7 +58,7 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 				}
 
 				if len(newUpdateTimes) == 0 {
-					newUpdateTimes = append(newUpdateTimes, "0000")
+					//newUpdateTimes = append(newUpdateTimes, "0000")
 				}
 
 				value = newUpdateTimes
@@ -203,25 +204,38 @@ func updateServerSettings(request RequestStruct) (settings SettingsStrcut, err e
 
 		if cacheImages == true {
 
-			if Settings.EpgSource == "XEPG" {
+			if Settings.EpgSource == "XEPG" && System.ImageCachingInProgress == 0 {
 
-				go func() {
+				Data.Cache.Images, err = imgcache.New(System.Folder.ImagesCache, fmt.Sprintf("%s://%s/images/", System.ServerProtocol.WEB, System.Domain), Settings.CacheImages)
+				if err != nil {
+					ShowError(err, 0)
+				}
 
-					if Settings.CacheImages == true {
+				switch Settings.CacheImages {
 
-						createXMLTVFile()
-						cachingImages()
+				case false:
+					createXMLTVFile()
+					createM3UFile()
+
+				case true:
+					go func() {
+
 						createXMLTVFile()
 						createM3UFile()
 
-					} else {
+						System.ImageCachingInProgress = 1
+						showInfo("Image Caching:Images are cached")
 
-						createXMLTVFile()
-						createM3UFile()
+						Data.Cache.Images.Image.Caching()
+						showInfo("Image Caching:Done")
 
-					}
+						System.ImageCachingInProgress = 0
 
-				}()
+						buildXEPG(false)
+
+					}()
+
+				}
 
 			}
 
@@ -408,7 +422,7 @@ func deleteLocalProviderFiles(dataID, fileType string) {
 }
 
 // Filtereinstellungen speichern (WebUI)
-func saveFilter(request RequestStruct) (settings SettingsStrcut, err error) {
+func saveFilter(request RequestStruct) (settings SettingsStruct, err error) {
 
 	var filterMap = make(map[int64]interface{})
 	var newData = make(map[int64]interface{})
@@ -496,6 +510,11 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 	var tmp = Data.XEPG
 
+	Data.Cache.Images, err = imgcache.New(System.Folder.ImagesCache, fmt.Sprintf("%s://%s/images/", System.ServerProtocol.WEB, System.Domain), Settings.CacheImages)
+	if err != nil {
+		ShowError(err, 0)
+	}
+
 	err = json.Unmarshal([]byte(mapToJSON(request.EpgMapping)), &tmp)
 	if err != nil {
 		return
@@ -512,18 +531,8 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 
 		System.ScanInProgress = 1
 		cleanupXEPG()
+		System.ScanInProgress = 0
 		buildXEPG(true)
-
-		go func() {
-
-			createXMLTVFile()
-			createM3UFile()
-			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
-			go cachingImages()
-
-			System.ScanInProgress = 0
-
-		}()
 
 	} else {
 
@@ -545,15 +554,10 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 			}
 
 			System.ScanInProgress = 1
-
 			cleanupXEPG()
-			buildXEPG(false)
-			createXMLTVFile()
-			createM3UFile()
-			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
-			go cachingImages()
-
 			System.ScanInProgress = 0
+			buildXEPG(false)
+			showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
 
 			System.BackgroundProcess = false
 
@@ -793,9 +797,9 @@ func buildDatabaseDVR() (err error) {
 
 	System.ScanInProgress = 1
 
-	Data.Streams.All = make([]interface{}, 0)
-	Data.Streams.Active = make([]interface{}, 0)
-	Data.Streams.Inactive = make([]interface{}, 0)
+	Data.Streams.All = make([]interface{}, 0, System.UnfilteredChannelLimit)
+	Data.Streams.Active = make([]interface{}, 0, System.UnfilteredChannelLimit)
+	Data.Streams.Inactive = make([]interface{}, 0, System.UnfilteredChannelLimit)
 	Data.Playlist.M3U.Groups.Text = []string{}
 	Data.Playlist.M3U.Groups.Value = []string{}
 	Data.StreamPreviewUI.Active = []string{}
@@ -951,7 +955,7 @@ func buildDatabaseDVR() (err error) {
 	sort.Strings(Data.Playlist.M3U.Groups.Text)
 	sort.Strings(Data.Playlist.M3U.Groups.Value)
 
-	if len(Data.Streams.Active) == 0 && len(Data.Streams.All) <= System.DVRLimit && len(Settings.Filter) == 0 {
+	if len(Data.Streams.Active) == 0 && len(Data.Streams.All) <= System.UnfilteredChannelLimit && len(Settings.Filter) == 0 {
 		Data.Streams.Active = Data.Streams.All
 		Data.Streams.Inactive = make([]interface{}, 0)
 
@@ -960,11 +964,11 @@ func buildDatabaseDVR() (err error) {
 
 	}
 
-	if len(Data.Streams.Active) > System.DVRLimit {
+	if len(Data.Streams.Active) > System.PlexChannelLimit {
 		showWarning(2000)
 	}
 
-	if len(Settings.Filter) == 0 && len(Data.Streams.All) > System.DVRLimit {
+	if len(Settings.Filter) == 0 && len(Data.Streams.All) > System.UnfilteredChannelLimit {
 		showWarning(2001)
 	}
 

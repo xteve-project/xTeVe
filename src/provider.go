@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	m3u "../src/internal/m3u-parser"
+	m3u "xteve/src/internal/m3u-parser"
 )
 
 // fileType: Welcher Dateityp soll aktualisiert werden (m3u, hdhr, xml) | fileID: Update einer bestimmten Datei (Provider ID)

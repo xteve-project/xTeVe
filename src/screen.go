@@ -16,7 +16,7 @@ func showInfo(str string) {
 		return
 	}
 
-	var max = 22
+	var max = 23
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
 	var space string
@@ -48,7 +48,7 @@ func showDebug(str string, level int) {
 		return
 	}
 
-	var max = 22
+	var max = 23
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
 	var space string
@@ -78,7 +78,7 @@ func showDebug(str string, level int) {
 
 func showHighlight(str string) {
 
-	var max = 22
+	var max = 23
 	var msg = strings.SplitN(str, ":", 2)
 	var length = len(msg[0])
 	var space string
@@ -300,9 +300,9 @@ func getErrMsg(errCode int) (errMsg string) {
 
 	// Warnings
 	case 2000:
-		errMsg = fmt.Sprintf("Plex can not handle more than %d streams. If you do not use Plex, you can ignore this warning.", System.DVRLimit)
+		errMsg = fmt.Sprintf("Plex can not handle more than %d streams. If you do not use Plex, you can ignore this warning.", System.PlexChannelLimit)
 	case 2001:
-		errMsg = fmt.Sprintf("%s has loaded more than %d streams. Use the filter to reduce the number of streams.", System.Name, System.DVRLimit)
+		errMsg = fmt.Sprintf("%s has loaded more than %d streams. Use the filter to reduce the number of streams.", System.Name, System.UnfilteredChannelLimit)
 	case 2002:
 		errMsg = fmt.Sprintf("PMS can not play m3u8 streams")
 	case 2003:

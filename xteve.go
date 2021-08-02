@@ -13,7 +13,7 @@ import (
 	"runtime"
 	"strings"
 
-	"./src"
+	"xteve/src"
 )
 
 // GitHubStruct : GitHub Account. Über diesen Account werden die Updates veröffentlicht
@@ -39,7 +39,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "martinvillysson", Repo: "xTeV
 const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.1.2.0122"
+const Version = "2.2.0.0200"
 
 // DBVersion : Datanbank Version
 const DBVersion = "2.1.0"
@@ -190,7 +190,6 @@ func main() {
 	err = src.BinaryUpdate()
 	if err != nil {
 		src.ShowError(err, 0)
-		os.Exit(0)
 	}
 
 	err = src.StartSystem(false)
