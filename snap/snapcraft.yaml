@@ -1,0 +1,22 @@
+name: xteve
+base: core20 # the base snap is the execution environment for this snap
+version: '0.1'
+summary: M3U Proxy for Plex DVR and Emby Live TV.
+description: |
+        Summary says it all
+
+grade: stable
+confinement: strict
+
+parts:
+  xteve:
+    plugin: go
+    source: .
+
+apps:
+  xteve:
+    daemon: simple
+    command: bin/xteve -port 8080 -config $SNAP_COMMON/config
+    plugs:
+      - network
+      - network-bind
