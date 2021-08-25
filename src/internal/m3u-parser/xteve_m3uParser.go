@@ -11,7 +11,7 @@ import (
 
 // MakeInterfaceFromM3U :
 func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err error) {
-
+  var usedNames = map[string]struct{}{}
   var content = string(byteStream)
   var channelName string
   var uuids []string
@@ -104,6 +104,15 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
           if len(channelName) == 0 {
             return
           }
+
+	  // Ensure channel name is unique
+	  baseChannelName := channelName
+	  _, found := usedNames[channelName]
+	  for i:=0; found; i++ {
+		  channelName = fmt.Sprintf("%s %d", baseChannelName, i)
+		  _, found = usedNames[channelName]
+	  }
+	  usedNames[channelName] = struct{}{}
 
           stream["name"] = channelName
           value = value + channelName
