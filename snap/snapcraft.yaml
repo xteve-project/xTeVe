@@ -16,7 +16,7 @@ parts:
 apps:
   xteve:
     daemon: simple
-    command: bin/xteve -port 8080 -config $SNAP_COMMON/config
+    command: bin/xteve -port 8080 -config $SNAP_COMMON/config -debug 3
     plugs:
       - network
       - network-bind
