@@ -5,6 +5,11 @@ import (
   "strings"
 )
 
+// ShowSystemVersion basic version info
+func ShowSystemVersion() {
+  fmt.Println(fmt.Sprintf("%s.%s", System.Version, System.Build))
+}
+
 // ShowSystemInfo : Systeminformationen anzeigen
 func ShowSystemInfo() {
 

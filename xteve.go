@@ -58,6 +58,7 @@ var restore = flag.String("restore", "", ": Restore from backup  ["+sampleRestor
 var gitBranch = flag.String("branch", "", ": Git Branch           [master|beta] (default: master)")
 var debug = flag.Int("debug", 0, ": Debug level          [0 - 3] (default: 0)")
 var info = flag.Bool("info", false, ": Show system info")
+var version = flag.Bool("version", false, ": Show system version")
 var h = flag.Bool("h", false, ": Show help")
 
 // Aktiviert den Entwicklungsmodus. Für den Webserver werden dann die lokalen Dateien verwendet.
@@ -123,9 +124,13 @@ func main() {
 
 	system.Dev = *dev
 
+	if *version {
+		src.ShowSystemVersion()
+		return
+	}
+
 	// Systeminformationen anzeigen
 	if *info {
-
 		system.Flag.Info = true
 
 		err := src.Init()
