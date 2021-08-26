@@ -1,9 +1,12 @@
 name: xteve
 base: core20 # the base snap is the execution environment for this snap
-version: '0.1'
 summary: M3U Proxy for Plex DVR and Emby Live TV.
+adopt-info: xteve
 description: |
-        Summary says it all
+  xTeVe emulates a DVR tuner for Plex and Emby. It takes an M3U files and
+  emulates a network tuner that can be discovered by those services. Provides
+  multiple tuners and caching proxy of streams. Can also take XMLTV files an
+  handle them internally for program guides.
 
 grade: stable
 confinement: strict
@@ -12,11 +15,14 @@ parts:
   xteve:
     plugin: go
     source: .
+    override-stage: |
+      snapcraftctl stage
+      snapcraftctl set-version `$SNAPCRAFT_STAGE/bin/xteve -version`
 
 apps:
   xteve:
     daemon: simple
-    command: bin/xteve -port 8080 -config $SNAP_COMMON/config -debug 3
+    command: bin/xteve -port 8080 -config $SNAP_COMMON/config
     plugs:
       - network
       - network-bind
