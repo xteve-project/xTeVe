@@ -14,6 +14,7 @@ import (
 )
 
 var port = flag.String("port", "", ": Server port          [34400] (default: 34400)")
+var host = flag.String("host", "", ": Server host                  (default: localhost)")
 
 func main() {
 	flag.Parse()
@@ -28,6 +29,11 @@ func main() {
 		}
 	}
 
+	hostname := "localhost"
+	if host != nil {
+		hostname = *host
+	}
+
 	requestBody, err := json.Marshal(&xteve.APIRequestStruct{
 		Cmd: "status",
 	})
@@ -36,7 +42,7 @@ func main() {
 		os.Exit(-1)
 	}
 
-	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/api/", portNum), "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post(fmt.Sprintf("http://%s:%d/api/", hostname, portNum), "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to get API: %v\n", err)
 		os.Exit(-1)
