@@ -64,5 +64,20 @@ func main() {
 		os.Exit(-1)
 	}
 
-	os.Exit(int(apiresp.TunerActive))
+	fmt.Printf("xTeVe status:\n")
+	fmt.Printf("EPG Source:        %v\n", apiresp.EpgSource)
+	fmt.Printf("Error:             %v\n", apiresp.Error)
+	fmt.Printf("Status:            %v\n", apiresp.Status)
+	fmt.Printf("Streams Active:    %v\n", apiresp.StreamsActive)
+	fmt.Printf("Streams Total:     %v\n", apiresp.StreamsAll)
+	fmt.Printf("Streams XEPG:      %v\n", apiresp.StreamsXepg)
+	fmt.Printf("Tuners Active:     %v\n", apiresp.TunerActive)
+	fmt.Printf("Tuners Available:  %v\n", apiresp.TunerAll)
+	fmt.Printf("URL for DVR:       %v\n", apiresp.URLDvr)
+	fmt.Printf("URL for M3U:       %v\n", apiresp.URLM3U)
+	fmt.Printf("URL for XEPG:      %v\n", apiresp.URLXepg)
+	fmt.Printf("API Version:       %v\n", apiresp.VersionAPI)
+	fmt.Printf("xTeVe Version:     %v\n", apiresp.VersionXteve)
+
+	os.Exit(0)
 }

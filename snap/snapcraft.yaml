@@ -30,6 +30,10 @@ apps:
     command: bin/xteve-inactive -port 8080
     plugs:
       - network
+  status:
+    command: bin/xteve-status -port 8080
+    plugs:
+      - network
 
 hooks:
   pre-refresh: 
