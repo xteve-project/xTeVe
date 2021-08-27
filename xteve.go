@@ -56,6 +56,7 @@ var port = flag.String("port", "", ": Server port          [34400] (default: 344
 var restore = flag.String("restore", "", ": Restore from backup  ["+sampleRestore+"xteve_backup.zip]")
 
 var gitBranch = flag.String("branch", "", ": Git Branch           [master|beta] (default: master)")
+var noUpdates = flag.Bool("no-updates", false, ": Disable updates")
 var debug = flag.Int("debug", 0, ": Debug level          [0 - 3] (default: 0)")
 var info = flag.Bool("info", false, ": Show system info")
 var version = flag.Bool("version", false, ": Show system version")
@@ -153,6 +154,11 @@ func main() {
 	system.Flag.Branch = *gitBranch
 	if len(system.Flag.Branch) > 0 {
 		fmt.Println("Git Branch is now:", system.Flag.Branch)
+	}
+
+	// Updates
+	if noUpdates != nil {
+		system.GitHub.Update = false
 	}
 
 	// Debug Level
