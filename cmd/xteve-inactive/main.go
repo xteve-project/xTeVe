@@ -23,7 +23,7 @@ func main() {
 		var err error
 		portNum, err = strconv.Atoi(*port)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Unable parse port: %v", err)
+			fmt.Fprintf(os.Stderr, "Unable parse port: %v\n", err)
 			os.Exit(-1)
 		}
 	}
@@ -32,13 +32,13 @@ func main() {
 		Cmd: "status",
 	})
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to marshall request: %v", err)
+		fmt.Fprintf(os.Stderr, "Unable to marshall request: %v\n", err)
 		os.Exit(-1)
 	}
 
-	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/api", portNum), "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post(fmt.Sprintf("http://localhost:%d/api/", portNum), "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to get API: %v", err)
+		fmt.Fprintf(os.Stderr, "Unable to get API: %v\n", err)
 		os.Exit(-1)
 	}
 
@@ -46,14 +46,15 @@ func main() {
 
 	respStr, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable read response: %v", err)
+		fmt.Fprintf(os.Stderr, "Unable read response: %v\n", err)
 		os.Exit(-1)
 	}
 
 	var apiresp xteve.APIResponseStruct
 	err = json.Unmarshal(respStr, &apiresp)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable parse response: %v", err)
+		fmt.Fprintf(os.Stderr, "Unable parse response: %v\n", err)
+		fmt.Fprintf(os.Stderr, "%s\n", respStr)
 		os.Exit(-1)
 	}
 
