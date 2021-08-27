@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec $SNAP/bin/xteve-inactive -port 8080

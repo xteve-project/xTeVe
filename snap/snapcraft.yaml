@@ -26,3 +26,12 @@ apps:
     plugs:
       - network
       - network-bind
+  inactive:
+    command: bin/xteve-inactive -port 8080
+    plugs:
+      - network
+
+hooks:
+  pre-refresh: 
+    plugs:
+      - network

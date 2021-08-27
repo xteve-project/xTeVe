@@ -926,6 +926,13 @@ func API(w http.ResponseWriter, r *http.Request) {
 		response.URLM3U = System.ServerProtocol.M3U + "://" + System.Domain + "/m3u/xteve.m3u"
 		response.URLXepg = System.ServerProtocol.XML + "://" + System.Domain + "/xmltv/xteve.xml"
 
+		BufferInformation.Range(func(k, v interface{}) bool {
+			playlist := v.(Playlist)
+			response.TunerActive += int64(len(playlist.Streams))
+			response.TunerAll += int64(playlist.Tuner)
+			return true
+		})
+
 	case "update.m3u":
 		err = getProviderData("m3u", "")
 		if err != nil {

@@ -137,6 +137,8 @@ type APIResponseStruct struct {
 	StreamsAll    int64  `json:"streams.all,omitempty"`
 	StreamsXepg   int64  `json:"streams.xepg,omitempty"`
 	Token         string `json:"token,omitempty"`
+	TunerActive   int64  `json:"tuners.active,omitempty"`
+	TunerAll      int64  `json:"tuners.all,omitempty"`
 	URLDvr        string `json:"url.dvr,omitempty"`
 	URLM3U        string `json:"url.m3u,omitempty"`
 	URLXepg       string `json:"url.xepg,omitempty"`
