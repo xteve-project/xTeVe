@@ -108,7 +108,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 	  // Ensure channel name is unique
 	  baseChannelName := channelName
 	  _, found := usedNames[channelName]
-	  for i:=0; found; i++ {
+	  for i:=1; found; i++ {
 		  channelName = fmt.Sprintf("%s %d", baseChannelName, i)
 		  _, found = usedNames[channelName]
 	  }
