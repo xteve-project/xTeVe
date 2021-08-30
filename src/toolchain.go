@@ -295,6 +295,13 @@ func resolveHostIP() (err error) {
 		return
 	}
 
+	conn, err := net.Dial("udp", "1.1.1.1:80")
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	System.IPAddress = conn.LocalAddr().(*net.UDPAddr).IP.String()
+
 	for _, netInterfaceAddress := range netInterfaceAddresses {
 
 		networkIP, ok := netInterfaceAddress.(*net.IPNet)
@@ -305,13 +312,7 @@ func resolveHostIP() (err error) {
 			var ip = networkIP.IP.String()
 
 			if networkIP.IP.To4() != nil {
-
 				System.IPAddressesV4 = append(System.IPAddressesV4, ip)
-
-				if !networkIP.IP.IsLoopback() && ip[0:7] != "169.254" {
-					System.IPAddress = ip
-				}
-
 			} else {
 				System.IPAddressesV6 = append(System.IPAddressesV6, ip)
 			}
