@@ -18,6 +18,11 @@ parts:
     override-stage: |
       snapcraftctl stage
       snapcraftctl set-version `$SNAPCRAFT_STAGE/bin/xteve -version`
+  snap-scripts:
+    plugin: dump
+    source: snap/local/scripts
+    organize:
+      '*': bin/
 
 apps:
   xteve:
@@ -26,6 +31,10 @@ apps:
     plugs:
       - network
       - network-bind
+  restart:
+    daemon: oneshot
+    command: bin/restart-if-inactive
+    timer: 00:00-24:00/24
   inactive:
     command: bin/xteve-inactive -port 8080
     plugs:
