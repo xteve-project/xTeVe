@@ -34,7 +34,9 @@ apps:
   restart:
     daemon: oneshot
     command: bin/restart-if-inactive
-    timer: 00:00-24:00/24
+    timer: 00:10-23:10/24
+    plugs:
+      - network
   inactive:
     command: bin/xteve-inactive -port 8080
     plugs:
