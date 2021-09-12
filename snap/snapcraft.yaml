@@ -23,6 +23,9 @@ parts:
     source: snap/local/scripts
     organize:
       '*': bin/
+  vlc:
+    plugin: nil
+    stage-packages: [ "vlc-bin" ]
 
 apps:
   xteve:
