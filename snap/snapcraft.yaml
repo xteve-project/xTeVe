@@ -34,6 +34,8 @@ apps:
   xteve:
     daemon: simple
     command: bin/xteve -port 8080 -config $SNAP_COMMON/config -no-updates
+    environment:
+      LD_LIBRARY_PATH: ${SNAP}/usr/lib/arm-linux-gnueabihf/pulseaudio/
     plugs:
       - network
       - network-bind
