@@ -380,6 +380,10 @@
       "title": "Replace missing program images",
       "description": "If the poster in the XMLTV program is missing, the channel logo will be used."
     },
+    "replaceChannelTitle": {
+      "title": "Replace PPV channels title/desc",
+      "description": "Use this if your provider maps the PPV event name to the channel name"
+    },
     "xteveAutoUpdate":
     {
       "title": "Automatic update of xTeVe",

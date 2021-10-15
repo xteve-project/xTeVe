@@ -258,6 +258,20 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
+      case "xepg.replace.channel.title":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.replaceChannelTitle.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       case "xteveAutoUpdate":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.xteveAutoUpdate.title}}" + ":"
@@ -496,6 +510,10 @@ class SettingsCategory {
 
       case "xepg.replace.missing.images":
         text = "{{.settings.replaceEmptyImages.description}}"
+        break
+
+      case "xepg.replace.channel.title":
+        text = "{{.settings.replaceChannelTitle.description}}"
         break
 
       case "udpxy":

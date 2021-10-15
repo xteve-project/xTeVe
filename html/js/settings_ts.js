@@ -6,6 +6,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -218,6 +220,17 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "xepg.replace.channel.title":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.replaceChannelTitle.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "xteveAutoUpdate":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.xteveAutoUpdate.title}}" + ":";
@@ -396,6 +409,9 @@ var SettingsCategory = /** @class */ (function () {
                 break;
             case "xepg.replace.missing.images":
                 text = "{{.settings.replaceEmptyImages.description}}";
+                break;
+            case "xepg.replace.channel.title":
+                text = "{{.settings.replaceChannelTitle.description}}";
                 break;
             case "udpxy":
                 text = "{{.settings.udpxy.description}}";

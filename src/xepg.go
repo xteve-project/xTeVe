@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"regexp"
 	"runtime"
 	"sort"
 
@@ -762,12 +763,40 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 
 			// Title
 			program.Title = xmltvProgram.Title
+			// Map PPV Channel name to title/desc for PPV only
+			var re = regexp.MustCompile(`(?m)PPV-\d+:`)
+			ppv_matches := re.FindAllString(xepgChannel.XName, -1)
+			if Settings.XepgReplaceChannelTitle {
+				title := []*Title{}
+				t := &Title{Value: strings.TrimSpace(xepgChannel.XName)}
+				// Strip out channel name
+				if len(ppv_matches) > 0 {
+					title_parsed := strings.Replace(xepgChannel.XName, ppv_matches[0], "", -1)
+					t = &Title{Value: strings.TrimSpace(title_parsed)}
+				}
+				title = append(title, t)
+				program.Title = title
+			}
 
 			// Sub title (Untertitel)
 			program.SubTitle = xmltvProgram.SubTitle
 
 			// Description (Beschreibung)
 			program.Desc = xmltvProgram.Desc
+			// Map PPV Channel name to title/desc for PPV only
+			if Settings.XepgReplaceChannelTitle && len(ppv_matches) > 0 {
+				desc := []*Desc{}
+				d := &Desc{Value: strings.TrimSpace(xepgChannel.XName)}
+
+				// Strip out channel name
+				if len(ppv_matches) > 0 {
+					desc_parsed := strings.Replace(xepgChannel.XName, ppv_matches[0], "", -1)
+					d = &Desc{Value: strings.TrimSpace(desc_parsed)}
+				}
+
+				desc = append(desc, d)
+				program.Desc = desc
+			}
 
 			// Category (Kategorie)
 			getCategory(program, xmltvProgram, xepgChannel)

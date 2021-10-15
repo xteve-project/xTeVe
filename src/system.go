@@ -128,6 +128,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["log.entries.ram"] = 500
 	defaults["mapping.first.channel"] = 1000
 	defaults["xepg.replace.missing.images"] = true
+	defaults["xepg.replace.channel.title"] = false
 	defaults["m3u8.adaptive.bandwidth.mbps"] = 10
 	defaults["port"] = "34400"
 	defaults["ssdp"] = true
