@@ -764,7 +764,7 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Title
 			program.Title = xmltvProgram.Title
 			// Map PPV Channel name to title/desc for PPV only
-			var re = regexp.MustCompile(`(?m)PPV-?\d+:?`)
+			var re = regexp.MustCompile(`(?m)PPV-\d+:?`)
 			ppv_matches := re.FindAllString(xepgChannel.XName, -1)
 			if Settings.XepgReplaceChannelTitle && len(ppv_matches) > 0 {
 				title := []*Title{}
