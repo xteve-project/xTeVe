@@ -3,8 +3,8 @@
 </div>
 <br>
 
-# xTeVe
-## M3U Proxy for Plex DVR and Emby Live TV.  
+# PlexTeVe
+## M3U Proxy for Plex DVR and Emby Live TV. Based on xTeVe, modified for Plex.
 
 Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md).
 
