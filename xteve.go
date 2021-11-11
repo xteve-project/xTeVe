@@ -36,7 +36,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "Fyb3roptik", Repo: "PlexTeVe"
 */
 
 // Name : Programmname
-const Name = "PlexTeVe"
+const Name = "xTeVe"
 
 // Version : Version, die Build Nummer wird in der main func geparst.
 const Version = "2.2.0.0200"

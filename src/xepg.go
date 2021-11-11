@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"path"
 	"regexp"
 	"runtime"
@@ -698,8 +699,11 @@ func createXMLTVFile() (err error) {
 				var channel Channel
 				channel.ID = xepgChannel.XChannelID
 				channel.Icon = Icon{Src: imgc.Image.GetURL(xepgChannel.TvgLogo)}
-				channel.DisplayName = append(channel.DisplayName, DisplayName{Value: xepgChannel.XName})
-
+				if xepgChannel.TvgName != "" {
+					channel.DisplayName = append(channel.DisplayName, DisplayName{Value: xepgChannel.TvgName})
+				} else {
+					channel.DisplayName = append(channel.DisplayName, DisplayName{Value: xepgChannel.XName})
+				}
 				xepgXML.Channel = append(xepgXML.Channel, &channel)
 
 				// Programme
@@ -764,12 +768,20 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Title
 			program.Title = xmltvProgram.Title
 			// Map PPV Channel name to title/desc for PPV only
-			var re = regexp.MustCompile(`(?m)PPV-\d+:?`)
-			ppv_matches := re.FindAllString(xepgChannel.XName, -1)
+			name := ""
+			if xepgChannel.TvgName != "" {
+				name = xepgChannel.TvgName
+			} else {
+				name = xepgChannel.XName
+			}
+
+			var re = regexp.MustCompile(`(?m)(?i)PPV-\d+:?`)
+			ppv_matches := re.FindAllString(name, -1)
 			if Settings.XepgReplaceChannelTitle && len(ppv_matches) > 0 {
+				log.Println("DEBUG: ", name)
 				title := []*Title{}
 				// Strip out channel name
-				title_parsed := strings.Replace(xepgChannel.XName, ppv_matches[0], "", -1)
+				title_parsed := strings.Replace(name, ppv_matches[0], "", -1)
 				t := &Title{Value: strings.TrimSpace(title_parsed)}
 				title = append(title, t)
 				program.Title = title
@@ -783,9 +795,9 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Map PPV Channel name to title/desc for PPV only
 			if Settings.XepgReplaceChannelTitle && len(ppv_matches) > 0 {
 				desc := []*Desc{}
-				d := &Desc{Value: strings.TrimSpace(xepgChannel.XName)}
+				d := &Desc{Value: strings.TrimSpace(name)}
 				// Strip out channel name
-				desc_parsed := strings.Replace(xepgChannel.XName, ppv_matches[0], "", -1)
+				desc_parsed := strings.Replace(name, ppv_matches[0], "", -1)
 				d = &Desc{Value: strings.TrimSpace(desc_parsed)}
 				desc = append(desc, d)
 				program.Desc = desc
