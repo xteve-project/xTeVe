@@ -51,7 +51,7 @@ function changeButtonAction(element, buttonID, attribute) {
     document.getElementById(buttonID).setAttribute(attribute, value);
 }
 function getLocalData(dataType, id) {
-    var data = new Object();
+    let data = {};
     switch (dataType) {
         case "m3u":
             data = SERVER["settings"]["files"][dataType][id];
@@ -71,6 +71,9 @@ function getLocalData(dataType, id) {
                 data["include"] = "";
                 data["name"] = "";
                 data["type"] = "group-title";
+                data["preserveMapping"] = true;
+                data["startingChannel"] = SERVER["settings"]["mapping.first.channel"];
+                data["defaultMissingEPG"] = "-";
                 SERVER["settings"]["filter"][id] = data;
             }
             data = SERVER["settings"]["filter"][id];
@@ -227,8 +230,8 @@ function createSearchObj() {
     var data = SERVER["xepg"]["epgMapping"];
     var channels = getObjKeys(data);
     var channelKeys = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"];
-    channels.forEach(function (id) {
-        channelKeys.forEach(function (key) {
+    channels.forEach(id => {
+        channelKeys.forEach(key => {
             if (key == "x-active") {
                 switch (data[id][key]) {
                     case true:
@@ -293,7 +296,7 @@ function changeChannelNumber(element) {
         alert("{{.alert.invalidChannelNumber}}");
         return;
     }
-    channels.forEach(function (id) {
+    channels.forEach(id => {
         var channelNumber = parseFloat(data[id]["x-channelID"]);
         channelNumbers.push(channelNumber);
     });
@@ -340,7 +343,7 @@ function toggleChannelStatus(id) {
     if (ids.length == 0) {
         ids.push(id);
     }
-    ids.forEach(function (id) {
+    ids.forEach(id => {
         var channel = SERVER["xepg"]["epgMapping"][id];
         channel["x-active"] = status;
         switch (channel["x-active"]) {

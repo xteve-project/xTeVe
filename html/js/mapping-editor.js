@@ -164,7 +164,7 @@ function createMappingTable() {
   table.appendChild(createElement(newTR));
 
   var tr = document.getElementById("id_mapping").lastChild;
-  var trHeadlines = new Array("Bulk", "Ch. No.", "Logo", "Channel Name", "Playlist", "Group Title", "XMLTV File", "XMLTV ID")
+  var trHeadlines = new Array("Bulk", "Ch. No.", "Logo", "Channel Name", "Playlist", "Group Title", "XMLTV File", "XMLTV ID", "Timeshift")
 
   for (var i = 0; i < trHeadlines.length; i++) {
     var newTD = new Object();
@@ -234,6 +234,8 @@ function createMappingTable() {
       
 
       case "XMLTV ID":      maxWidth = "150px"; minWidth = "100px"; break;
+
+      case "Timeshift":      maxWidth = "50px"; minWidth = "20px"; break;
 
       default: 
         newTD["class"]    = "";

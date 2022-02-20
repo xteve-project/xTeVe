@@ -124,7 +124,7 @@ func showWarning(errCode int) {
 	return
 }
 
-// ShowError : Zeigt die Fehlermeldungen in der Konsole
+// ShowError : Shows the Error Messages in the Console
 func ShowError(err error, errCode int) {
 
 	var mutex = sync.RWMutex{}
@@ -214,7 +214,7 @@ func logCleanUp() {
 	return
 }
 
-// Fehlercodes
+// Return Error Message from numeric Error Codes
 func getErrMsg(errCode int) (errMsg string) {
 
 	switch errCode {
@@ -251,7 +251,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")
 
-	// Datenbank Update
+	// Database Update
 	case 1030:
 		errMsg = fmt.Sprintf("Invalid settings file (%s)", System.File.Settings)
 	case 1031:
@@ -264,7 +264,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1060:
 		errMsg = fmt.Sprintf("Invalid characters found in the tvg parameters, streams with invalid parameters were skipped.")
 
-	// Dateisystem
+	// Filesystem
 	case 1070:
 		errMsg = fmt.Sprintf("Folder could not be created.")
 	case 1071:
@@ -288,7 +288,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1200:
 		errMsg = fmt.Sprintf("Could not create file")
 
-	// Stream URL Fehler
+	// Stream URL Error
 	case 1201:
 		errMsg = fmt.Sprintf("Plex stream error")
 	case 1202:
@@ -337,7 +337,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 2302:
 		errMsg = fmt.Sprintf("Channel ID in the XMLTV file has changed. Channel has been deactivated.")
 
-	// Benutzerauthentifizierung
+	// User Authentication
 	case 3000:
 		errMsg = fmt.Sprintf("Database for user authentication could not be initialized.")
 	case 3001:

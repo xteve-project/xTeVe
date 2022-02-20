@@ -18,10 +18,10 @@ var packageName string
 
 var blankMap = make(map[string]interface{})
 
-// HTMLInit : Dateipfade festlegen
-// mapName = Name der zu erstellenden map
-// htmlFolder: Ordner der HTML Dateien
-// packageName: Name des package
+// HTMLInit : Define file paths
+// mapName = Name of the map to be created
+// htmlFolder: HTML Files Folder
+// packageName: Name of the package
 func HTMLInit(name, pkg, folder, file string) {
 
 	htmlFolder = folder
@@ -31,7 +31,7 @@ func HTMLInit(name, pkg, folder, file string) {
 
 }
 
-// BuildGoFile : Erstellt das GO Dokument
+// BuildGoFile : Creates the GO Document
 func BuildGoFile() error {
 
 	var err = checkHTMLFile(htmlFolder)
@@ -82,7 +82,7 @@ func readFilesToMap(path string, info os.FileInfo, err error) error {
 
 	if info.IsDir() == false {
 		var base64Str = fileToBase64(getLocalPath(path))
-		blankMap[path] = base64Str
+		blankMap[filepath.ToSlash(path)] = base64Str
 	}
 
 	return nil
@@ -110,7 +110,7 @@ func fileToBase64(file string) string {
 func getLocalPath(filename string) string {
 
 	path, file := filepath.Split(filename)
-	var newPath = filepath.Dir(path)
+	var newPath = filepath.ToSlash(filepath.Dir(path))
 
 	var newFileName = newPath + "/" + file
 

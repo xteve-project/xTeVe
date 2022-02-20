@@ -2,7 +2,7 @@ package src
 
 import "xteve/src/internal/imgcache"
 
-// SystemStruct : Beinhaltet alle Systeminformationen
+// SystemStruct : Contains all System Information
 type SystemStruct struct {
 	Addresses struct {
 		DVR string
@@ -109,13 +109,13 @@ type SystemStruct struct {
 	}
 }
 
-// GitStruct : Updateinformationen von GitHub
+// GitStruct : Update information from GitHub
 type GitStruct struct {
 	Filename string `json:"filename"`
 	Version  string `json:"version"`
 }
 
-// DataStruct : Alle Daten werden hier abgelegt. (Lineup, XMLTV)
+// DataStruct : All Data is stored here. (Lineup, XMLTV)
 type DataStruct struct {
 	Cache struct {
 		Images      *imgcache.Cache
@@ -165,14 +165,17 @@ type DataStruct struct {
 	}
 }
 
-// Filter : Wird für die Filterregeln verwendet
+// Filter : Used for the Filter Rules
 type Filter struct {
-	CaseSensitive bool
-	Rule          string
-	Type          string
+	CaseSensitive     bool
+	PreserveMapping   bool
+	Rule              string
+	Type              string
+	StartingChannel   string
+	DefaultMissingEPG string
 }
 
-// XEPGChannelStruct : XEPG Struktur
+// XEPGChannelStruct : XEPG Structure
 type XEPGChannelStruct struct {
 	FileM3UID          string `json:"_file.m3u.id,required"`
 	FileM3UName        string `json:"_file.m3u.name,required"`
@@ -182,6 +185,7 @@ type XEPGChannelStruct struct {
 	TvgID              string `json:"tvg-id,required"`
 	TvgLogo            string `json:"tvg-logo,required"`
 	TvgName            string `json:"tvg-name,required"`
+	TvgShift           string `json:"tvg-shift,required"`
 	URL                string `json:"url,required"`
 	UUIDKey            string `json:"_uuid.key,required"`
 	UUIDValue          string `json:"_uuid.value,omitempty"`
@@ -197,43 +201,52 @@ type XEPGChannelStruct struct {
 	XUpdateChannelIcon bool   `json:"x-update-channel-icon,required"`
 	XUpdateChannelName bool   `json:"x-update-channel-name,required"`
 	XDescription       string `json:"x-description,required"`
+	XTimeshift         string `json:"x-timeshift,required"`
+	DefaultMissingEPG  string `json:"x-default-missing-epg,required"`
 }
 
-// M3UChannelStructXEPG : M3U Struktur für XEPG
+// M3UChannelStructXEPG : M3U Structure for XEPG
 type M3UChannelStructXEPG struct {
-	FileM3UID   string `json:"_file.m3u.id,required"`
-	FileM3UName string `json:"_file.m3u.name,required"`
-	FileM3UPath string `json:"_file.m3u.path,required"`
-	GroupTitle  string `json:"group-title,required"`
-	Name        string `json:"name,required"`
-	TvgID       string `json:"tvg-id,required"`
-	TvgLogo     string `json:"tvg-logo,required"`
-	TvgName     string `json:"tvg-name,required"`
-	URL         string `json:"url,required"`
-	UUIDKey     string `json:"_uuid.key,required"`
-	UUIDValue   string `json:"_uuid.value,required"`
-	Values      string `json:"_values,required"`
+	FileM3UID         string `json:"_file.m3u.id,required"`
+	FileM3UName       string `json:"_file.m3u.name,required"`
+	FileM3UPath       string `json:"_file.m3u.path,required"`
+	GroupTitle        string `json:"group-title,required"`
+	Name              string `json:"name,required"`
+	TvgID             string `json:"tvg-id,required"`
+	TvgLogo           string `json:"tvg-logo,required"`
+	TvgName           string `json:"tvg-name,required"`
+	TvgShift          string `json:"tvg-shift,required"`
+	URL               string `json:"url,required"`
+	UUIDKey           string `json:"_uuid.key,required"`
+	UUIDValue         string `json:"_uuid.value,required"`
+	Values            string `json:"_values,required"`
+	PreserveMapping   string `json:"_preserve-mapping,required"`
+	StartingChannel   string `json:"_starting-channel,required"`
+	DefaultMissingEPG string `json:"_default-missing-epg,required"`
 }
 
-// FilterStruct : Filter Struktur
+// FilterStruct : Filter Structure
 type FilterStruct struct {
-	Active        bool   `json:"active,required"`
-	CaseSensitive bool   `json:"caseSensitive,required"`
-	Description   string `json:"description,required"`
-	Exclude       string `json:"exclude,required"`
-	Filter        string `json:"filter,required"`
-	Include       string `json:"include,required"`
-	Name          string `json:"name,required"`
-	Rule          string `json:"rule,omitempty"`
-	Type          string `json:"type,required"`
+	Active            bool   `json:"active,required"`
+	CaseSensitive     bool   `json:"caseSensitive,required"`
+	PreserveMapping   bool   `json:"preserveMapping,required"`
+	Description       string `json:"description,required"`
+	Exclude           string `json:"exclude,required"`
+	Filter            string `json:"filter,required"`
+	Include           string `json:"include,required"`
+	Name              string `json:"name,required"`
+	Rule              string `json:"rule,omitempty"`
+	Type              string `json:"type,required"`
+	StartingChannel   string `json:"startingChannel,required"`
+	DefaultMissingEPG string `json:"defaultMissingEPG,required"`
 }
 
-// StreamingURLS : Informationen zu allen streaming URL's
+// StreamingURLS : Information on all Streaming URL's
 type StreamingURLS struct {
 	Streams map[string]StreamInfo `json:"channels,required"`
 }
 
-// StreamInfo : Informationen zum Kanal für die streaming URL
+// StreamInfo : Information about the Channel for the Streaming URL
 type StreamInfo struct {
 	ChannelNumber string `json:"channelNumber,required"`
 	Name          string `json:"name,required"`
@@ -242,7 +255,7 @@ type StreamInfo struct {
 	URLid         string `json:"urlID,required"`
 }
 
-// Notification : Notifikationen im Webinterface
+// Notification : Notifications in the Web Interface
 type Notification struct {
 	Headline string `json:"headline,required"`
 	Message  string `json:"message,required"`
@@ -251,7 +264,7 @@ type Notification struct {
 	Type     string `json:"type,required"`
 }
 
-// SettingsStruct : Inhalt der settings.json
+// SettingsStruct : Content of settings.json
 type SettingsStruct struct {
 	API               bool     `json:"api"`
 	AuthenticationAPI bool     `json:"authentication.api"`
@@ -271,8 +284,8 @@ type SettingsStruct struct {
 	FFmpegPath        string   `json:"ffmpeg.path"`
 	VLCOptions        string   `json:"vlc.options"`
 	VLCPath           string   `json:"vlc.path"`
-	FileM3U           []string `json:"file,omitempty"`  // Beim Wizard wird die M3U in ein Slice gespeichert
-	FileXMLTV         []string `json:"xmltv,omitempty"` // Altes Speichersystem der Provider XML Datei Slice (Wird für die Umwandlung auf das neue benötigt)
+	FileM3U           []string `json:"file,omitempty"`  // In the Wizard, the M3U is saved in a Slice
+	FileXMLTV         []string `json:"xmltv,omitempty"` // Old Storage System of the provider XML File Slice (Required for the conversion to the new one)
 
 	Files struct {
 		HDHR  map[string]interface{} `json:"hdhr"`
@@ -301,7 +314,7 @@ type SettingsStruct struct {
 	XteveAutoUpdate           bool                  `json:"xteveAutoUpdate"`
 }
 
-// LanguageUI : Sprache für das WebUI
+// LanguageUI : Language for the WebUI
 type LanguageUI struct {
 	Login struct {
 		Failed string

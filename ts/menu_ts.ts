@@ -5,13 +5,13 @@ class MainMenu {
   ImagePath:string = "img/"
   
   createIMG(src):any {
-    var element = document.createElement("IMG")
+    let element = document.createElement("IMG")
     element.setAttribute("src", this.ImagePath + src)
     return element
   }
 
   createValue(value):any {
-    var element = document.createElement("P")
+    let element = document.createElement("P")
     element.innerHTML = value
     return element
   }
@@ -34,16 +34,16 @@ class MainMenuItem extends MainMenu {
   }
 
   createItem():void {
-    var item = document.createElement("LI")
+    let item = document.createElement("LI")
     item.setAttribute("onclick", "javascript: openThisMenu(this)")
     item.setAttribute("id", this.id)
-    var img = this.createIMG(this.imgSrc)
-    var value = this.createValue(this.value)
+    let img = this.createIMG(this.imgSrc)
+    let value = this.createValue(this.value)
     
     item.appendChild(img)
     item.appendChild(value)
 
-    var doc = document.getElementById(this.DocumentID)
+    let doc = document.getElementById(this.DocumentID)
     doc.appendChild(item)
 
     switch(this.menuKey) {
@@ -63,8 +63,8 @@ class MainMenuItem extends MainMenu {
         this.tableHeader = ["{{.users.table.username}}", "{{.users.table.password}}", "{{.users.table.web}}", "{{.users.table.pms}}", "{{.users.table.m3u}}", "{{.users.table.xml}}", "{{.users.table.api}}"]
         break
 
-      case "mapping": 
-        this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}"]
+      case "mapping":
+        this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}", "{{.mapping.table.timeshift}}"]
         break
 
     }
@@ -83,48 +83,48 @@ class Content {
   interactionID:string = "content-interaction"
 
   createHeadline(value):any {
-    var element = document.createElement("H3")
+    let element = document.createElement("H3")
     element.innerHTML = value
     return element
   }
 
   createHR():any {
-    var element = document.createElement("HR")
-    return element
+    return document.createElement("HR")
   }
 
   createInteraction():any {
-    var element = document.createElement("DIV")
+    let element = document.createElement("DIV")
     element.setAttribute("id", this.interactionID)
     return element
   }
 
   createDIV():any {
-    var element = document.createElement("DIV")
+    let element = document.createElement("DIV")
     element.id = this.DivID
     return element
   }
 
   createTABLE():any {
-    var element = document.createElement("TABLE")
+    let element = document.createElement("TABLE")
     element.id = this.TableID
     return element
   }
 
   createTableRow():any {
-    var element = document.createElement("TR")
+    let element = document.createElement("TR")
     element.className = this.headerClass
     return element
   }
 
   createTableContent(menuKey:string):string[] {
 
-    var data = new Object()
-    var rows = new Array()
+    let data = {}
+    let rows = []
+    let fileTypes = []
 
     switch(menuKey) {
       case "playlist":
-        var fileTypes = new Array("m3u", "hdhr")
+        fileTypes = ["m3u", "hdhr"]
 
         fileTypes.forEach(fileType => {
           
@@ -203,7 +203,7 @@ class Content {
         });
         break
       
-        case "filter":
+      case "filter":
         delete SERVER["settings"]["filter"][-1]
         data = SERVER["settings"]["filter"]
         var keys = getObjKeys(data)
@@ -212,7 +212,7 @@ class Content {
           tr.id = key
 
           tr.setAttribute('onclick', 'javascript: openPopUp("' + data[key]["type"] + '", this)')
-          
+
           var cell:Cell = new Cell()
           cell.child = true
           cell.childType = "P"
@@ -230,11 +230,11 @@ class Content {
             case "group-title":
               cell.value = "{{.filter.group}}"
               break;
-          
+
             default:
               break;
           }
-          
+
           tr.appendChild(cell.createCell())
 
           var cell:Cell = new Cell()
@@ -249,58 +249,58 @@ class Content {
         break
 
       case "xmltv":
-        var fileTypes = new Array("xmltv")
+        fileTypes = new Array("xmltv")
 
         fileTypes.forEach(fileType => {
-            
+
           data = SERVER["settings"]["files"][fileType]
-      
+
           var keys = getObjKeys(data)
-    
+
           keys.forEach(key => {
             var tr = document.createElement("TR")
-          
+
             tr.id = key
             tr.setAttribute('onclick', 'javascript: openPopUp("' + fileType + '", this)')
 
             var cell:Cell = new Cell()
             cell.child = true
             cell.childType = "P"
-            cell.value = data[key]["name"] 
+            cell.value = data[key]["name"]
             tr.appendChild(cell.createCell())
-            
+
             var cell:Cell = new Cell()
             cell.child = true
             cell.childType = "P"
             cell.value = data[key]["last.update"]
             tr.appendChild(cell.createCell())
-            
+
             var cell:Cell = new Cell()
             cell.child = true
             cell.childType = "P"
             cell.value = data[key]["provider.availability"]
             tr.appendChild(cell.createCell())
-            
+
             var cell:Cell = new Cell()
             cell.child = true
             cell.childType = "P"
             cell.value = data[key]["compatibility"]["xmltv.channels"]
             tr.appendChild(cell.createCell())
-            
+
             var cell:Cell = new Cell()
             cell.child = true
             cell.childType = "P"
             cell.value = data[key]["compatibility"]["xmltv.programs"]
             tr.appendChild(cell.createCell())
-            
+
             rows.push(tr)
           });
-        
+
         });
         break
 
       case "users":
-        var fileTypes = new Array("users")
+        fileTypes = new Array("users")
 
         fileTypes.forEach(fileType => {
           data = SERVER[fileType]
@@ -496,6 +496,16 @@ class Content {
 
           tr.appendChild(td)
 
+          // TimeShift
+          var cell:Cell = new Cell()
+          cell.child = true
+          cell.childType = "P"
+          cell.value = data[key]["x-timeshift"]
+          var td = cell.createCell()
+          td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)')
+          td.id = key
+          tr.appendChild(td)
+
           rows.push(tr)
         });
 
@@ -530,7 +540,7 @@ class Cell {
   onclickFunktion:string
 
   createCell():any {
-    var td = document.createElement("TD")
+    let td = document.createElement("TD")
 
 
     if (this.child == true) {
@@ -611,7 +621,7 @@ class ShowContent extends Content {
 
   createInput(type:string, name:string, value:string,):any {
     
-    var input = document.createElement("INPUT")
+    let input = document.createElement("INPUT")
     input.setAttribute("type", type)
     input.setAttribute("name", name)
     input.setAttribute("value", value)
@@ -621,24 +631,24 @@ class ShowContent extends Content {
   show():void {
     COLUMN_TO_SORT = -1
     // Alten Inhalt löschen
-    var doc = document.getElementById(this.DocumentID)
+    let doc = document.getElementById(this.DocumentID)
     doc.innerHTML = ""
     showPreview(false)
 
     // Überschrift
-    var headline:string[] = menuItems[this.menuID].headline
+    let headline:string[] = menuItems[this.menuID].headline
     
-    var menuKey = menuItems[this.menuID].menuKey
-    var h = this.createHeadline(headline)
+    let menuKey = menuItems[this.menuID].menuKey
+    let h = this.createHeadline(headline)
     doc.appendChild(h)
 
-    var hr = this.createHR()
+    let hr = this.createHR()
     doc.appendChild(hr)
 
     // Interaktion
-    var div =this.createInteraction()
+    let div =this.createInteraction()
     doc.appendChild(div)
-    var interaction = document.getElementById(this.interactionID)
+    let interaction = document.getElementById(this.interactionID)
     switch (menuKey) {
       case "playlist":
         var input = this.createInput("button", menuKey, "{{.button.new}}")
@@ -711,7 +721,6 @@ class ShowContent extends Content {
         showSettings()
         
         return
-        break
 
       case "log":
         var input = this.createInput("button", menuKey, "{{.button.resetLogs}}")
@@ -729,7 +738,6 @@ class ShowContent extends Content {
         showLogs(true)
 
         return
-        break
 
       case "logout":
         location.reload()
@@ -826,8 +834,8 @@ class ShowContent extends Content {
 
 function PageReady() {
 
-  var server:Server = new Server("getServerConfig")
-  server.request(new Object())
+  let server:Server = new Server("getServerConfig")
+  server.request({})
 
   window.addEventListener("resize", function(){
     calculateWrapperHeight();
@@ -844,8 +852,8 @@ function PageReady() {
 function createLayout() {
 
   // Client Info
-  var obj = SERVER["clientInfo"]
-  var keys = getObjKeys(obj);
+  let obj = SERVER["clientInfo"]
+  let keys = getObjKeys(obj);
   for (var i = 0; i < keys.length; i++) {
     
     if (document.getElementById(keys[i])) {
@@ -893,8 +901,8 @@ function createLayout() {
 }
 
 function openThisMenu(element) {
-  var id = element.id
-  var content:ShowContent = new ShowContent(id)
+  let id = element.id
+  let content:ShowContent = new ShowContent(id)
   content.show()
   calculateWrapperHeight()
 
@@ -907,20 +915,20 @@ class PopupWindow {
   doc = document.getElementById(this.DocumentID)
 
   createTitle(title:string):any {
-    var td = document.createElement("TD")
+    let td = document.createElement("TD")
     td.className = "left"
     td.innerHTML = title + ":"
     return td
   }
 
   createContent(element):any {
-    var td = document.createElement("TD")
+    let td = document.createElement("TD")
     td.appendChild(element)
     return td
   }
 
   createInteraction():any {
-    var div = document.createElement("div")
+    let div = document.createElement("div")
     div.setAttribute("id", "popup-interaction")
     div.className = "interaction"
     this.doc.appendChild(div)
@@ -943,7 +951,7 @@ class PopupContent extends PopupWindow{
   }
 
   appendRow(title:string, element:any):void {
-    var tr = document.createElement("TR")
+    let tr = document.createElement("TR")
     
     // Bezeichnung
     if (title.length != 0) {
@@ -958,8 +966,8 @@ class PopupContent extends PopupWindow{
 
 
   createInput(type:string, name:string, value:string):any {
-    
-    var input = document.createElement("INPUT")
+
+    let input = document.createElement("INPUT")
     if (value == undefined) {
       value = ""
     }
@@ -971,18 +979,19 @@ class PopupContent extends PopupWindow{
   }
 
   createCheckbox(name:string):any {
-    var input = document.createElement("INPUT")
+    let input = document.createElement("INPUT")
 
     input.setAttribute("type", "checkbox")
     input.setAttribute("name", name)
     return input
   }
 
+  // Creates a selection of multiple options values with text descriptions
   createSelect(text:string[], values:string[], set:string, dbKey:string):any {
-    var select = document.createElement("SELECT")
+    let select = document.createElement("SELECT")
     select.setAttribute("name", dbKey)
     for (let i = 0; i < text.length; i++) {
-      var option = document.createElement("OPTION")
+      let option = document.createElement("OPTION")
       option.setAttribute("value", values[i])
       option.innerText = text[i]
       select.appendChild(option)
@@ -1000,15 +1009,15 @@ class PopupContent extends PopupWindow{
 
   selectOption(select:any, value:string):any {
     //select.selectedOptions = value
-    var s:HTMLSelectElement = (select as HTMLSelectElement)
+    let s:HTMLSelectElement = (select as HTMLSelectElement)
     s.options[s.selectedIndex].value = value 
     return select
   }
 
   description(value:string):any {
-    var tr = document.createElement("TR")
-    var td = document.createElement("TD")
-    var span = document.createElement("PRE")
+    let tr = document.createElement("TR")
+    let td = document.createElement("TD")
+    let span = document.createElement("PRE")
 
     span.innerHTML = value
 
@@ -1021,15 +1030,15 @@ class PopupContent extends PopupWindow{
 
   // Interaktion
   addInteraction(element:any) {
-    var interaction = document.getElementById("popup-interaction")
+    let interaction = document.getElementById("popup-interaction")
     interaction.appendChild(element)
   }
 }
 
 function openPopUp(dataType, element) {
 
-  var data:object = new Object();
-  var id:any
+  let data:object = {};
+  let id:any
   switch (element) {
     case undefined:
 
@@ -1064,8 +1073,8 @@ function openPopUp(dataType, element) {
       data = getLocalData(dataType, id)      
       break;
   }
-  
-  var content:PopupContent = new PopupContent()
+
+  let content:PopupContent = new PopupContent()
   
   switch (dataType) {
     case "playlist": 
@@ -1114,8 +1123,8 @@ function openPopUp(dataType, element) {
 
       // Tuner
       if (SERVER["settings"]["buffer"] != "-") {
-        var text:string[] = new Array()
-        var values:string[] = new Array()
+        var text:string[] = []
+        var values:string[] = []
 
         for (var i = 1; i <= 100; i++) {
           text.push(i.toString())
@@ -1193,8 +1202,8 @@ function openPopUp(dataType, element) {
 
       // Tuner
       if (SERVER["settings"]["buffer"] != "-") {
-        var text:string[] = new Array()
-        var values:string[] = new Array()
+        var text:string[] = []
+        var values:string[] = []
 
         for (var i = 1; i <= 100; i++) {
           text.push(i.toString())
@@ -1281,11 +1290,11 @@ function openPopUp(dataType, element) {
       
       switch (dataType) {
         case "custom-filter":
-          content.createHeadline("{{.filter.custom}}")
+          content.createHeadline("{{.filter.custom}}" + " Filter")
           break;
       
         case "group-title":
-          content.createHeadline("{{.filter.group}}")
+          content.createHeadline("{{.filter.group}}" + " Filter")
           break;
       }
 
@@ -1357,7 +1366,41 @@ function openPopUp(dataType, element) {
           input.setAttribute("placeholder", "{{.filter.exclude.placeholder}}")
           content.appendRow("{{.filter.exclude.title}}", input)
           content.description("{{.filter.exclude.description}}")
-          
+
+          // Preserve M3U Playlist Channel Mapping
+          var dbKey:string = "preserveMapping"
+          var input = content.createCheckbox(dbKey)
+          input.checked = data[dbKey]
+          content.appendRow("{{.filter.preserveMapping.title}}", input)
+
+          // Starting Channel Number Mapping
+          var dbKey:string = "startingChannel"
+          var input = content.createInput("text", dbKey, data[dbKey])
+          input.setAttribute("placeholder", "{{.filter.startingChannel.placeholder}}")
+          content.appendRow("{{.filter.startingChannel.title}}", input)
+
+          // Fill Missing EPG Data
+
+          // The following code only works when xTeVe Dummy already exists
+          // var dbKey:string = "defaultMissingEPG"
+          // var xmltv:XMLTVFile = new XMLTVFile()
+          // var select = xmltv.getPrograms("xTeVe Dummy", data[dbKey])
+          // select.setAttribute("name", dbKey)
+          // select.setAttribute("id", "popup-missing-epg")
+
+          // The workaround is currently to hard code the xTeVe Dummy data
+          var dbKey:string = "defaultMissingEPG"
+          var listOptions = {"text": ["-", "30 Minutes (30_Minutes)", "60 Minutes (60_Minutes)", "90 Minutes (90_Minutes)",
+            "120 Minutes (120_Minutes)", "180 Minutes (30_Minutes)", "240 Minutes (30_Minutes)", "360 Minutes (30_Minutes)"],
+            "value": ["-", "30_Minutes", "60_Minutes", "90_Minutes", "120_Minutes", "180_Minutes", "240_Minutes", "360_Minutes", ]}
+          var text:string[] = listOptions["text"]
+          var values:string[] = listOptions["value"]
+          var select = content.createSelect(text, values, data[dbKey], dbKey)
+
+          select.setAttribute("onchange", "javascript: this.className = 'changed'")
+          content.appendRow("{{.filter.defaultMissingEPG.title}}", select)
+          content.description("{{.filter.defaultMissingEPG.description}}")
+
           break
       
         default:
@@ -1605,6 +1648,14 @@ function openPopUp(dataType, element) {
       sortSelect(select)
       content.appendRow("{{.mapping.xmltvChannel.title}}", select)
 
+      // Timeshift
+      var dbKey:string = "x-timeshift"
+      var input = content.createInput("text", dbKey, data[dbKey])
+      input.setAttribute("onchange", "javascript: this.className = 'changed'")
+      input.setAttribute("placeholder", "{{.mapping.timeshift.placeholder}}")
+      input.setAttribute("id", "timeshift")
+      content.appendRow("{{.mapping.timeshift.title}}", input)
+      
       // Interaktion
       content.createInteraction()
 
@@ -1619,7 +1670,7 @@ function openPopUp(dataType, element) {
       content.addInteraction(input)
       
       // Fertig
-      var ids:string[] = new Array()
+      var ids:string[] = []
       ids = getAllSelectedChannels()
       if (ids.length == 0) {
         ids.push(id)
@@ -1641,9 +1692,9 @@ class XMLTVFile {
   File:string
 
   getFiles(set:string):any {
-    var fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
-    var values = new Array("-");
-    var text  = new Array("-");
+    let fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
+    let values = new Array("-");
+    let text  = new Array("-");
 
     for (let i = 0; i < fileIDs.length; i++) {
       if (fileIDs[i] != "xTeVe Dummy") {
@@ -1656,7 +1707,7 @@ class XMLTVFile {
 
     }
 
-    var select = document.createElement("SELECT")
+    let select = document.createElement("SELECT")
     for (let i = 0; i < text.length; i++) {
       var option = document.createElement("OPTION")
       option.setAttribute("value", values[i])
@@ -1673,9 +1724,9 @@ class XMLTVFile {
 
   getPrograms(file:string, set:string):any {
     //var fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
-    var values = getObjKeys(SERVER["xepg"]["xmltvMap"][file]);
-    var text = new Array()
-    var displayName:string
+    let values = getObjKeys(SERVER["xepg"]["xmltvMap"][file]);
+    let text = []
+    let displayName:string
 
     for (let i = 0; i < values.length; i++) {
       if (SERVER["xepg"]["xmltvMap"][file][values[i]].hasOwnProperty('display-name') == true) {
@@ -1690,7 +1741,7 @@ class XMLTVFile {
     text.unshift("-");
     values.unshift("-");
 
-    var select = document.createElement("SELECT")
+    let select = document.createElement("SELECT")
     for (let i = 0; i < text.length; i++) {
       var option = document.createElement("OPTION")
       option.setAttribute("value", values[i])
@@ -1718,8 +1769,8 @@ function getValueFromProviderFile(file:string, fileType, key) {
     return file
   }
 
-  var fileID:string
-  var indicator = file.charAt(0)
+  let fileID:string
+  let indicator = file.charAt(0)
 
   switch (indicator) {
     case "M":
@@ -1750,14 +1801,14 @@ function getValueFromProviderFile(file:string, fileType, key) {
 
 function setXmltvChannel(id, element) {
 
-  var xmltv:XMLTVFile = new XMLTVFile()
-  var xmlFile = element.value
+  let xmltv:XMLTVFile = new XMLTVFile()
+  let xmlFile = element.value
 
-  var tvgId:string = SERVER["xepg"]["epgMapping"][id]["tvg-id"]
-  var td = document.getElementById("popup-mapping").parentElement
+  let tvgId:string = SERVER["xepg"]["epgMapping"][id]["tvg-id"]
+  let td = document.getElementById("popup-mapping").parentElement
   td.innerHTML = ""
 
-  var select = xmltv.getPrograms(element.value, tvgId)
+  let select = xmltv.getPrograms(element.value, tvgId)
   select.setAttribute("name", "x-mapping")
   select.setAttribute("id", "popup-mapping")
   select.setAttribute("onchange", "javascript: this.className = 'changed'; checkXmltvChannel('" + id + "',this,'" + xmlFile + "');")  
@@ -1769,19 +1820,15 @@ function setXmltvChannel(id, element) {
 }
 
 function checkXmltvChannel(id:string, element:any, xmlFile) {
-  
-  var value = (element as HTMLSelectElement).value
-  var bool:boolean
-  var checkbox = document.getElementById('active')
-  var channel:any = SERVER["xepg"]["epgMapping"][id]
-  var updateLogo:boolean
+
+  let value = (element as HTMLSelectElement).value
+  let bool:boolean
+  let checkbox = document.getElementById('active')
+  let channel:any = SERVER["xepg"]["epgMapping"][id]
+  let updateLogo:boolean
   
 
-  if (value == "-") {
-    bool = false
-  } else {
-    bool = true
-  }
+  bool = value != "-";
 
   (checkbox as HTMLInputElement).checked = bool
   checkbox.className = "changed"
@@ -1814,16 +1861,16 @@ function checkXmltvChannel(id:string, element:any, xmlFile) {
 
 function changeChannelLogo(id:string) {
 
-  var updateLogo:boolean
-  var channel:any = SERVER["xepg"]["epgMapping"][id]
+  let updateLogo:boolean
+  let channel:any = SERVER["xepg"]["epgMapping"][id]
 
-  var f = (document.getElementById("popup-xmltv") as HTMLSelectElement);
-  var xmltvFile = f.options[f.selectedIndex].value;
+  let f = (document.getElementById("popup-xmltv") as HTMLSelectElement);
+  let xmltvFile = f.options[f.selectedIndex].value;
 
-  var m = (document.getElementById("popup-mapping") as HTMLSelectElement);
-  var xMapping = m.options[m.selectedIndex].value;
+  let m = (document.getElementById("popup-mapping") as HTMLSelectElement);
+  let xMapping = m.options[m.selectedIndex].value;
 
-  var xmltvLogo = SERVER["xepg"]["xmltvMap"][xmltvFile][xMapping]["icon"]
+  let xmltvLogo = SERVER["xepg"]["xmltvMap"][xmltvFile][xMapping]["icon"]
   updateLogo = (document.getElementById("update-icon") as HTMLInputElement).checked
 
   if (updateLogo == true && xmltvFile != "xTeVe Dummy") {
@@ -1848,15 +1895,15 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
   
   if (dataType == "mapping") {
     
-    var data = new Object()
+    let data = {}
     console.log("Save mapping data")
       
-    cmd = "saveEpgMapping"
+    let cmd = "saveEpgMapping"
     data["epgMapping"] = SERVER["xepg"]["epgMapping"]
   
     console.log("SEND TO SERVER");
  
-    var server:Server = new Server(cmd)
+    let server:Server = new Server(cmd)
     server.request(data)
 
     delete UNDO["epgMapping"]
@@ -1865,13 +1912,13 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
   }
 
   console.log("Save popup data")
-  var div = document.getElementById("popup-custom")
+  let div = document.getElementById("popup-custom")
 
-  var inputs = div.getElementsByTagName("TABLE")[0].getElementsByTagName("INPUT");
-  var selects = div.getElementsByTagName("TABLE")[0].getElementsByTagName("SELECT");
+  let inputs = div.getElementsByTagName("TABLE")[0].getElementsByTagName("INPUT");
+  let selects = div.getElementsByTagName("TABLE")[0].getElementsByTagName("SELECT");
 
-  var input = new Object();
-  var confirmMsg: string
+  let input = {};
+  let confirmMsg: string
 
   for (let i = 0; i < selects.length; i++) {
 
@@ -1922,9 +1969,9 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
     
   }
 
-  var data = new Object()
+  let data = {}
 
-  var cmd:string
+  let cmd:string
 
   if (remove == true) {
     input["delete"] = true
@@ -1939,7 +1986,7 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
         data["userData"] = input
       } else {
         cmd = "saveUserData"
-        var d = new Object()
+        let d = {}
         d[id] = input
         data["userData"] = d
       }
@@ -1962,8 +2009,8 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
 
       }
 
-      data["files"] = new Object
-      data["files"][dataType] = new Object
+      data["files"] = {}
+      data["files"][dataType] = {}
       data["files"][dataType][id] = input
       
       break
@@ -1984,8 +2031,8 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
 
       }
 
-      data["files"] = new Object
-      data["files"][dataType] = new Object
+      data["files"] = {}
+      data["files"][dataType] = {}
       data["files"][dataType][id] = input
       
       break
@@ -2006,8 +2053,8 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
 
       }
 
-      data["files"] = new Object
-      data["files"][dataType] = new Object
+      data["files"] = {}
+      data["files"][dataType] = {}
       data["files"][dataType][id] = input
       
       break
@@ -2016,14 +2063,13 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
 
       confirmMsg = "Delete this filter?"
       cmd = "saveFilter"
-      data["filter"] = new Object
+      data["filter"] = {}
       data["filter"][id] = input
       break
 
     default:
       console.log(dataType, id);
       return
-      break;
 
   }
 
@@ -2039,28 +2085,28 @@ function savePopupData(dataType:string, id:string, remove:Boolean, option:number
   console.log("SEND TO SERVER");
   
   console.log(data);
-  
-  var server:Server = new Server(cmd)
+
+  let server:Server = new Server(cmd)
   server.request(data)
 
 }
 
 function donePopupData(dataType:string, idsStr:string) {
-  
-  var ids:string[] = idsStr.split(',');
-  var div = document.getElementById("popup-custom")
-  var inputs = div.getElementsByClassName("changed")
+
+  let ids:string[] = idsStr.split(',');
+  let div = document.getElementById("popup-custom")
+  let inputs = div.getElementsByClassName("changed")
   
   ids.forEach(id => {
-    var input = new Object();
+    let input: Object;
     input = SERVER["xepg"]["epgMapping"][id]
 
     console.log(input);
 
     for (let i = 0; i < inputs.length; i++) {
-      
-      var name:string
-      var value:any
+
+      let name:string
+      let value:any
 
       switch (inputs[i].tagName) {
         
@@ -2158,28 +2204,27 @@ function donePopupData(dataType:string, idsStr:string) {
 
 function showPreview(element:boolean) {
 
-  var div = document.getElementById("myStreamsBox")
+  let div = document.getElementById("myStreamsBox")
   switch (element) {
   
     case false:
       div.className = "notVisible"
       return
-      break;
   }
-  
-  var streams:string[] = ["activeStreams", "inactiveStreams"]
+
+  let streams:string[] = ["activeStreams", "inactiveStreams"]
    
   streams.forEach(preview => {
-    
-    var table = document.getElementById(preview)
+
+    let table = document.getElementById(preview)
     table.innerHTML = ""
-    var obj:string[] = SERVER["data"]["StreamPreviewUI"][preview]
+    let obj:string[] = SERVER["data"]["StreamPreviewUI"][preview]
     
     obj.forEach(channel => {
-    
-      var tr = document.createElement("TR")
-      var tdKey = document.createElement("TD")
-      var tdVal = document.createElement("TD")
+
+      let tr = document.createElement("TR")
+      let tdKey = document.createElement("TD")
+      let tdVal = document.createElement("TD")
 
       tdKey.className = "tdKey"
       tdVal.className = "tdVal"
