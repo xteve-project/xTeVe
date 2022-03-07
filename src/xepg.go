@@ -920,7 +920,7 @@ func getPoster(program *Program, xmltvProgram *Program, xepgChannel XEPGChannelS
 
 		if len(xmltvProgram.Poster) == 0 {
 			var poster Poster
-			poster.Src = imgc.Image.GetURL(poster.Src)
+			poster.Src = imgc.Image.GetURL(xepgChannel.TvgLogo)
 			program.Poster = append(program.Poster, poster)
 		}
 
