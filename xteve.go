@@ -39,7 +39,7 @@ var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Updat
 const Name = "xTeVe"
 
 // Version : Version, the Build Number is parsed in the main func
-const Version = "2.2.2.0100"
+const Version = "2.2.2.0200"
 
 // DBVersion : Database Version
 const DBVersion = "2.1.1"
