@@ -2176,6 +2176,10 @@ function donePopupData(dataType:string, idsStr:string) {
    
           break
 
+        case "x-timeshift":
+          (document.getElementById(id).childNodes[8].firstChild as HTMLElement).innerHTML = value
+          break
+
         default: 
         
       }

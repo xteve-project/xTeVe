@@ -1707,6 +1707,9 @@ function donePopupData(dataType, idsStr) {
                     }
                     document.getElementById(id).childNodes[7].firstChild.innerHTML = value;
                     break;
+                case "x-timeshift":
+                    document.getElementById(id).childNodes[8].firstChild.innerHTML = value;
+                    break;
                 default:
             }
             createSearchObj();
