@@ -156,53 +156,6 @@ func buildXEPG(background bool) {
 
 }
 
-// Update XEPG Data
-func updateXEPG(background bool) {
-
-	if System.ScanInProgress == 1 {
-		return
-	}
-
-	System.ScanInProgress = 1
-
-	if Settings.EpgSource == "XEPG" {
-
-		switch background {
-
-		case false:
-
-			createXEPGDatabase()
-			mapping()
-			cleanupXEPG()
-
-			go func() {
-
-				createXMLTVFile()
-				createM3UFile()
-				showInfo("XEPG:" + fmt.Sprintf("Ready to use"))
-
-				System.ScanInProgress = 0
-
-			}()
-
-		case true:
-			System.ScanInProgress = 0
-
-		}
-
-	} else {
-
-		System.ScanInProgress = 0
-
-	}
-
-	// Clearing the Cache
-	//Data.Cache.XMLTV = nil //make(map[string]XMLTV)
-	//Data.Cache.XMLTV = make(map[string]XMLTV)
-
-	return
-}
-
 // Create Mapping Menu for the XMLTV Files
 func createXEPGMapping() {
 
@@ -1117,35 +1070,6 @@ func cleanupXEPG() {
 
 	if len(Data.Streams.Active) > 0 && Data.XEPG.XEPGCount == 0 {
 		showWarning(2005)
-	}
-
-	return
-}
-
-// Generate Streaming URL for the Channels App
-func getStreamByChannelID(channelID string) (playlistID, streamURL string, err error) {
-
-	err = errors.New("Channel not found")
-
-	for _, dxc := range Data.XEPG.Channels {
-
-		var xepgChannel XEPGChannelStruct
-		err := json.Unmarshal([]byte(mapToJSON(dxc)), &xepgChannel)
-
-		fmt.Println(xepgChannel.XChannelID)
-
-		if err == nil {
-
-			if channelID == xepgChannel.XChannelID {
-
-				playlistID = xepgChannel.FileM3UID
-				streamURL = xepgChannel.URL
-
-				return playlistID, streamURL, nil
-			}
-
-		}
-
 	}
 
 	return
