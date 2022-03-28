@@ -796,6 +796,11 @@ class ShowContent extends Content {
             cell.onclickFunktion = "javascript: sortTable(5);"
           }
   
+          if (element == "{{.mapping.table.timeshift}}") {
+            cell.onclick = true
+            cell.onclickFunktion = "javascript: sortTable(8);"
+          }
+
         }
         
         header.appendChild(cell.createCell())

@@ -192,7 +192,7 @@ function sortTable(column) {
                 sortObj[i] = rows[i];
             }
             else {
-                switch (isNaN(xValue)) {
+                switch (isNaN(xValue) || typeof xValue == "string") {
                     case false:
                         xValue = parseFloat(xValue);
                         sortObj[xValue] = rows[i];

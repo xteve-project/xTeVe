@@ -258,7 +258,7 @@ function sortTable(column) {
 
       } else {
 
-        switch(isNaN(xValue)) {
+        switch(isNaN(xValue) || typeof xValue == "string") {
           case false:
 
             xValue = parseFloat(xValue);
