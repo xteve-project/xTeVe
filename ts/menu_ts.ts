@@ -537,7 +537,7 @@ class Cell {
   tdClassName:string
   imageURL:string
   onclick:boolean
-  onclickFunktion:string
+  onclickFunction:string
 
   createCell():any {
     let td = document.createElement("TD")
@@ -597,7 +597,7 @@ class Cell {
     }
 
     if (this.onclick == true) {
-      td.setAttribute("onclick", this.onclickFunktion)
+      td.setAttribute("onclick", this.onclickFunction)
       td.className = "pointer"
     }
 
@@ -777,28 +777,28 @@ class ShowContent extends Content {
           
           if (element == "{{.mapping.table.chNo}}") {
             cell.onclick = true
-            cell.onclickFunktion = "javascript: sortTable(1);"
+            cell.onclickFunction = "javascript: sortTable(1);"
             cell.tdClassName = "sortThis"
           }
           
           if (element == "{{.mapping.table.channelName}}") {
             cell.onclick = true
-            cell.onclickFunktion = "javascript: sortTable(3);"
+            cell.onclickFunction = "javascript: sortTable(3);"
           }
   
           if (element == "{{.mapping.table.playlist}}") {
             cell.onclick = true
-            cell.onclickFunktion = "javascript: sortTable(4);"
+            cell.onclickFunction = "javascript: sortTable(4);"
           }
   
           if (element == "{{.mapping.table.groupTitle}}") {
             cell.onclick = true
-            cell.onclickFunktion = "javascript: sortTable(5);"
+            cell.onclickFunction = "javascript: sortTable(5);"
           }
   
           if (element == "{{.mapping.table.timeshift}}") {
             cell.onclick = true
-            cell.onclickFunktion = "javascript: sortTable(8);"
+            cell.onclickFunction = "javascript: sortTable(8);"
           }
 
         }
