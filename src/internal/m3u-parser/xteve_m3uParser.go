@@ -24,7 +24,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
     var lines = strings.Split(strings.Replace(channel, "\r\n", "\n", -1), "\n")
 
-    // Zeilen mit # und leerer Zeilen entfernen
+    // Remove lines with # and blank lines
     for i := len(lines) - 1; i >= 0; i-- {
 
       if len(lines[i]) == 0 || lines[i][0:1] == "#" {
@@ -47,7 +47,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
         default:
 
           var value string
-          // Alle Parameter parsen
+          // Parse all parameters
           var p = regexp.MustCompile(exceptForParameter)
           var streamParameter = p.FindAllString(line, -1)
 
@@ -60,7 +60,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
             if len(parameter) == 2 {
 
-              // TVG Key als Kleinbuchstaben speichern
+              // Set TVG Key as lowercase
               switch strings.Contains(parameter[0], "tvg") {
 
               case true:
@@ -70,7 +70,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
               }
 
-              // URL's nicht an die Filterfunktion übergeben
+              // URL's are not passed to the filter function
               if !strings.Contains(parameter[1], "://") && len(parameter[1]) > 0 {
                 value = value + parameter[1] + " "
               }
@@ -79,7 +79,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
           }
 
-          // Kanalnamen parsen
+          // Parse channel names
           n := regexp.MustCompile(exceptForChannelName)
           var name = n.FindAllString(line, 1)
 
@@ -100,7 +100,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
           channelName = strings.TrimRight(channelName, " ")
 
-          // Kanäle ohne Namen werden augelassen
+          // Channels without names are skipped
           if len(channelName) == 0 {
             return
           }
@@ -116,7 +116,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
     }
 
-    // Nach eindeutiger ID im Stream suchen
+    // Search for a unique ID in the stream
     for key, value := range stream {
 
       if !strings.Contains(strings.ToLower(key), "tvg-id") {

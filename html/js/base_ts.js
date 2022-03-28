@@ -5,7 +5,7 @@ var SEARCH_MAPPING = new Object();
 var UNDO = new Object();
 var SERVER_CONNECTION = false;
 var WS_AVAILABLE = false;
-// Menü
+// Menu
 var menuItems = new Array();
 menuItems.push(new MainMenuItem("playlist", "{{.mainMenu.item.playlist}}", "m3u.png", "{{.mainMenu.headline.playlist}}"));
 //menuItems.push(new MainMenuItem("pmsID", "{{.mainMenu.item.pmsID}}", "number.png", "{{.mainMenu.headline.pmsID}}"))
@@ -16,7 +16,7 @@ menuItems.push(new MainMenuItem("users", "{{.mainMenu.item.users}}", "users.png"
 menuItems.push(new MainMenuItem("settings", "{{.mainMenu.item.settings}}", "settings.png", "{{.mainMenu.headline.settings}}"));
 menuItems.push(new MainMenuItem("log", "{{.mainMenu.item.log}}", "log.png", "{{.mainMenu.headline.log}}"));
 menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.png", "{{.mainMenu.headline.logout}}"));
-// Kategorien für die Einstellungen
+// Settings categories
 var settingsCategory = new Array();
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "xteveAutoUpdate,tuner,epgSource,api"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"));

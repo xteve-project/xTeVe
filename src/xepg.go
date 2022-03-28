@@ -438,7 +438,7 @@ func createXEPGDatabase() (err error) {
 			Data.XEPG.Channels[currentXEPGID] = xepgChannel
 
 		case false:
-			// Neuer Kanal
+			// New Channel
 			var xepg = createNewID()
 			xChannelID := func() string {
 				if m3uChannel.PreserveMapping == "true" {
@@ -755,46 +755,46 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 			// Title
 			program.Title = xmltvProgram.Title
 
-			// Sub title (Untertitel)
+			// Subtitle
 			program.SubTitle = xmltvProgram.SubTitle
 
-			// Description (Beschreibung)
+			// Description
 			program.Desc = xmltvProgram.Desc
 
-			// Category (Kategorie)
+			// Category
 			getCategory(program, xmltvProgram, xepgChannel)
 
-			// Credits : (Credits)
+			// Credits
 			program.Credits = xmltvProgram.Credits
 
-			// Rating (Bewertung)
+			// Rating
 			program.Rating = xmltvProgram.Rating
 
-			// StarRating (Bewertung / Kritiken)
+			// StarRating
 			program.StarRating = xmltvProgram.StarRating
 
-			// Country (Länder)
+			// Country
 			program.Country = xmltvProgram.Country
 
-			// Program icon (Poster / Cover)
+			// Program icon
 			getPoster(program, xmltvProgram, xepgChannel)
 
-			// Language (Sprache)
+			// Language
 			program.Language = xmltvProgram.Language
 
-			// Episodes numbers (Episodennummern)
+			// Episodes numbers
 			getEpisodeNum(program, xmltvProgram, xepgChannel)
 
-			// Video (Videoparameter)
+			// Video
 			getVideo(program, xmltvProgram, xepgChannel)
 
-			// Date (Datum)
+			// Date
 			program.Date = xmltvProgram.Date
 
-			// Previously shown (Wiederholung)
+			// Previously shown
 			program.PreviouslyShown = xmltvProgram.PreviouslyShown
 
-			// New (Neu)
+			// New
 			program.New = xmltvProgram.New
 
 			// Live

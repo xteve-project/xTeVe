@@ -61,7 +61,7 @@ func serverRequest() (err error) {
 	jsonByte, err := json.MarshalIndent(Updater, "", "  ")
 	if err == nil {
 
-		// Serververbindung prüfen
+		// Check server connection
 		u, err := url.Parse(Updater.URL)
 		if err != nil {
 			return err

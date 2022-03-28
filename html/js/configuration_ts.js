@@ -89,7 +89,7 @@ function saveWizard() {
             case "SELECT":
                 name = config[i].name;
                 value = config[i].value;
-                // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+                // If the value is a number, store it as a number
                 if (isNaN(value)) {
                     wizard[name] = value;
                 }

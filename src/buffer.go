@@ -385,11 +385,11 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 						time.Sleep(time.Duration(100) * time.Millisecond)
 					}
 
-				} // Ende Loop 2
+				} // End of Loop 2
 
 			} else {
 
-				// Stream nicht vorhanden
+				// Stream not available
 				killClientConnection(streamID, stream.PlaylistID, false)
 				showInfo(fmt.Sprintf("Streaming Status:Playlist: %s - Tuner: %d / %d", playlist.PlaylistName, len(playlist.Streams), playlist.Tuner))
 				return
@@ -736,7 +736,7 @@ func connectToStreamingServer(streamID int, playlistID string) {
 
 			defer resp.Body.Close()
 
-			// HTTP Status überprüfen, bei Fehlern wird der Stream beendet
+			// Check HTTP Status, in case of errors the stream is terminated
 			var contentType = resp.Header.Get("Content-Type")
 			var httpStatusCode = resp.StatusCode
 			var httpStatusInfo = fmt.Sprintf("HTTP Response Status [%d] %s", httpStatusCode, http.StatusText(resp.StatusCode))
@@ -1024,9 +1024,9 @@ func connectToStreamingServer(streamID int, playlistID string) {
 
 			resp.Body.Close()
 
-		} // Ende for loop
+		} // End for loop
 
-	} // Ende BufferInformation
+	} // End of BufferInformation
 
 }
 
@@ -1125,7 +1125,7 @@ func parseM3U8(stream *ThisStream) (err error) {
 
 	var parseURL = func(line string, segment *Segment) {
 
-		// Prüfen ob die Adresse eine gültige URL ist (http://... oder /path/to/stream)
+		// Check if the address is a valid URL (http://... or /path/to/stream)
 		_, err := url.ParseRequestURI(line)
 		if err == nil {
 
@@ -1133,16 +1133,16 @@ func parseM3U8(stream *ThisStream) (err error) {
 			u, _ := url.Parse(line)
 
 			if len(u.Host) == 0 {
-				// Adresse enthällt nicht die Domain, Redirect wird der Adresse hinzugefügt
+				// Check whether the domain is included in the address
 				segment.URL = stream.URLStreamingServer + line
 			} else {
-				// Domain in der Adresse enthalten
+				// Domain included in the address
 				segment.URL = line
 			}
 
 		} else {
 
-			// keine URL, sondern ein Dateipfad (media/file-01.ts)
+			// not URL, but a file path (media/file-01.ts)
 			var serverURLPath = strings.Replace(stream.M3U8URL, path.Base(stream.M3U8URL), line, -1)
 			segment.URL = serverURLPath
 
@@ -1195,7 +1195,7 @@ func parseM3U8(stream *ThisStream) (err error) {
 
 				}
 
-				// Segment mit TS Stream
+				// Segment with TS Stream
 				if segment.Duration > 0 && line[0:1] != "#" {
 
 					parseURL(line, &segment)
@@ -1239,7 +1239,7 @@ func parseM3U8(stream *ThisStream) (err error) {
 				noNewSegment = false
 				stream.LastSequence = segment.Sequence
 
-				// Stream ist vom Typ VOD. Es muss das erste Segment der M3U8 Playlist verwendet werden.
+				// Stream is of type VOD. The first segment of the M3U8 playlist must be used.
 				if strings.ToUpper(segment.PlaylistType) == "VOD" {
 					break
 				}
@@ -1341,7 +1341,7 @@ func switchBandwidth(stream *ThisStream) (err error) {
 	return
 }
 
-// Buffer mit FFMPEG
+// Buffer with FFMPEG
 func thirdPartyBuffer(streamID int, playlistID string) {
 
 	if p, ok := BufferInformation.Load(playlistID); ok {

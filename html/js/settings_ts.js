@@ -16,7 +16,7 @@ class SettingsCategory {
         var content = new PopupContent();
         var data = SERVER["settings"][settingsKey];
         switch (settingsKey) {
-            // Texteingaben
+            // Text inputs
             case "update":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.update.title}}" + ":";
@@ -116,7 +116,7 @@ class SettingsCategory {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
-            // Checkboxen
+            // Checkboxes
             case "authentication.web":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.authenticationWEB.title}}" + ":";
@@ -413,7 +413,7 @@ class SettingsCategoryItem extends SettingsCategory {
         var settingsKeys = this.settingsKeys;
         var doc = document.getElementById(this.DocumentID);
         doc.appendChild(headline);
-        // Tabelle für die Kategorie erstellen
+        // Create a table for the category
         var table = document.createElement("TABLE");
         var keys = settingsKeys.split(",");
         keys.forEach(settingsKey => {
@@ -478,7 +478,7 @@ function saveSettings() {
             case "SELECT":
                 name = settings[i].name;
                 value = settings[i].value;
-                // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+                // If the value is a number, store it as a number
                 if (isNaN(value)) {
                     newSettings[name] = value;
                 }

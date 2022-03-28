@@ -30,7 +30,7 @@ func BinaryUpdate() (err error) {
 
 	switch System.Branch {
 
-	// Update von GitHub
+	// Update from GitHub
 	case "master", "beta":
 
 		var gitInfo = fmt.Sprintf("%s/%s/info.json?raw=true", System.Update.Git, System.Branch)
@@ -245,7 +245,7 @@ checkVersion:
 		}
 
 	} else {
-		// settings.json ist zu alt (älter als Version 1.4.4)
+		// settings.json is too old (older than Version 1.4.4)
 		err = errors.New(getErrMsg(1013))
 	}
 

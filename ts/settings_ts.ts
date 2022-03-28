@@ -18,7 +18,7 @@ class SettingsCategory {
 
     switch (settingsKey) {
 
-        // Texteingaben
+        // Text inputs
       case "update":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.update.title}}" + ":"
@@ -145,7 +145,7 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
-        // Checkboxen
+        // Checkboxes
       case "authentication.web":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.authenticationWEB.title}}" + ":"
@@ -542,7 +542,7 @@ class SettingsCategoryItem extends SettingsCategory {
     var doc = document.getElementById(this.DocumentID)
     doc.appendChild(headline)
 
-    // Tabelle für die Kategorie erstellen
+    // Create a table for the category
 
     var table = document.createElement("TABLE")
 
@@ -636,7 +636,7 @@ function saveSettings() {
         name = (settings[i] as HTMLSelectElement).name
         value = (settings[i] as HTMLSelectElement).value
 
-        // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+        // If the value is a number, store it as a number
         if(isNaN(value)){
           newSettings[name] = value
         } else {

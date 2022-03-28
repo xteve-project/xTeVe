@@ -127,7 +127,7 @@ func extractGZIP(gzipBody []byte, fileSource string) (body []byte, err error) {
 	var r io.Reader
 	r, err = gzip.NewReader(b)
 	if err != nil {
-		// Keine gzip Datei
+		// Not a gzip file
 		body = gzipBody
 		err = nil
 		return

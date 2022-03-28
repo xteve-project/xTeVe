@@ -127,7 +127,7 @@ function saveWizard() {
         name = (config[i] as HTMLSelectElement).name
         value = (config[i] as HTMLSelectElement).value
 
-        // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+        // If the value is a number, store it as a number
         if(isNaN(value)){
           wizard[name] = value
         } else {
