@@ -7,3 +7,7 @@ update_xteve*.sh
 xteve
 xteve.exe
 de.json
+parts/
+prime/
+stage/
+xteve*.snap
