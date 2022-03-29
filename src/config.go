@@ -51,7 +51,7 @@ func Init() (err error) {
 	System.Compatibility = "1.4.4"
 
 	// FFmpeg Default Einstellungen
-	System.FFmpeg.DefaultOptions = "-hide_banner -loglevel error -i [URL] -c copy -f mpegts pipe:1"
+	System.FFmpeg.DefaultOptions = "-hide_banner -err_detect ignore_err -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 20 -loglevel error -i [URL] -c copy -f mpegts pipe:1"
 	System.VLC.DefaultOptions = "-I dummy [URL] --sout #std{mux=ts,access=file,dst=-}"
 
 	// Default Logeinträge, wird später von denen aus der settings.json überschrieben. Muss gemacht werden, damit die ersten Einträge auch im Log (webUI aangezeigt werden)
