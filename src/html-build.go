@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sort"
 )
 
 var htmlFolder string
@@ -70,7 +71,14 @@ func createMapFromFiles(folder string) string {
 
 	var content string
 
-	for key := range blankMap {
+	// Sort map keys before writing to file to prevent git mark webUI.go as modified when no real changes has been made
+	keys := make([]string, 0, len(blankMap))
+    for k := range blankMap {
+        keys = append(keys, k)
+    }
+    sort.Strings(keys)
+
+	for _, key := range keys {
 		var newKey = key
 		content += `  ` + mapName + `["` + newKey + `"` + `] = "` + blankMap[key].(string) + `"` + "\n"
 	}
