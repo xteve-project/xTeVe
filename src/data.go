@@ -98,7 +98,12 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 				}
 
 				if err != nil {
-					return
+					showWarning(1015)
+					value = os.TempDir() + string(os.PathSeparator)
+					err = checkFilePermission(value.(string))
+					if err != nil {
+						return
+					}
 				}
 
 			case "ffmpeg.path", "vlc.path":

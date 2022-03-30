@@ -3,6 +3,7 @@ package src
 import (
 	"fmt"
 	"log"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -247,6 +248,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Invalid settings file (settings.json), file must be at least version %s", System.Compatibility)
 	case 1014:
 		errMsg = fmt.Sprintf("Invalid filter rule")
+	case 1015:
+		errMsg = fmt.Sprintf("Specified temp folder path is invalid, fallback to %s", os.TempDir())
 
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")
