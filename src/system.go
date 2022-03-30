@@ -201,6 +201,10 @@ func saveSettings(settings SettingsStruct) (err error) {
 		settings.BufferTimeout = 0
 	}
 
+	if System.Dev == true {
+		Settings.UUID = "2019-01-DEV-xTeVe!"
+	}
+
 	System.Folder.Temp = settings.TempPath + settings.UUID + string(os.PathSeparator)
 
 	err = writeByteToFile(System.File.Settings, []byte(mapToJSON(settings)))
@@ -209,10 +213,6 @@ func saveSettings(settings SettingsStruct) (err error) {
 	}
 
 	Settings = settings
-
-	if System.Dev == true {
-		Settings.UUID = "2019-01-DEV-xTeVe!"
-	}
 
 	setDeviceID()
 
