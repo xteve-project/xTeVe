@@ -274,6 +274,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("File could not be created")
 	case 1072:
 		errMsg = fmt.Sprintf("File not found")
+	case 1073:
+		errMsg = fmt.Sprintf("Can not remove old config folder before recover")
 
 	// Backup
 	case 1090:

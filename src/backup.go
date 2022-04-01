@@ -155,6 +155,10 @@ func xteveRestore(archive string) (newWebURL string, err error) {
 		return
 	}
 
+	if err = os.RemoveAll(System.Folder.Config); err != nil {
+		ShowError(err, 1073)
+	}
+
 	// Extract the ZIP Archive into the Config Folder
 	err = extractZIP(archive, System.Folder.Config)
 	if err != nil {

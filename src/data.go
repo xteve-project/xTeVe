@@ -98,7 +98,7 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 				}
 
 				if err != nil {
-					showWarning(1015)
+					ShowError(err, 1015)
 					value = os.TempDir() + string(os.PathSeparator)
 					err = checkFilePermission(value.(string))
 					if err != nil {
