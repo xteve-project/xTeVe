@@ -155,7 +155,7 @@ func xteveRestore(archive string) (newWebURL string, err error) {
 		return
 	}
 
-	if err = os.RemoveAll(System.Folder.Config); err != nil {
+	if err = removeChildItems(getPlatformPath(System.Folder.Config)); err != nil {
 		ShowError(err, 1073)
 	}
 
