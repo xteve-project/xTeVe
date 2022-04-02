@@ -170,8 +170,6 @@ func loadSettings() (settings SettingsStruct, err error) {
 		settings.VLCPath = searchFileInOS("cvlc")
 	}
 
-	settings.Version = System.DBVersion
-
 	err = saveSettings(settings)
 
 	// Warning if FFmpeg was not found
