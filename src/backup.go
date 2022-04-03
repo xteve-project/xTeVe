@@ -131,6 +131,9 @@ func xteveRestore(archive string) (newWebURL string, err error) {
 
 	tmpRestore = System.Folder.Temp + "restore" + string(os.PathSeparator)
 
+	defer os.RemoveAll(tmpRestore)
+	defer os.Remove(archive)
+
 	err = checkFolder(tmpRestore)
 	if err != nil {
 		return
@@ -200,8 +203,6 @@ func xteveRestore(archive string) (newWebURL string, err error) {
 
 	var url = System.URLBase + "/web/"
 	newWebURL = strings.Replace(url, ":"+oldPort, ":"+newPort, 1)
-
-	os.RemoveAll(tmpRestore)
 
 	return
 }
