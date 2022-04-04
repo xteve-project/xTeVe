@@ -86,25 +86,7 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 				}
 
 			case "temp.path":
-				value = strings.TrimRight(value.(string), string(os.PathSeparator)) + string(os.PathSeparator)
-				err = checkFolder(value.(string))
-				if err == nil {
-
-					err = checkFilePermission(value.(string))
-					if err != nil {
-						return
-					}
-
-				}
-
-				if err != nil {
-					ShowError(err, 1015)
-					value = os.TempDir() + string(os.PathSeparator)
-					err = checkFilePermission(value.(string))
-					if err != nil {
-						return
-					}
-				}
+				value = getValidTempDir(value.(string))
 
 			case "ffmpeg.path", "vlc.path":
 				var path = value.(string)

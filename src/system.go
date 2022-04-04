@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"time"
@@ -170,6 +169,8 @@ func loadSettings() (settings SettingsStruct, err error) {
 		settings.VLCPath = searchFileInOS("cvlc")
 	}
 
+	settings.TempPath = getValidTempDir(settings.TempPath)
+
 	err = saveSettings(settings)
 
 	// Warning if FFmpeg was not found
@@ -203,7 +204,7 @@ func saveSettings(settings SettingsStruct) (err error) {
 		Settings.UUID = "2019-01-DEV-xTeVe!"
 	}
 
-	System.Folder.Temp = settings.TempPath + settings.UUID + string(os.PathSeparator)
+	System.Folder.Temp = getValidTempDir(settings.TempPath + settings.UUID)
 
 	err = writeByteToFile(System.File.Settings, []byte(mapToJSON(settings)))
 	if err != nil {

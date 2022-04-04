@@ -110,6 +110,40 @@ func getPlatformPath(path string) string {
 	return filepath.Dir(path) + string(os.PathSeparator)
 }
 
+// getDefaultTempDir returns default temporary folder path + application name, e.g.: "/tmp/xteve/" or %Tmp%\xteve.
+//
+// Function assumes default OS temporary folder exists and writable. 
+func getDefaultTempDir() string {
+	return os.TempDir() + string(os.PathSeparator) + System.AppName + string(os.PathSeparator)
+}
+
+// getValidTempDir returns standartized temporary folder <path> with trailing path separator:
+//
+// Slashes will be replaced with OS specific ones and duplicated slashes removed.
+//
+// On Windows, "/tmp" will be replaced with expanded system environment variable %Tmp%.
+func getValidTempDir(path string) string {
+	if runtime.GOOS == "windows" {
+		if strings.HasPrefix(path, "/tmp") {
+			path = strings.Replace(path, "/tmp", os.TempDir(), 1)
+		}
+	}
+	path = filepath.Clean(path)
+	path = path + string(os.PathSeparator)
+
+	err := checkFolder(path)
+	if err == nil {
+		err = checkFilePermission(path)
+	}
+
+	if err != nil {
+		ShowError(err, 1015)
+		path = getDefaultTempDir()
+	}
+
+	return path
+}
+
 // Generate File Path for the running OS
 func getPlatformFile(filename string) (osFilePath string) {
 

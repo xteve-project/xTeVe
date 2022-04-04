@@ -63,9 +63,6 @@ func Init() (err error) {
 	System.Update.Name = "xteve_2"
 
 	// Define folder paths
-	var tempFolder = os.TempDir() + string(os.PathSeparator) + System.AppName + string(os.PathSeparator)
-	tempFolder = getPlatformPath(strings.Replace(tempFolder, "//", "/", -1))
-
 	if len(System.Folder.Config) == 0 {
 		System.Folder.Config = GetUserHomeDirectory() + string(os.PathSeparator) + "." + System.AppName + string(os.PathSeparator)
 	} else {
@@ -79,7 +76,7 @@ func Init() (err error) {
 	System.Folder.Cache = System.Folder.Config + "cache" + string(os.PathSeparator)
 	System.Folder.ImagesCache = System.Folder.Cache + "images" + string(os.PathSeparator)
 	System.Folder.ImagesUpload = System.Folder.Data + "images" + string(os.PathSeparator)
-	System.Folder.Temp = tempFolder
+	System.Folder.Temp = getDefaultTempDir()
 
 	// Dev Info
 	showDevInfo()
