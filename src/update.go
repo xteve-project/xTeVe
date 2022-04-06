@@ -238,7 +238,33 @@ checkVersion:
 				return
 			}
 
-		case "2.1.0":
+		case "2.1.0", "2.1.1":
+
+			// Database verison <= 2.1.1 has broken XEPG mapping
+			showWarning(2022)
+
+			// Clear XEPG mapping
+			Data.XEPG.Channels = make(map[string]interface{})
+			Data.XEPG.XEPGCount = 0
+			Data.Cache.Streams = struct{ Active []string }{}
+
+			err = saveMapToJSONFile(System.File.XEPG, Data.XEPG.Channels)
+			if err != nil {
+				ShowError(err, 000)
+				return err
+			}
+
+			// Update database version
+			settingsMap["version"] = "2.2.0"
+
+			err = saveMapToJSONFile(System.File.Settings, settingsMap)
+			if err != nil {
+				return
+			}
+
+			goto checkVersion
+
+		case "2.2.0":
 			// If there are changes to the Database in a later update, continue here
 
 			break

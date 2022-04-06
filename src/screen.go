@@ -322,6 +322,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("FFmpeg binary was not found. Check the FFmpeg binary path in the xTeVe settings.")
 	case 2021:
 		errMsg = fmt.Sprintf("VLC binary was not found. Check the VLC path binary in the xTeVe settings.")
+	case 2022:
+		errMsg = fmt.Sprintf("Loaded database has broken XEPG mapping (version <= 2.1.1). Clearing it.")
 
 	case 2099:
 		errMsg = fmt.Sprintf("Updates have been disabled by the developer")
