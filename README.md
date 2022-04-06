@@ -4,27 +4,31 @@
 <br>
 
 # xTeVe
-## M3U Proxy and EPG aggregator for Plex DVR and Emby Live TV.
 
-#### This is a fork of <https://github.com/xteve-project/xTeVe>, all credit goes to the original author.
+## M3U Proxy and EPG aggregator for Plex DVR and Emby Live TV
+
+### This is a fork of <https://github.com/xteve-project/xTeVe>, all credit goes to the original author
 
 Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md).
 
 #### Donation
+
 * **Bitcoin:** 1c1iCe4CJPfNUXtqxKBbW2Qd2EtqRPWme  
 ![Bitcoin](html/img/BC-QR.jpg "Bitcoin - xTeVe")
 
---- 
+---
 
 ## Features
 
-#### Files
+### Files
+
 * Merge external M3U files
 * Merge external XMLTV files (EPG aggregation)
 * Automatic M3U and XMLTV update
 * M3U and XMLTV export
 
 #### Channel management
+
 * Filtering streams
 * Teleguide timeshift
 * Channel mapping
@@ -33,6 +37,7 @@ Documentation for setup and configuration is [here](https://github.com/xteve-pro
 * Channel categories
 
 #### Streaming
+
 * Buffer with HLS / M3U8 support
 * Re-streaming
 * Number of tuners adjustable
@@ -41,19 +46,22 @@ Documentation for setup and configuration is [here](https://github.com/xteve-pro
 ---
 
 ## Downloads
+
 * See [releases page](https://github.com/SCP002/xTeVe/releases)
 
 ---
 
 ### xTeVe Beta branch
+
 New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the master branch.
 
 **It is not recommended to use the beta version in a production system.**  
 
 With the command line argument `branch` the Git Branch can be changed. xTeVe must be started via the terminal.  
 
-#### Switch from master to beta branch:
-```
+#### Switch from master to beta branch
+
+```text
 xteve -branch beta
 
 ...
@@ -62,8 +70,9 @@ xteve -branch beta
 ...
 ```
 
-#### Switch from beta to master branch:
-```
+#### Switch from beta to master branch
+
+```text
 xteve -branch master
 
 ...
@@ -76,23 +85,19 @@ When the branch is changed, an update is only performed if there is a new versio
 
 ---
 
-## Run
-
-#### Requirements
-
----
-
 ## Build from source code [Go / Golang]
 
-#### Requirements
+### Requirements
+
 * [Go](https://golang.org) (go1.18 or newer)
 
-#### Dependencies
+### Dependencies
+
 * [go-ssdp](https://github.com/koron/go-ssdp)
 * [websocket](https://github.com/gorilla/websocket)
 * [osext](https://github.com/kardianos/osext)
 
-#### Build
+### Build
 
 #### 1. Download source code
 
@@ -152,11 +157,13 @@ gox -output="./xteve-build/{{.Dir}}_{{.OS}}_{{.Arch}}" ./
 ---
 
 ## Fork without pull request :mega:
+
 When creating a fork, the xTeVe GitHub account must be changed from the source code or the update function disabled.
 Future updates of the xteve-project would update your fork. :wink:
 
 xteve.go - Line: 29
-```Go
+
+```go
 var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-Downloads", Update: true}
 
 /*
@@ -165,5 +172,4 @@ var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-
   Repo:   GitHub Repository
   Update: Automatic updates from the GitHub repository [true|false]
 */
-
 ```
