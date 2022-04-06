@@ -1,10 +1,12 @@
 <div align="center" style="background-color: #111; padding: 100;">
-    <a href="https://github.com/xteve-project/xTeVe"><img width="880" height="200" src="html/img/logo_b_880x200.jpg" alt="xTeVe" /></a>
+    <a href="https://github.com/SCP002/xTeVe"><img width="880" height="200" src="html/img/logo_b_880x200.jpg" alt="xTeVe" /></a>
 </div>
 <br>
 
 # xTeVe
-## M3U Proxy and EPG aggregator for Plex DVR and Emby Live TV.  
+## M3U Proxy and EPG aggregator for Plex DVR and Emby Live TV.
+
+#### This is a fork of <https://github.com/xteve-project/xTeVe>, all credit goes to the original author.
 
 Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md).
 
@@ -18,7 +20,7 @@ Documentation for setup and configuration is [here](https://github.com/xteve-pro
 
 #### Files
 * Merge external M3U files
-* Merge external XMLTV files
+* Merge external XMLTV files (EPG aggregation)
 * Automatic M3U and XMLTV update
 * M3U and XMLTV export
 
@@ -55,8 +57,8 @@ With the command line argument `branch` the Git Branch can be changed. xTeVe mus
 xteve -branch beta
 
 ...
-[xTeVe] GitHub:                https://github.com/xteve-project
-[xTeVe] Git Branch:            beta [xteve-project]
+[xTeVe] GitHub:                https://github.com/SCP002
+[xTeVe] Git Branch:            beta [SCP002]
 ...
 ```
 
@@ -65,8 +67,8 @@ xteve -branch beta
 xteve -branch master
 
 ...
-[xTeVe] GitHub:                https://github.com/xteve-project
-[xTeVe] Git Branch:            master [xteve-project]
+[xTeVe] GitHub:                https://github.com/SCP002
+[xTeVe] Git Branch:            master [SCP002]
 ...
 ```
 
@@ -74,10 +76,16 @@ When the branch is changed, an update is only performed if there is a new versio
 
 ---
 
+## Run
+
+#### Requirements
+
+---
+
 ## Build from source code [Go / Golang]
 
 #### Requirements
-* [Go](https://golang.org) (go1.16.2 or newer)
+* [Go](https://golang.org) (go1.18 or newer)
 
 #### Dependencies
 * [go-ssdp](https://github.com/koron/go-ssdp)
@@ -85,14 +93,60 @@ When the branch is changed, an update is only performed if there is a new versio
 * [osext](https://github.com/kardianos/osext)
 
 #### Build
-1. Download source code
-2. Install dependencies
-```
+
+#### 1. Download source code
+
+#### 2. Install dependencies
+
+```sh
 go mod tidy
 ```
-3. Build xTeVe
+
+Or
+
+```sh
+go get github.com/koron/go-ssdp
+go get github.com/gorilla/websocket
+go get github.com/kardianos/osext
 ```
+
+#### 3. Update dependencies (optional)
+
+```sh
+go get -u ./...
+```
+
+#### 4. Update web files (optional)
+
+If TypeScript files were changed, run:
+
+```sh
+tsc -p ./ts/tsconfig.json
+```
+
+Then, to embed updated JavaScript files into the source code (src/webUI.go), run it in development mode at least once:
+
+```sh
 go build xteve.go
+xteve -dev
+```
+
+:exclamation: To not to get CreateFile error, do not forget to switch your binary to "regular" mode after runnning with `-dev` flag:
+
+`xteve -branch master` or `xteve -branch beta`
+
+#### 4. Build xTeVe
+
+```sh
+go build xteve.go
+```
+
+Or use convenient cross-compile tool. To build binaries for every OS / architecture pair into `./xteve-build/` folder:
+
+```sh
+go get github.com/mitchellh/gox
+go install github.com/mitchellh/gox
+gox -output="./xteve-build/{{.Dir}}_{{.OS}}_{{.Arch}}" ./
 ```
 
 ---

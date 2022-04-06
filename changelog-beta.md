@@ -1,3 +1,6 @@
+#### For any futurer changes, see https://github.com/SCP002/xTeVe/releases
+---
+
 #### 2.1.1.0116-beta
 If no user agent is specified, the default FFmpeg or VLC user agent is used.
 
