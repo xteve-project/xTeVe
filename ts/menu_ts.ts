@@ -1731,16 +1731,16 @@ class XMLTVFile {
     //var fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
     let values = getObjKeys(SERVER["xepg"]["xmltvMap"][file]);
     let text = []
-    let displayName:string
+    let friendlyName:string
 
     for (let i = 0; i < values.length; i++) {
-      if (SERVER["xepg"]["xmltvMap"][file][values[i]].hasOwnProperty('display-name') == true) {
-        displayName = SERVER["xepg"]["xmltvMap"][file][values[i]]["display-name"];
+      if (SERVER["xepg"]["xmltvMap"][file][values[i]].hasOwnProperty('friendly-name') == true) {
+        friendlyName = SERVER["xepg"]["xmltvMap"][file][values[i]]["friendly-name"];
       } else {
-        displayName = "-"
+        friendlyName = "-"
       }
      
-      text[i] = displayName + " (" + values[i]  + ")";
+      text[i] = friendlyName + " (" + values[i]  + ")";
     }
 
     text.unshift("-");

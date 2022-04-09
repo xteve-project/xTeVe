@@ -14,9 +14,9 @@ type XMLTV struct {
 
 // Channel : Channels
 type Channel struct {
-	ID          string        `xml:"id,attr"`
-	DisplayName []DisplayName `xml:"display-name"`
-	Icon        Icon          `xml:"icon"`
+	ID           string        `xml:"id,attr"`
+	DisplayNames []DisplayName `xml:"display-name"`
+	Icon         Icon          `xml:"icon"`
 }
 
 // DisplayName : Channel Name
