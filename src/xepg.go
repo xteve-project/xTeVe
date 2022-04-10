@@ -93,12 +93,7 @@ func buildXEPG(background bool) {
 
 				System.ScanInProgress = 0
 
-				// Clearing the Cache
-				/*
-					Data.Cache.XMLTV = make(map[string]XMLTV)
-					Data.Cache.XMLTV = nil
-				*/
-				runtime.GC()
+				clearXMLTVCache()
 
 			}()
 
@@ -138,10 +133,7 @@ func buildXEPG(background bool) {
 
 				System.ScanInProgress = 0
 
-				// Clearing the Cache
-				//Data.Cache.XMLTV = make(map[string]XMLTV)
-				//Data.Cache.XMLTV = nil
-				runtime.GC()
+				clearXMLTVCache()
 
 			}()
 
@@ -1105,4 +1097,10 @@ func cleanupXEPG() {
 	}
 
 	return
+}
+
+// clearXMLTVCache empties XMLTV cache and runs a garbage collector
+func clearXMLTVCache() {
+	Data.Cache.XMLTV = make(map[string]XMLTV)
+	runtime.GC()
 }
