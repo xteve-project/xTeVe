@@ -87,7 +87,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 						channelName = name[0]
 						channelName = strings.Replace(channelName, `,`, "", 1)
 						channelName = strings.TrimRight(channelName, "\r\n")
-						channelName = strings.TrimRight(channelName, " ")
+						channelName = strings.Trim(channelName, " ")
 					}
 
 					if len(channelName) == 0 {
@@ -98,7 +98,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
 					}
 
-					channelName = strings.TrimRight(channelName, " ")
+					channelName = strings.Trim(channelName, " ")
 
 					// Channels without names are skipped
 					if len(channelName) == 0 {
@@ -143,7 +143,6 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 		return
 	}
 
-	//fmt.Println(content)
 	if strings.Contains(content, "#EXT-X-TARGETDURATION") || strings.Contains(content, "#EXT-X-MEDIA-SEQUENCE") {
 		err = errors.New("Invalid M3U file, an extended M3U file is required.")
 		return
