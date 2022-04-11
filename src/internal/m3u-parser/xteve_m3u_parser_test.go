@@ -20,9 +20,9 @@ type M3UStream struct {
 	UUIDValue  string `json:"_uuid.value,omitempty"`
 }
 
-func TestStream1(t *testing.T) {
+func TestMakeInterfaceFromM3U(t *testing.T) {
 
-	var file = "test_list_1.m3u"
+	var file = "test_playlist_1.m3u"
 	var content, err = ioutil.ReadFile(file)
 	if err != nil {
 		t.Error(err)
