@@ -12,6 +12,7 @@ import (
 
 var exceptForParameterRx = regexp.MustCompile(`[a-z-A-Z=]*(".*?")`)
 var exceptForChannelNameRx = regexp.MustCompile(`,([^\n]*|,[^\r]*)`)
+var extGrpRx = regexp.MustCompile(`#EXTGRP: *(.*)`)
 
 // MakeInterfaceFromM3U :
 func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err error) {
@@ -154,9 +155,19 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
 		channels = append(channels[:0], channels[1:]...)
 
+		var lastExtGrp string
+
 		for _, channel := range channels {
 
 			var stream = parseMetaData(channel)
+
+			if extGrp := extGrpRx.FindStringSubmatch(channel); len(extGrp) > 1 {
+				lastExtGrp = strings.Trim(extGrp[1], "\r\n")
+			}
+
+			if lastExtGrp != "" {
+				stream["ext-grp"] = lastExtGrp
+			}
 
 			if len(stream) > 0 && stream != nil {
 				allChannels = append(allChannels, stream)
