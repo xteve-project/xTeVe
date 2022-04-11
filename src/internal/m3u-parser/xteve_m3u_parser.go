@@ -7,7 +7,11 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"github.com/samber/lo"
 )
+
+var exceptForParameterRx = regexp.MustCompile(`[a-z-A-Z=]*(".*?")`)
+var exceptForChannelNameRx = regexp.MustCompile(`,([^\n]*|,[^\r]*)`)
 
 // MakeInterfaceFromM3U :
 func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err error) {
@@ -19,8 +23,6 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 	var parseMetaData = func(channel string) (stream map[string]string) {
 
 		stream = make(map[string]string)
-		var exceptForParameter = `[a-z-A-Z=]*(".*?")`
-		var exceptForChannelName = `,([^\n]*|,[^\r]*)`
 
 		var lines = strings.Split(strings.Replace(channel, "\r\n", "\n", -1), "\n")
 
@@ -48,8 +50,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
 					var value string
 					// Parse all parameters
-					var p = regexp.MustCompile(exceptForParameter)
-					var streamParameter = p.FindAllString(line, -1)
+					var streamParameter = exceptForParameterRx.FindAllString(line, -1)
 
 					for _, p := range streamParameter {
 
@@ -80,8 +81,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 					}
 
 					// Parse channel names
-					n := regexp.MustCompile(exceptForChannelName)
-					var name = n.FindAllString(line, 1)
+					var name = exceptForChannelNameRx.FindAllString(line, 1)
 
 					if len(name) > 0 {
 						channelName = name[0]
@@ -123,7 +123,7 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 
 				if strings.Contains(strings.ToLower(key), "id") {
 
-					if indexOfString(value, uuids) != -1 {
+					if lo.IndexOf(uuids, value) != -1 {
 						log.Println(fmt.Sprintf("Channel: %s - %s = %s ", stream["name"], key, value))
 						break
 					}
@@ -171,15 +171,4 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 	}
 
 	return
-}
-
-func indexOfString(element string, data []string) int {
-
-	for k, v := range data {
-		if element == v {
-			return k
-		}
-	}
-
-	return -1
 }
