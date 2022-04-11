@@ -9,7 +9,6 @@ import (
 )
 
 type M3UStream struct {
-	ExtGrp     string `json:"ext-grp,required"`
 	GroupTitle string `json:"group-title,required"`
 	Name       string `json:"name,required"`
 	TvgID      string `json:"tvg-id,required"`
@@ -51,7 +50,6 @@ func TestMakeInterfaceFromM3U(t *testing.T) {
 	// Test stream 1
 	assert.Equal(t, "Channel 1", streams[0].Name, "Names should match")
 	assert.Equal(t, "Group 1", streams[0].GroupTitle, "Groups should match")
-	assert.Empty(t, streams[0].ExtGrp, "Should not have EXTGRP attribute")
 	assert.Equal(t, "http://example.com/stream/1", streams[0].URL, "URL's should match")
 	assert.Equal(t, "Channel.1", streams[0].TvgName, "TVG names should match")
 	assert.Equal(t, "tvg.id.1", streams[0].TvgID, "TVG ID's should match")
@@ -60,8 +58,7 @@ func TestMakeInterfaceFromM3U(t *testing.T) {
 
 	// Test stream 2
 	assert.Equal(t, "Channel 2", streams[1].Name, "Names should match")
-	assert.Empty(t, streams[1].GroupTitle, "Should not have group-title tag")
-	assert.Equal(t, "Group 2", streams[1].ExtGrp, "Groups should match")
+	assert.Equal(t, "Group 2", streams[1].GroupTitle, "Should have a GroupTitle set from EXTGRP")
 	assert.Equal(t, "http://example.com/stream/2", streams[1].URL, "URL's should match")
 	assert.Equal(t, "Channel.2", streams[1].TvgName, "TVG names should match")
 	assert.Equal(t, "tvg.id.2", streams[1].TvgID, "TVG ID's should match")
@@ -70,8 +67,7 @@ func TestMakeInterfaceFromM3U(t *testing.T) {
 
 	// Test stream 3
 	assert.Equal(t, ",:It's - a difficult name |", streams[2].Name, "Names should match")
-	assert.Empty(t, streams[2].GroupTitle, "Should not have group-title tag")
-	assert.Equal(t, "Group 2", streams[2].ExtGrp, "Should have EXTGRP inherited from previous stream")
+	assert.Equal(t, "Group 2", streams[2].GroupTitle, "Should have a GroupTitle set from previous EXTGRP")
 	assert.Equal(t, "http://example.com/stream/3", streams[2].URL, "URL's should match")
 	assert.Empty(t, streams[2].TvgName, "Should not have tvg-name tag")
 	assert.Empty(t, streams[2].TvgID, "Should not have tvg-id tag")
@@ -80,8 +76,7 @@ func TestMakeInterfaceFromM3U(t *testing.T) {
 
 	// Test stream 4
 	assert.Equal(t, "Channel 4", streams[3].Name, "Names should match")
-	assert.Equal(t, "Group 4", streams[3].GroupTitle, "Groups should match")
-	assert.Equal(t, "Group 99", streams[3].ExtGrp, "Groups should match")
+	assert.Equal(t, "Group 4", streams[3].GroupTitle, "Should have a GroupTitle set from group-title, over EXTGRP")
 	assert.Equal(t, "http://example.com/stream/4", streams[3].URL, "URL's should match")
 	assert.Equal(t, "Channel.4", streams[3].TvgName, "TVG names should match")
 	assert.Equal(t, "tvg.id.4", streams[3].TvgID, "TVG ID's should match")

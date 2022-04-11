@@ -162,11 +162,13 @@ func MakeInterfaceFromM3U(byteStream []byte) (allChannels []interface{}, err err
 			var stream = parseMetaData(channel)
 
 			if extGrp := extGrpRx.FindStringSubmatch(channel); len(extGrp) > 1 {
+				// EXTGRP applies to all subseqent channels until overriden
 				lastExtGrp = strings.Trim(extGrp[1], "\r\n")
 			}
 
-			if lastExtGrp != "" {
-				stream["ext-grp"] = lastExtGrp
+			// group-title has priority over EXTGRP
+			if stream["group-title"] == "" && lastExtGrp != "" {
+				stream["group-title"] = lastExtGrp
 			}
 
 			if len(stream) > 0 && stream != nil {
