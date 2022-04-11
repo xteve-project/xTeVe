@@ -2,13 +2,14 @@ package m3u
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type M3UStream struct {
+	ExtGrp     string `json:"ext-grp,required"`
 	GroupTitle string `json:"group-title,required"`
 	Name       string `json:"name,required"`
 	TvgID      string `json:"tvg-id,required"`
@@ -22,65 +23,68 @@ type M3UStream struct {
 
 func TestMakeInterfaceFromM3U(t *testing.T) {
 
-	var file = "test_playlist_1.m3u"
-	var content, err = ioutil.ReadFile(file)
-	if err != nil {
-		t.Error(err)
-		return
+	// Read playlist
+	file := "test_playlist_1.m3u"
+	content, err := ioutil.ReadFile(file)
+	assert.NoError(t, err, "Should read playlist")
+
+	// Parse playlist into []interface{}
+	rawStreams, err := MakeInterfaceFromM3U(content)
+	assert.NoError(t, err, "Should parse playlist")
+
+	// Build []M3UStream from []interface{}
+	streams := []M3UStream{}
+
+	for _, rawStream := range rawStreams {
+		jsonString, err := json.MarshalIndent(rawStream, "", "  ")
+		assert.NoError(t, err, "Should convert from interface")
+
+		stream := M3UStream{}
+		err = json.Unmarshal(jsonString, &stream)
+		assert.NoError(t, err, "Should convert from interface")
+
+		streams = append(streams, stream)
 	}
 
-	streams, err := MakeInterfaceFromM3U(content)
+	assert.Len(t, streams, 4, "Should be 4 streams in total")
 
-	if err != nil {
-		t.Error(err)
-	}
+	// Test stream 1
+	assert.Equal(t, "Channel 1", streams[0].Name, "Names should match")
+	assert.Equal(t, "Group 1", streams[0].GroupTitle, "Groups should match")
+	assert.Empty(t, streams[0].ExtGrp, "Should not have EXTGRP attribute")
+	assert.Equal(t, "http://example.com/stream/1", streams[0].URL, "URL's should match")
+	assert.Equal(t, "Channel.1", streams[0].TvgName, "TVG names should match")
+	assert.Equal(t, "tvg.id.1", streams[0].TvgID, "TVG ID's should match")
+	assert.Equal(t, "https://example/logo.png", streams[0].TvgLogo, "TVG logos should match")
+	assert.Empty(t, streams[0].TvgShift, "Should not have tvg-shift tag")
 
-	err = checkStream(streams)
-	if err != nil {
-		t.Error(err)
-	}
+	// Test stream 2
+	assert.Equal(t, "Channel 2", streams[1].Name, "Names should match")
+	assert.Empty(t, streams[1].GroupTitle, "Should not have group-title tag")
+	assert.Equal(t, "Group 2", streams[1].ExtGrp, "Groups should match")
+	assert.Equal(t, "http://example.com/stream/2", streams[1].URL, "URL's should match")
+	assert.Equal(t, "Channel.2", streams[1].TvgName, "TVG names should match")
+	assert.Equal(t, "tvg.id.2", streams[1].TvgID, "TVG ID's should match")
+	assert.Equal(t, "https://example/logo/2.png", streams[1].TvgLogo, "TVG logos should match")
+	assert.Empty(t, streams[1].TvgShift, "Should not have tvg-shift tag")
 
-	fmt.Println("Streams:", len(streams))
-	t.Log(streams)
+	// Test stream 3
+	assert.Equal(t, ",:It's - a difficult name |", streams[2].Name, "Names should match")
+	assert.Empty(t, streams[2].GroupTitle, "Should not have group-title tag")
+	assert.Equal(t, "Group 2", streams[2].ExtGrp, "Should have EXTGRP inherited from previous stream")
+	assert.Equal(t, "http://example.com/stream/3", streams[2].URL, "URL's should match")
+	assert.Empty(t, streams[2].TvgName, "Should not have tvg-name tag")
+	assert.Empty(t, streams[2].TvgID, "Should not have tvg-id tag")
+	assert.Empty(t, streams[2].TvgLogo, "Should not have tvg-logo tag")
+	assert.Empty(t, streams[2].TvgShift, "Should not have tvg-shift tag")
 
-}
-
-func checkStream(streamInterface []interface{}) (err error) {
-
-	for i, s := range streamInterface {
-
-		var stream = s.(map[string]string)
-		var m3uStream M3UStream
-
-		jsonString, err := json.MarshalIndent(stream, "", "  ")
-
-		if err == nil {
-
-			err = json.Unmarshal(jsonString, &m3uStream)
-			if err == nil {
-
-				log.Print(fmt.Sprintf("Stream:        %d", i))
-				log.Print(fmt.Sprintf("Name*:         %s", m3uStream.Name))
-				log.Print(fmt.Sprintf("URL*:          %s", m3uStream.URL))
-				log.Print(fmt.Sprintf("tvg-name:      %s", m3uStream.TvgName))
-				log.Print(fmt.Sprintf("tvg-id**:      %s", m3uStream.TvgID))
-				log.Print(fmt.Sprintf("tvg-logo:      %s", m3uStream.TvgLogo))
-				log.Print(fmt.Sprintf("tvg-shift:     %s", m3uStream.TvgShift))
-				log.Print(fmt.Sprintf("group-title**: %s", m3uStream.GroupTitle))
-
-				if len(m3uStream.UUIDKey) > 0 {
-					log.Print(fmt.Sprintf("UUID key***:   %s", m3uStream.UUIDKey))
-					log.Print(fmt.Sprintf("UUID value:    %s", m3uStream.UUIDValue))
-				} else {
-					log.Print(fmt.Sprintf("UUID key:    false"))
-				}
-
-			}
-
-		}
-
-		log.Println(fmt.Sprintf("- - - - - (*: Required) | (**: Nice to have) | (***: Love it) - - - - -"))
-	}
-
-	return
+	// Test stream 4
+	assert.Equal(t, "Channel 4", streams[3].Name, "Names should match")
+	assert.Equal(t, "Group 4", streams[3].GroupTitle, "Groups should match")
+	assert.Equal(t, "Group 99", streams[3].ExtGrp, "Groups should match")
+	assert.Equal(t, "http://example.com/stream/4", streams[3].URL, "URL's should match")
+	assert.Equal(t, "Channel.4", streams[3].TvgName, "TVG names should match")
+	assert.Equal(t, "tvg.id.4", streams[3].TvgID, "TVG ID's should match")
+	assert.Equal(t, "https://example/logo/4.png", streams[3].TvgLogo, "TVG logos should match")
+	assert.Equal(t, "-5", streams[3].TvgShift, "TVG shifts should match")
 }
