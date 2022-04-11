@@ -94,8 +94,10 @@ When the branch is changed, an update is only performed if there is a new versio
 ### Dependencies
 
 * [go-ssdp](https://github.com/koron/go-ssdp)
-* [websocket](https://github.com/gorilla/websocket)
+* [lo](https://github.com/samber/lo)
 * [osext](https://github.com/kardianos/osext)
+* [testify](https://github.com/stretchr/testify)
+* [websocket](https://github.com/gorilla/websocket)
 
 ### Build
 
@@ -111,8 +113,10 @@ Or
 
 ```sh
 go get github.com/koron/go-ssdp
-go get github.com/gorilla/websocket
+go get github.com/samber/lo
 go get github.com/kardianos/osext
+go get github.com/stretchr/testify
+go get github.com/gorilla/websocket
 ```
 
 #### 3. Update dependencies (optional)
