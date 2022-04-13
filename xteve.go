@@ -42,7 +42,7 @@ const Name = "xTeVe"
 const Version = "2.2.5.0000"
 
 // DBVersion : Database Version
-const DBVersion = "2.2.0"
+const DBVersion = "2.2.1"
 
 // APIVersion : API Version
 const APIVersion = "1.1.0"

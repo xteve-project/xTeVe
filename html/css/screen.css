@@ -404,6 +404,11 @@ tbody {
   cursor: not-allowed;
 }
 
+#popup-custom input[type=text]:disabled {
+  color: #666;
+  cursor: not-allowed;
+}
+
 #mapping-detail-table, #user-detail-table {
   display: inline-table;
   width: 100%;

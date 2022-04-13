@@ -255,6 +255,12 @@
       "placeholder": "",
       "description": ""
     },
+    "updateChannelGroup":
+    {
+      "title": "Update Channel Group",
+      "placeholder": "",
+      "description": "If checked, use group from the database"
+    },
     "channelLogo":
     {
       "title": "Logo URL",

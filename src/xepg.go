@@ -421,6 +421,13 @@ func createXEPGDatabase() (err error) {
 				}
 			}
 
+			// Update GroupTitle
+			xepgChannel.GroupTitle = m3uChannel.GroupTitle
+
+			if xepgChannel.XUpdateChannelGroup {
+				xepgChannel.XGroupTitle = m3uChannel.GroupTitle
+			}
+
 			// Update Channel Logo. Will be overwritten again if the Logo is present in the XMLTV file
 			if xepgChannel.XUpdateChannelIcon == true {
 				xepgChannel.TvgLogo = m3uChannel.TvgLogo

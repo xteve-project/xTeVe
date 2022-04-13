@@ -368,6 +368,21 @@ function toggleChannelStatus(id) {
         }
     });
 }
+function toggleGroupUpdateCb(xepgId, target) {
+    target.className = 'changed';
+    const groupInput = document.querySelector('input[name="x-group-title"]');
+    const mapping = getLocalData('mapping', xepgId);
+    if (target.checked) {
+        groupInput.dataset.oldValue = groupInput.value;
+        groupInput.value = mapping['group-title'];
+        groupInput.disabled = true;
+    }
+    else {
+        groupInput.value = groupInput.dataset.oldValue;
+        groupInput.disabled = false;
+    }
+    groupInput.className = 'changed';
+}
 function restore() {
     if (document.getElementById('upload')) {
         document.getElementById('upload').remove();

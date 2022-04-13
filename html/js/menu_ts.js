@@ -1305,10 +1305,21 @@ function openPopUp(dataType, element) {
             var dbKey = "x-group-title";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            input.dataset.oldValue = data[dbKey];
             content.appendRow("{{.mapping.m3uGroupTitle.title}}", input);
             if (data["group-title"] != undefined) {
                 content.description(data["group-title"]);
             }
+            if (data["x-update-channel-group"] == true) {
+                input.disabled = true;
+            }
+            // Update channel group checkbox
+            var dbKey = "x-update-channel-group";
+            var input = content.createCheckbox(dbKey);
+            input.setAttribute("onchange", "javascript: toggleGroupUpdateCb('" + id + "', this);");
+            input.checked = data[dbKey];
+            content.appendRow("{{.mapping.updateChannelGroup.title}}", input);
+            content.description("{{.mapping.updateChannelGroup.description}}");
             // XMLTV file
             var dbKey = "x-xmltv-file";
             var xmlFile = data[dbKey];
