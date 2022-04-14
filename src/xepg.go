@@ -248,9 +248,9 @@ func createXEPGMapping() {
 // Create / update XEPG Database
 func createXEPGDatabase() (err error) {
 
-	var allChannelNumbers = make([]float64, 0, System.UnfilteredChannelLimit)
-	Data.Cache.Streams.Active = make([]string, 0, System.UnfilteredChannelLimit)
-	Data.XEPG.Channels = make(map[string]interface{}, System.UnfilteredChannelLimit)
+	var allChannelNumbers = make([]float64, 0)
+	Data.Cache.Streams.Active = make([]string, 0)
+	Data.XEPG.Channels = make(map[string]interface{})
 
 	Data.XEPG.Channels, err = loadJSONFileToMap(System.File.XEPG)
 	if err != nil {
@@ -327,7 +327,7 @@ func createXEPGDatabase() (err error) {
 	}
 
 	// Make a map of the db channels based on their previously downloaded attributes -- filename, group, title, etc
-	var xepgChannelsValuesMap = make(map[string]XEPGChannelStruct, System.UnfilteredChannelLimit)
+	var xepgChannelsValuesMap = make(map[string]XEPGChannelStruct)
 	for _, v := range Data.XEPG.Channels {
 		var channel XEPGChannelStruct
 		err = json.Unmarshal([]byte(mapToJSON(v)), &channel)

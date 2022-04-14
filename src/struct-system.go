@@ -23,7 +23,6 @@ type SystemStruct struct {
 	DeviceID               string
 	Domain                 string
 	PlexChannelLimit       int
-	UnfilteredChannelLimit int
 
 	FFmpeg struct {
 		DefaultOptions string
