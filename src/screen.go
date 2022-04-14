@@ -1,6 +1,7 @@
 package src
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -397,6 +398,20 @@ func getErrMsg(errCode int) (errMsg string) {
 	}
 
 	return errMsg
+}
+
+func sendAlert(text string) {
+
+	select {
+	case webAlerts <- text:
+		//
+	default:
+		err := errors.New(fmt.Sprintf("Client alert buffer is full, dropping the message: %v", text))
+		ShowError(err, 0)
+	}
+
+	return
+
 }
 
 func addNotification(notification Notification) (err error) {

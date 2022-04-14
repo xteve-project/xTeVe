@@ -54,6 +54,9 @@ class Server {
                 }
                 return;
             }
+            if (response.hasOwnProperty("alert")) {
+                alert(response["alert"]);
+            }
             if (response.hasOwnProperty("logoURL")) {
                 var div = document.getElementById("channel-icon");
                 div.value = response["logoURL"];
@@ -80,9 +83,6 @@ class Server {
             }
             if (response.hasOwnProperty("openLink")) {
                 window.location = response["openLink"];
-            }
-            if (response.hasOwnProperty("alert")) {
-                alert(response["alert"]);
             }
             if (response.hasOwnProperty("reload")) {
                 location.reload();

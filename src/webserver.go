@@ -15,6 +15,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// webAlerts channel to send to client
+var webAlerts = make(chan string, 3)
+
 // StartWebserver : Start the Webserver
 func StartWebserver() (err error) {
 
@@ -342,10 +345,18 @@ func WS(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not open websocket connection", http.StatusBadRequest)
 		return
 	}
+	defer conn.Close()
 
 	setGlobalDomain(r.Host)
 
 	for {
+
+		select {
+		case response.Alert = <-webAlerts:
+			//
+		default:
+			//
+		}
 
 		err = conn.ReadJSON(&request)
 

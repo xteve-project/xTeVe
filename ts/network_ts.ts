@@ -85,6 +85,10 @@ class Server {
       }
 
 
+      if (response.hasOwnProperty("alert")) {
+        alert(response["alert"])
+      }
+
       if (response.hasOwnProperty("logoURL")) {
         var div = (document.getElementById("channel-icon") as HTMLInputElement)
         div.value = response["logoURL"]
@@ -115,10 +119,6 @@ class Server {
 
       if (response.hasOwnProperty("openLink")) {
         window.location = response["openLink"]
-      }
-
-      if (response.hasOwnProperty("alert")) {
-        alert(response["alert"])
       }
 
       if (response.hasOwnProperty("reload")) {
