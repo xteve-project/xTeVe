@@ -56,7 +56,7 @@ class MainMenuItem extends MainMenu {
         break
 
       case "filter": 
-        this.tableHeader = ["{{.filter.table.name}}", "{{.filter.table.type}}", "{{.filter.table.filter}}"]
+        this.tableHeader = ["{{.filter.table.startingChannel}}", "{{.filter.table.name}}", "{{.filter.table.type}}", "{{.filter.table.filter}}"]
         break
 
       case "users": 
@@ -212,6 +212,12 @@ class Content {
           tr.id = key
 
           tr.setAttribute('onclick', 'javascript: openPopUp("' + data[key]["type"] + '", this)')
+
+          var cell:Cell = new Cell()
+          cell.child = true
+          cell.childType = "P"
+          cell.value = data[key]["startingChannel"]
+          tr.appendChild(cell.createCell())
 
           var cell:Cell = new Cell()
           cell.child = true
@@ -803,6 +809,31 @@ class ShowContent extends Content {
 
         }
         
+        if (menuKey == "filter") {
+
+          if (element == "{{.filter.table.startingChannel}}") {
+            cell.onclick = true
+            cell.onclickFunction = "javascript: sortTable(0);"
+            cell.tdClassName = "sortThis"
+          }
+
+          if (element == "{{.filter.table.name}}") {
+            cell.onclick = true
+            cell.onclickFunction = "javascript: sortTable(1);"
+          }
+
+          if (element == "{{.filter.table.type}}") {
+            cell.onclick = true
+            cell.onclickFunction = "javascript: sortTable(2);"
+          }
+
+          if (element == "{{.filter.table.filter}}") {
+            cell.onclick = true
+            cell.onclickFunction = "javascript: sortTable(3);"
+          }
+
+        }
+
         header.appendChild(cell.createCell())
       });
 

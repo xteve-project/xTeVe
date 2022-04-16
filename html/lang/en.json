@@ -58,6 +58,7 @@
   {
     "table":
     {
+      "startingChannel": "Starting Ch. No.",
       "name": "Filter Name",
       "type": "Filter Type",
       "filter": "Filter"
