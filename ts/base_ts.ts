@@ -204,38 +204,38 @@ function bulkEdit() {
 }
 
 function sortTable(column) {
-  //console.log(columm);
 
   if (column == COLUMN_TO_SORT) {
     return;
   }
 
+  const table       = document.getElementById("content_table");
+  const tableHead   = table.getElementsByTagName("TR")[0];
+  const tableItems  = tableHead.getElementsByTagName("TD");
 
-  var table       = document.getElementById("content_table");
-  var tableHead   = table.getElementsByTagName("TR")[0];
-  var tableItems  = tableHead.getElementsByTagName("TD");
+  type SortEntry = {
+    key: string | number;
+    row: HTMLTableRowElement;
+  }
 
-  var sortObj = new Object();
-  var x, xValue;
-  var tableHeader
-  var sortByString = false
+  const sortArr: SortEntry[] = [];
+  let xValue: string | number;
 
-  if (column > 0 && COLUMN_TO_SORT > 0)  {
+  if (column >= 0 && COLUMN_TO_SORT >= 0)  {
     tableItems[COLUMN_TO_SORT].className = "pointer";
     tableItems[column].className = "sortThis";
   }
 
   COLUMN_TO_SORT = column;
 
-
-  var rows = (table as HTMLTableElement).rows;
+  const rows = (table as HTMLTableElement).rows;
 
   if (rows[1] != undefined) {
-    tableHeader = rows[0]
+    const tableHeader = rows[0];
 
-    x = rows[1].getElementsByTagName("TD")[column];
+    let x: any = rows[1].getElementsByTagName("TD")[column];
 
-    for (i = 1; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
 
       x = rows[i].getElementsByTagName("TD")[column];
 
@@ -248,32 +248,11 @@ function sortTable(column) {
           xValue = x.getElementsByTagName("P")[0].innerText.toLowerCase();
           break;
 
-        default: console.log(x.childNodes[0].tagName);
+        default:
+          console.log(x.childNodes[0].tagName);
       }
 
-      if (xValue == "" || xValue == NaN) {
-
-        xValue = i
-        sortObj[i] = rows[i];
-
-      } else {
-
-        switch(isNaN(xValue) || typeof xValue == "string") {
-          case false:
-
-            xValue = parseFloat(xValue);
-            sortObj[xValue] = rows[i]
-            break;
-
-          case true:
-
-            sortByString = true
-            sortObj[xValue.toLowerCase() + i] = rows[i]
-            break;
-
-        }
-
-      }
+      sortArr.push({key: xValue ? xValue : i, row: rows[i]});
 
     }
 
@@ -281,25 +260,30 @@ function sortTable(column) {
       table.removeChild(table.firstChild);
     }
 
-    var sortValues = getObjKeys(sortObj)
+    sortArr.sort((se1: SortEntry, se2: SortEntry): number => {
+      const se1KeyNum = parseFloat(String(se1.key));
+      const se2KeyNum = parseFloat(String(se2.key));
 
-    if (sortByString == true) {
-      sortValues.sort()
-      console.log(sortValues);
-    } else {
-      function sortFloat(a, b) {
-        return a - b;
+      if (!isNaN(se1KeyNum) && !isNaN(se2KeyNum)) {
+        return se1KeyNum - se2KeyNum;
       }
-      sortValues.sort(sortFloat);
-    }
 
-    table.appendChild(tableHeader)
+      if (se1.key < se2.key) {
+        return -1;
+      }
 
-    for (var i = 0; i < sortValues.length; i++) {
+      if (se1.key > se2.key) {
+        return 1;
+      }
 
-      table.appendChild(sortObj[sortValues[i]])
+      return 0;
+    });
 
-    }
+    table.appendChild(tableHeader);
+
+    sortArr.forEach((se: SortEntry) => {
+      table.appendChild(se.row);
+    });
 
   }
 
