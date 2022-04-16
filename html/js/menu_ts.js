@@ -41,7 +41,7 @@ class MainMenuItem extends MainMenu {
                 this.tableHeader = ["{{.xmltv.table.guide}}", "{{.xmltv.table.lastUpdate}}", "{{.xmltv.table.availability}} %", "{{.xmltv.table.channels}}", "{{.xmltv.table.programs}}"];
                 break;
             case "filter":
-                this.tableHeader = ["{{.filter.table.name}}", "{{.filter.table.type}}", "{{.filter.table.filter}}"];
+                this.tableHeader = ["{{.filter.table.startingChannel}}", "{{.filter.table.name}}", "{{.filter.table.type}}", "{{.filter.table.filter}}"];
                 break;
             case "users":
                 this.tableHeader = ["{{.users.table.username}}", "{{.users.table.password}}", "{{.users.table.web}}", "{{.users.table.pms}}", "{{.users.table.m3u}}", "{{.users.table.xml}}", "{{.users.table.api}}"];
@@ -164,6 +164,11 @@ class Content {
                     var tr = document.createElement("TR");
                     tr.id = key;
                     tr.setAttribute('onclick', 'javascript: openPopUp("' + data[key]["type"] + '", this)');
+                    var cell = new Cell();
+                    cell.child = true;
+                    cell.childType = "P";
+                    cell.value = data[key]["startingChannel"];
+                    tr.appendChild(cell.createCell());
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
@@ -628,6 +633,25 @@ class ShowContent extends Content {
                     if (element == "{{.mapping.table.timeshift}}") {
                         cell.onclick = true;
                         cell.onclickFunction = "javascript: sortTable(8);";
+                    }
+                }
+                if (menuKey == "filter") {
+                    if (element == "{{.filter.table.startingChannel}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(0);";
+                        cell.tdClassName = "sortThis";
+                    }
+                    if (element == "{{.filter.table.name}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(1);";
+                    }
+                    if (element == "{{.filter.table.type}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(2);";
+                    }
+                    if (element == "{{.filter.table.filter}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(3);";
                     }
                 }
                 header.appendChild(cell.createCell());
