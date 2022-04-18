@@ -130,7 +130,7 @@ class Content {
           
           data = SERVER["settings"]["files"][fileType]
         
-          var keys = getObjKeys(data)
+          var keys = getOwnObjProps(data)
           
           keys.forEach(key => {
             var tr = document.createElement("TR")
@@ -206,7 +206,7 @@ class Content {
       case "filter":
         delete SERVER["settings"]["filter"][-1]
         data = SERVER["settings"]["filter"]
-        var keys = getObjKeys(data)
+        var keys = getOwnObjProps(data)
         keys.forEach(key => {
           var tr = document.createElement("TR")
           tr.id = key
@@ -261,7 +261,7 @@ class Content {
 
           data = SERVER["settings"]["files"][fileType]
 
-          var keys = getObjKeys(data)
+          var keys = getOwnObjProps(data)
 
           keys.forEach(key => {
             var tr = document.createElement("TR")
@@ -311,7 +311,7 @@ class Content {
         fileTypes.forEach(fileType => {
           data = SERVER[fileType]
       
-          var keys = getObjKeys(data)
+          var keys = getOwnObjProps(data)
     
           keys.forEach(key => {
             var tr = document.createElement("TR")
@@ -393,7 +393,7 @@ class Content {
         console.log("MAPPING")
         data = SERVER["xepg"]["epgMapping"]
 
-        var keys = getObjKeys(data)
+        var keys = getOwnObjProps(data)
         keys.forEach(key => {
           var tr = document.createElement("TR")
           tr.id = key
@@ -889,7 +889,7 @@ function createLayout() {
 
   // Client Info
   let obj = SERVER["clientInfo"]
-  let keys = getObjKeys(obj);
+  let keys = getOwnObjProps(obj);
   for (var i = 0; i < keys.length; i++) {
     
     if (document.getElementById(keys[i])) {
@@ -1680,20 +1680,20 @@ function openPopUp(dataType, element) {
       var select = xmltv.getFiles(data[dbKey])
       select.setAttribute("name", dbKey)
       select.setAttribute("id", "popup-xmltv")
-      select.setAttribute("onchange", "javascript: this.className = 'changed'; setXmltvChannel('" + id + "',this);")  
+      select.setAttribute("onchange", `javascript: this.className = 'changed'; setXmltvChannel('${id}', this);`);
       content.appendRow("{{.mapping.xmltvFile.title}}", select)
-      var file = data[dbKey]
 
       // XMLTV Mapping
-      var dbKey:string = "x-mapping"
-      var xmltv:XMLTVFile = new XMLTVFile()
-      var select = xmltv.getPrograms(file, data[dbKey])
-      select.setAttribute("name", dbKey)
-      select.setAttribute("id", "popup-mapping")
-      select.setAttribute("onchange", "javascript: this.className = 'changed'; checkXmltvChannel('" + id + "',this,'" + xmlFile + "');")  
-       
-      sortSelect(select)
-      content.appendRow("{{.mapping.xmltvChannel.title}}", select)
+      var dbKey: string = 'x-mapping';
+      var xmltv: XMLTVFile = new XMLTVFile();
+      const xMapping: string = data[dbKey];
+      const xmlTvIdSelect = xmltv.getPrograms(xmlFile, xMapping);
+      xmlTvIdSelect.setAttribute('name', dbKey);
+      xmlTvIdSelect.setAttribute('id', 'popup-mapping');
+      xmlTvIdSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this, '${xmlFile}');`);
+
+      sortSelect(xmlTvIdSelect);
+      content.appendRow('{{.mapping.xmltvChannel.title}}', xmlTvIdSelect);
 
       // Timeshift
       var dbKey:string = "x-timeshift"
@@ -1739,7 +1739,7 @@ class XMLTVFile {
   File:string
 
   getFiles(set:string):any {
-    let fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
+    let fileIDs:string[] = getOwnObjProps(SERVER["xepg"]["xmltvMap"])
     let values = new Array("-");
     let text  = new Array("-");
 
@@ -1769,42 +1769,36 @@ class XMLTVFile {
     return select
   }
 
-  getPrograms(file:string, set:string):any {
-    //var fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
-    let values = getObjKeys(SERVER["xepg"]["xmltvMap"][file]);
-    let text = []
-    let friendlyName:string
+  getPrograms(xmlFile: string, xMapping: string): HTMLSelectElement {
+    const values = getOwnObjProps(SERVER['xepg']['xmltvMap'][xmlFile]);
+    const text: string[] = [];
+    let friendlyName: string;
 
     for (let i = 0; i < values.length; i++) {
-      if (SERVER["xepg"]["xmltvMap"][file][values[i]].hasOwnProperty('friendly-name') == true) {
-        friendlyName = SERVER["xepg"]["xmltvMap"][file][values[i]]["friendly-name"];
+      if (SERVER['xepg']['xmltvMap'][xmlFile][values[i]].hasOwnProperty('friendly-name') == true) {
+        friendlyName = SERVER['xepg']['xmltvMap'][xmlFile][values[i]]['friendly-name'];
       } else {
-        friendlyName = "-"
+        friendlyName = '-';
       }
      
-      text[i] = friendlyName + " (" + values[i]  + ")";
+      text[i] = `${friendlyName} (${values[i]})`;
     }
 
-    text.unshift("-");
-    values.unshift("-");
+    text.unshift('-');
+    values.unshift('-');
 
-    let select = document.createElement("SELECT")
+    const select = (document.createElement('select') as HTMLSelectElement);
+
     for (let i = 0; i < text.length; i++) {
-      var option = document.createElement("OPTION")
-      option.setAttribute("value", values[i])
-      option.innerText = text[i]
-      select.appendChild(option)
+      const option = document.createElement('option');
+      option.setAttribute('value', values[i]);
+      option.innerText = text[i];
+      select.appendChild(option);
     }
 
-    if(set != "") {
-      (select as HTMLSelectElement).value = set
-    }
+    select.value = (xMapping == '') ? '-' : xMapping;
 
-    if ((select as HTMLSelectElement).value != set) {
-      (select as HTMLSelectElement).value = "-"
-    }    
-
-    return select
+    return select;
   }
 
   return
@@ -1846,92 +1840,78 @@ function getValueFromProviderFile(file:string, fileType, key) {
 
 }
 
-function setXmltvChannel(id, element) {
+function setXmltvChannel(epgMappingId: string, oldSelect: HTMLSelectElement) {
 
-  let xmltv:XMLTVFile = new XMLTVFile()
-  let xmlFile = element.value
+  let xmltv: XMLTVFile = new XMLTVFile();
+  let xmlFile = oldSelect.value;
 
-  let tvgId:string = SERVER["xepg"]["epgMapping"][id]["tvg-id"]
-  let td = document.getElementById("popup-mapping").parentElement
-  td.innerHTML = ""
+  let tvgId: string = SERVER['xepg']['epgMapping'][epgMappingId]['tvg-id'];
+  let td = document.getElementById('popup-mapping').parentElement;
+  td.innerHTML = '';
 
-  let select = xmltv.getPrograms(element.value, tvgId)
-  select.setAttribute("name", "x-mapping")
-  select.setAttribute("id", "popup-mapping")
-  select.setAttribute("onchange", "javascript: this.className = 'changed'; checkXmltvChannel('" + id + "',this,'" + xmlFile + "');")  
-  select.className = "changed"
-  sortSelect(select)
-  td.appendChild(select);
+  const newSelect = xmltv.getPrograms(oldSelect.value, tvgId);
+  newSelect.setAttribute('name', 'x-mapping');
+  newSelect.setAttribute('id', 'popup-mapping');
+  newSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMappingId}', this, '${xmlFile}');`);
+  newSelect.className = 'changed';
+  sortSelect(newSelect);
+  td.appendChild(newSelect);
   
-  checkXmltvChannel(id, select, xmlFile)
+  checkXmltvChannel(epgMappingId, newSelect, xmlFile);
+
 }
 
-function checkXmltvChannel(id:string, element:any, xmlFile) {
+function checkXmltvChannel(epgMappingId: string, select: HTMLSelectElement, xmlFile: string) {
 
-  let value = (element as HTMLSelectElement).value
-  let bool:boolean
-  let checkbox = document.getElementById('active')
-  let channel:any = SERVER["xepg"]["epgMapping"][id]
-  let updateLogo:boolean
-  
+  const selectValue = (select as HTMLSelectElement).value;
+  let channelActive: boolean;
+  const checkbox = document.getElementById('active');
 
-  bool = value != "-";
+  channelActive = selectValue != '-';
 
-  (checkbox as HTMLInputElement).checked = bool
-  checkbox.className = "changed"
-  console.log(xmlFile);
-  
-  // Update channel logo
-  /*
-  updateLogo = (document.getElementById("update-icon") as HTMLInputElement).checked
-  console.log(updateLogo);
-  */
-  
-  if(xmlFile != "xTeVe Dummy" && bool == true) {
-    
-    //(document.getElementById("update-icon") as HTMLInputElement).checked = true;
-    //(document.getElementById("update-icon") as HTMLInputElement).className = "changed";
+  (checkbox as HTMLInputElement).checked = channelActive;
+  checkbox.className = 'changed';
 
-    console.log("ID", id)
-    changeChannelLogo(id)
-
-    return
+  if(xmlFile != 'xTeVe Dummy' && channelActive == true) {
+    changeChannelLogo(epgMappingId);
+    return;
   }
 
-  if (xmlFile == "xTeVe Dummy") {
-    (document.getElementById("update-icon") as HTMLInputElement).checked = false;
-    (document.getElementById("update-icon") as HTMLInputElement).className = "changed";
+  if (xmlFile == 'xTeVe Dummy') {
+    (document.getElementById('update-icon') as HTMLInputElement).checked = false;
+    (document.getElementById('update-icon') as HTMLInputElement).className = 'changed';
   }
 
-  return
 }
 
-function changeChannelLogo(id:string) {
+function changeChannelLogo(epgMappingId: string) {
 
-  let updateLogo:boolean
-  let channel:any = SERVER["xepg"]["epgMapping"][id]
+  let updateLogo: boolean;
+  let logo: string;
+  const channel: any = SERVER['xepg']['epgMapping'][epgMappingId];
 
-  let f = (document.getElementById("popup-xmltv") as HTMLSelectElement);
-  let xmltvFile = f.options[f.selectedIndex].value;
+  const f = (document.getElementById('popup-xmltv') as HTMLSelectElement);
+  const xmltvFile = f.options[f.selectedIndex].value;
 
-  let m = (document.getElementById("popup-mapping") as HTMLSelectElement);
-  let xMapping = m.options[m.selectedIndex].value;
+  const m = (document.getElementById('popup-mapping') as HTMLSelectElement);
+  const xMapping = m.options[m.selectedIndex].value;
 
-  let xmltvLogo = SERVER["xepg"]["xmltvMap"][xmltvFile][xMapping]["icon"]
-  updateLogo = (document.getElementById("update-icon") as HTMLInputElement).checked
+  const xmltvLogo = SERVER['xepg']['xmltvMap'][xmltvFile][xMapping]['icon'];
+  updateLogo = (document.getElementById('update-icon') as HTMLInputElement).checked;
 
-  if (updateLogo == true && xmltvFile != "xTeVe Dummy") {
+  if (updateLogo == true && xmltvFile != 'xTeVe Dummy') {
 
-    if (SERVER["xepg"]["xmltvMap"][xmltvFile].hasOwnProperty(xMapping)) {
-      var logo = xmltvLogo
+    if (SERVER['xepg']['xmltvMap'][xmltvFile].hasOwnProperty(xMapping)) {
+      logo = xmltvLogo;
     } else {
-        logo = channel["tvg-logo"]
+      logo = channel['tvg-logo'];
     }
 
-    var logoInput = (document.getElementById("channel-icon") as HTMLInputElement);
-    logoInput.value = logo
+    var logoInput = (document.getElementById('channel-icon') as HTMLInputElement);
+    logoInput.value = logo;
+
     if (BULK_EDIT == false) {
-      logoInput.className = "changed"
+      logoInput.className = 'changed';
     }
 
   }

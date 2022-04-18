@@ -93,14 +93,8 @@ function getLocalData(dataType, id) {
     }
     return data;
 }
-function getObjKeys(obj) {
-    var keys = new Array();
-    for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-            keys.push(i);
-        }
-    }
-    return keys;
+function getOwnObjProps(object) {
+    return Object.getOwnPropertyNames(object);
 }
 function getAllSelectedChannels() {
     var channels = new Array();
@@ -214,7 +208,7 @@ function sortTable(column) {
 function createSearchObj() {
     SEARCH_MAPPING = new Object();
     var data = SERVER["xepg"]["epgMapping"];
-    var channels = getObjKeys(data);
+    var channels = getOwnObjProps(data);
     var channelKeys = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"];
     channels.forEach(id => {
         channelKeys.forEach(key => {
@@ -277,7 +271,7 @@ function changeChannelNumber(element) {
     var newNumber = parseFloat(element.value);
     var channelNumbers = [];
     var data = SERVER["xepg"]["epgMapping"];
-    var channels = getObjKeys(data);
+    var channels = getOwnObjProps(data);
     if (isNaN(newNumber)) {
         alert("{{.alert.invalidChannelNumber}}");
         return;
@@ -461,22 +455,34 @@ function checkUndo(key) {
     }
     return;
 }
-function sortSelect(elem) {
-    var tmpAry = [];
-    var selectedValue = elem[elem.selectedIndex].value;
-    for (var i = 0; i < elem.options.length; i++)
-        tmpAry.push(elem.options[i]);
-    tmpAry.sort(function (a, b) { return (a.text < b.text) ? -1 : 1; });
-    while (elem.options.length > 0)
-        elem.options[0] = null;
-    var newSelectedIndex = 0;
-    for (var i = 0; i < tmpAry.length; i++) {
-        elem.options[i] = tmpAry[i];
-        if (elem.options[i].value == selectedValue)
-            newSelectedIndex = i;
+function sortSelect(select) {
+    const tempArr = [];
+    const selectedValue = select.options[select.selectedIndex].value;
+    for (const selectOption of select.options) {
+        tempArr.push(selectOption);
     }
-    elem.selectedIndex = newSelectedIndex; // Set new selected index after sorting
-    return;
+    tempArr.sort((o1, o2) => {
+        if (o1.text < o2.text) {
+            return -1;
+        }
+        if (o1.text > o2.text) {
+            return 1;
+        }
+        return 0;
+    });
+    while (select.options.length > 0) {
+        select.options[0] = null;
+    }
+    ;
+    let newSelectedIndex = 0;
+    for (let i = 0; i < tempArr.length; i++) {
+        select.options[i] = tempArr[i];
+        if (select.options[i].value == selectedValue) {
+            newSelectedIndex = i;
+        }
+    }
+    // Set new selected index after sorting
+    select.selectedIndex = newSelectedIndex;
 }
 function updateLog() {
     console.log("TOKEN");

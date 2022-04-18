@@ -32,7 +32,7 @@ function showLogs(bottom:boolean) {
 
   div.innerHTML = ""
 
-  var keys = getObjKeys(logs)
+  var keys = getOwnObjProps(logs)
 
   keys.forEach(logID => {
 

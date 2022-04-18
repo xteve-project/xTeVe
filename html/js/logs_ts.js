@@ -19,7 +19,7 @@ function showLogs(bottom) {
     var logs = SERVER["log"]["log"];
     var div = document.getElementById("content_log");
     div.innerHTML = "";
-    var keys = getObjKeys(logs);
+    var keys = getOwnObjProps(logs);
     keys.forEach(logID => {
         var entry = log.createLog(logs[logID]);
         div.append(entry);
