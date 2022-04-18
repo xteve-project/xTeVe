@@ -94,7 +94,7 @@ function getLocalData(dataType, id) {
     return data;
 }
 function getOwnObjProps(object) {
-    return Object.getOwnPropertyNames(object);
+    return object ? Object.getOwnPropertyNames(object) : [];
 }
 function getAllSelectedChannels() {
     var channels = new Array();

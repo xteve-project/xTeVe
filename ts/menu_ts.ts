@@ -1674,23 +1674,23 @@ function openPopUp(dataType, element) {
       content.description("{{.mapping.updateChannelGroup.description}}")
 
       // XMLTV file
-      var dbKey:string = "x-xmltv-file"
-      var xmlFile = data[dbKey]
-      var xmltv:XMLTVFile = new XMLTVFile()
-      var select = xmltv.getFiles(data[dbKey])
-      select.setAttribute("name", dbKey)
-      select.setAttribute("id", "popup-xmltv")
-      select.setAttribute("onchange", `javascript: this.className = 'changed'; setXmltvChannel('${id}', this);`);
-      content.appendRow("{{.mapping.xmltvFile.title}}", select)
+      var dbKey = 'x-xmltv-file';
+      const xmlTvFile: string = data[dbKey];
+      var xmlTv = new XMLTVFile();
+      const xmlTvFileSelect = xmlTv.getFiles(data[dbKey]);
+      xmlTvFileSelect.setAttribute('name', dbKey);
+      xmlTvFileSelect.setAttribute('id', 'popup-xmltv');
+      xmlTvFileSelect.setAttribute('onchange', `javascript: this.className = 'changed'; setXmltvChannel('${id}', this);`);
+      content.appendRow('{{.mapping.xmltvFile.title}}', xmlTvFileSelect);
 
       // XMLTV Mapping
       var dbKey: string = 'x-mapping';
-      var xmltv: XMLTVFile = new XMLTVFile();
-      const xMapping: string = data[dbKey];
-      const xmlTvIdSelect = xmltv.getPrograms(xmlFile, xMapping);
+      var xmlTv = new XMLTVFile();
+      const currentXmlTvId: string = data[dbKey];
+      const xmlTvIdSelect = xmlTv.getPrograms(xmlTvFile, currentXmlTvId);
       xmlTvIdSelect.setAttribute('name', dbKey);
       xmlTvIdSelect.setAttribute('id', 'popup-mapping');
-      xmlTvIdSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this, '${xmlFile}');`);
+      xmlTvIdSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this, '${xmlTvFile}');`);
 
       sortSelect(xmlTvIdSelect);
       content.appendRow('{{.mapping.xmltvChannel.title}}', xmlTvIdSelect);
@@ -1769,14 +1769,14 @@ class XMLTVFile {
     return select
   }
 
-  getPrograms(xmlFile: string, xMapping: string): HTMLSelectElement {
-    const values = getOwnObjProps(SERVER['xepg']['xmltvMap'][xmlFile]);
+  getPrograms(xmlTvFile: string, currentXmlTvId: string): HTMLSelectElement {
+    const values = getOwnObjProps(SERVER['xepg']['xmltvMap'][xmlTvFile]);
     const text: string[] = [];
     let friendlyName: string;
 
     for (let i = 0; i < values.length; i++) {
-      if (SERVER['xepg']['xmltvMap'][xmlFile][values[i]].hasOwnProperty('friendly-name') == true) {
-        friendlyName = SERVER['xepg']['xmltvMap'][xmlFile][values[i]]['friendly-name'];
+      if (SERVER['xepg']['xmltvMap'][xmlTvFile][values[i]].hasOwnProperty('friendly-name') == true) {
+        friendlyName = SERVER['xepg']['xmltvMap'][xmlTvFile][values[i]]['friendly-name'];
       } else {
         friendlyName = '-';
       }
@@ -1796,7 +1796,7 @@ class XMLTVFile {
       select.appendChild(option);
     }
 
-    select.value = (xMapping == '') ? '-' : xMapping;
+    select.value = (currentXmlTvId == '') ? '-' : currentXmlTvId;
 
     return select;
   }
@@ -1840,69 +1840,73 @@ function getValueFromProviderFile(file:string, fileType, key) {
 
 }
 
-function setXmltvChannel(epgMappingId: string, oldSelect: HTMLSelectElement) {
+function setXmltvChannel(epgMapId: string, xmlTvFileSelect: HTMLSelectElement) {
 
-  let xmltv: XMLTVFile = new XMLTVFile();
-  let xmlFile = oldSelect.value;
+  const xmlTv = new XMLTVFile();
+  const newXmlTvFile = xmlTvFileSelect.value;
 
-  let tvgId: string = SERVER['xepg']['epgMapping'][epgMappingId]['tvg-id'];
-  let td = document.getElementById('popup-mapping').parentElement;
-  td.innerHTML = '';
+  // Remove old XMLTV ID selection box
+  const xmlTvIdSelectParent = document.getElementById('popup-mapping').parentElement as HTMLTableCellElement;
+  xmlTvIdSelectParent.innerHTML = '';
 
-  const newSelect = xmltv.getPrograms(oldSelect.value, tvgId);
-  newSelect.setAttribute('name', 'x-mapping');
-  newSelect.setAttribute('id', 'popup-mapping');
-  newSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMappingId}', this, '${xmlFile}');`);
-  newSelect.className = 'changed';
-  sortSelect(newSelect);
-  td.appendChild(newSelect);
-  
-  checkXmltvChannel(epgMappingId, newSelect, xmlFile);
+  // Create new XMLTV ID selection box
+  const tvgId: string = SERVER['xepg']['epgMapping'][epgMapId]['tvg-id'];
+
+  const newXmlTvIdSelect = xmlTv.getPrograms(newXmlTvFile, tvgId);
+  newXmlTvIdSelect.setAttribute('name', 'x-mapping');
+  newXmlTvIdSelect.setAttribute('id', 'popup-mapping');
+  newXmlTvIdSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMapId}', this, '${newXmlTvFile}');`);
+  newXmlTvIdSelect.className = 'changed';
+  sortSelect(newXmlTvIdSelect);
+
+  // Add new XMLTV ID selection box to it's parent
+  xmlTvIdSelectParent.appendChild(newXmlTvIdSelect);
+
+  checkXmltvChannel(epgMapId, newXmlTvIdSelect, newXmlTvFile);
 
 }
 
-function checkXmltvChannel(epgMappingId: string, select: HTMLSelectElement, xmlFile: string) {
+function checkXmltvChannel(epgMapId: string, xmlTvIdSelect: HTMLSelectElement, xmlTvFile: string) {
 
-  const selectValue = (select as HTMLSelectElement).value;
-  let channelActive: boolean;
-  const checkbox = document.getElementById('active');
+  const newXmlTvId = xmlTvIdSelect.value;
+  const channelActiveCb = document.getElementById('active') as HTMLInputElement;
 
-  channelActive = selectValue != '-';
+  const channelActive = newXmlTvId != '-';
 
-  (checkbox as HTMLInputElement).checked = channelActive;
-  checkbox.className = 'changed';
+  channelActiveCb.checked = channelActive;
+  channelActiveCb.className = 'changed';
 
-  if(xmlFile != 'xTeVe Dummy' && channelActive == true) {
-    changeChannelLogo(epgMappingId);
+  if(xmlTvFile != 'xTeVe Dummy' && channelActive == true) {
+    changeChannelLogo(epgMapId);
     return;
   }
 
-  if (xmlFile == 'xTeVe Dummy') {
+  if (xmlTvFile == 'xTeVe Dummy') {
     (document.getElementById('update-icon') as HTMLInputElement).checked = false;
     (document.getElementById('update-icon') as HTMLInputElement).className = 'changed';
   }
 
 }
 
-function changeChannelLogo(epgMappingId: string) {
+function changeChannelLogo(epgMapId: string) {
 
-  let updateLogo: boolean;
+  const channel: Object = SERVER['xepg']['epgMapping'][epgMapId];
+
+  const xmlTvFileSelect = document.getElementById('popup-xmltv') as HTMLSelectElement;
+  const xmlTvFile = xmlTvFileSelect.options[xmlTvFileSelect.selectedIndex].value;
+
+  const xmlTvIdSelect = document.getElementById('popup-mapping') as HTMLSelectElement;
+  const newXmlTvId = xmlTvIdSelect.options[xmlTvIdSelect.selectedIndex].value;
+
+  const xmlTvLogo = SERVER['xepg']['xmltvMap'][xmlTvFile][newXmlTvId]['icon'];
+  const updateLogo = (document.getElementById('update-icon') as HTMLInputElement).checked;
+
   let logo: string;
-  const channel: any = SERVER['xepg']['epgMapping'][epgMappingId];
 
-  const f = (document.getElementById('popup-xmltv') as HTMLSelectElement);
-  const xmltvFile = f.options[f.selectedIndex].value;
+  if (updateLogo == true && xmlTvFile != 'xTeVe Dummy') {
 
-  const m = (document.getElementById('popup-mapping') as HTMLSelectElement);
-  const xMapping = m.options[m.selectedIndex].value;
-
-  const xmltvLogo = SERVER['xepg']['xmltvMap'][xmltvFile][xMapping]['icon'];
-  updateLogo = (document.getElementById('update-icon') as HTMLInputElement).checked;
-
-  if (updateLogo == true && xmltvFile != 'xTeVe Dummy') {
-
-    if (SERVER['xepg']['xmltvMap'][xmltvFile].hasOwnProperty(xMapping)) {
-      logo = xmltvLogo;
+    if (SERVER['xepg']['xmltvMap'][xmlTvFile].hasOwnProperty(newXmlTvId)) {
+      logo = xmlTvLogo;
     } else {
       logo = channel['tvg-logo'];
     }
@@ -1918,7 +1922,7 @@ function changeChannelLogo(epgMappingId: string) {
 
 }
 
-function savePopupData(dataType:string, id:string, remove:Boolean, option:number) {
+function savePopupData(dataType: string, id: string, remove: Boolean, option: number) {
   
   if (dataType == "mapping") {
     

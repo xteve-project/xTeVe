@@ -111,7 +111,7 @@ function getLocalData(dataType, id):object {
 }
 
 function getOwnObjProps(object: Object): string[] {
-  return Object.getOwnPropertyNames(object);
+  return object ? Object.getOwnPropertyNames(object) : [];
 }
 
 function getAllSelectedChannels():string[] {
