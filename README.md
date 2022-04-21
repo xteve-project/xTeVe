@@ -160,12 +160,25 @@ gox -output="./xteve-build/{{.Dir}}_{{.OS}}_{{.Arch}}" ./
 
 ---
 
-## Certificate generation
+## TLS mode
 
-See:
+Before enabling TLS mode, you should put a self-signed certificate and it's private key into your xTeVe config directory, for example:
+
+```text
+/home/username/.xteve/certificates/xteve.crt
+/home/username/.xteve/certificates/xteve.key
+```
+
+Next, enable this mode by the checkbox in `Settings -> General`.
+
+You can either [generate](https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309) your own or download a 'dummy' certificate and it's key [from this repository](https://github.com/SCP002/xTeVe/tree/master/certeficates).
+
+❗ Certificate from this repository will only allow TLS mode to start up but not to actually establish a secure connections.
+For truly working HTTPS, you should generate it by yourself and **also** add self-signed root CA to client-side certificate storage (where the web browser, Plex etc. is).
+
+See also:
 * <https://pkg.go.dev/net/http#ListenAndServeTLS>
 * <https://github.com/denji/golang-tls>
-* <https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309>
 
 ---
 
