@@ -1,6 +1,7 @@
 package src
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"xteve/src/internal/authentication"
 
@@ -17,11 +19,10 @@ import (
 
 // webAlerts channel to send to client
 var webAlerts = make(chan string, 3)
+var restartWebserver = make(chan bool, 1)
 
 // StartWebserver : Start the Webserver
 func StartWebserver() (err error) {
-
-	var port = Settings.Port
 
 	http.HandleFunc("/", Index)
 	http.HandleFunc("/stream/", Stream)
@@ -33,31 +34,59 @@ func StartWebserver() (err error) {
 	http.HandleFunc("/api/", API)
 	http.HandleFunc("/images/", Images)
 	http.HandleFunc("/data_images/", DataImages)
+	// http.HandleFunc("/auto/", Auto)
 
-	//http.HandleFunc("/auto/", Auto)
+	for {
 
-	showInfo("DVR IP:" + System.IPAddress + ":" + Settings.Port)
+		showInfo("Web server:" + "Starting")
 
-	var ips = len(System.IPAddressesV4) + len(System.IPAddressesV6) - 1
-	switch ips {
+		showInfo("DVR IP:" + System.IPAddress + ":" + Settings.Port)
 
-	case 0:
-		showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/", System.ServerProtocol.WEB, System.IPAddress, Settings.Port))
+		var ips = len(System.IPAddressesV4) + len(System.IPAddressesV6) - 1
+		switch ips {
 
-	case 1:
-		showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, ips))
+		case 0:
+			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/", System.ServerProtocol.WEB, System.IPAddress, Settings.Port))
 
-	default:
-		showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP's.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, len(System.IPAddressesV4)+len(System.IPAddressesV6)-1))
+		case 1:
+			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, ips))
 
+		default:
+			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP's.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, len(System.IPAddressesV4)+len(System.IPAddressesV6)-1))
+
+		}
+
+		var port = Settings.Port
+		server := http.Server{Addr: ":" + port}
+
+		go func() {
+			if Settings.TLSMode {
+				certFile := System.Folder.Certificates + "xteve.crt"
+				keyFile := System.Folder.Certificates + "xteve.key"
+				err = server.ListenAndServeTLS(certFile, keyFile)
+			} else {
+				err = server.ListenAndServe()
+			}
+			if err != nil && err != http.ErrServerClosed {
+				ShowError(err, 1001)
+				return
+			}
+		}()
+
+		<-restartWebserver
+		showInfo("Web server:" + "Restarting")
+
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err = server.Shutdown(ctx); err != nil {
+			ShowError(err, 1016)
+			return
+		}
+
+		<-ctx.Done()
+		showInfo("Web server:" + "Stopped")
 	}
 
-	if err = http.ListenAndServe(":"+port, nil); err != nil {
-		ShowError(err, 1001)
-		return
-	}
-
-	return
 }
 
 // Index : Web Server /
@@ -332,12 +361,10 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 	var newToken string
 
-	/*
-		if r.Header.Get("Origin") != "http://"+r.Host {
-			httpStatusError(w, r, 403)
-			return
-		}
-	*/
+	// if r.Header.Get("Origin") != "http://" + r.Host {
+	// 	httpStatusError(w, r, 403)
+	// 	return
+	// }
 
 	conn, err := websocket.Upgrade(w, r, w.Header(), 1024, 1024)
 	if err != nil {
@@ -405,24 +432,22 @@ func WS(w http.ResponseWriter, r *http.Request) {
 		switch request.Cmd {
 		// Read Data
 		case "getServerConfig":
-			//response.Config = Settings
+			// response.Config = Settings
 
 		case "updateLog":
 			response = setDefaultResponseData(response, false)
 			if err = conn.WriteJSON(response); err != nil {
 				ShowError(err, 1022)
-			} else {
-				return
-				break
 			}
 			return
 
 		case "loadFiles":
-			//response.Response = Settings.Files
+			// response.Response = Settings.Files
 
 		// Save Data
 		case "saveSettings":
 			var authenticationUpdate = Settings.AuthenticationWEB
+			var previousTLSMode = Settings.TLSMode
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
 
@@ -430,6 +455,23 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 				if Settings.AuthenticationWEB == true && authenticationUpdate == false {
 					response.Reload = true
+				}
+
+				if Settings.TLSMode != previousTLSMode {
+					showInfo("Web server:" + "Toggling TLS mode")
+
+					err := Init()
+					if err != nil {
+						ShowError(err, 0)
+					}
+
+					err = StartSystem(true)
+					if err != nil {
+						ShowError(err, 0)
+					}
+
+					response.NewWebURL = System.URLBase + "/web/"
+					restartWebserver <- true
 				}
 
 			}
@@ -561,11 +603,10 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 			}
 
-			/*
-				case "wizardCompleted":
-					System.ConfigurationWizard = false
-					response.Reload = true
-			*/
+		// case "wizardCompleted":
+		// 	System.ConfigurationWizard = false
+		// 	response.Reload = true
+
 		default:
 			fmt.Println("+ + + + + + + + + + +", request.Cmd)
 
@@ -596,7 +637,6 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	return
 }
 
 // Web : Web Server /web/

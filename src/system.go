@@ -112,32 +112,33 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["authentication.xml"] = false
 	defaults["backup.keep"] = 10
 	defaults["backup.path"] = System.Folder.Backup
-	defaults["buffer"] = "-"
 	defaults["buffer.size.kb"] = 1024
 	defaults["buffer.timeout"] = 500
+	defaults["buffer"] = "-"
 	defaults["cache.images"] = false
 	defaults["epgSource"] = "PMS"
 	defaults["ffmpeg.options"] = System.FFmpeg.DefaultOptions
-	defaults["vlc.options"] = System.VLC.DefaultOptions
-	defaults["files"] = dataMap
 	defaults["files.update"] = true
+	defaults["files"] = dataMap
 	defaults["filter"] = make(map[string]interface{})
 	defaults["git.branch"] = System.Branch
 	defaults["language"] = "en"
 	defaults["log.entries.ram"] = 500
-	defaults["mapping.first.channel"] = 1000
-	defaults["xepg.replace.missing.images"] = true
 	defaults["m3u8.adaptive.bandwidth.mbps"] = 10
+	defaults["mapping.first.channel"] = 1000
 	defaults["port"] = "34400"
 	defaults["ssdp"] = true
+	defaults["temp.path"] = System.Folder.Temp
+	defaults["tlsMode"] = false
 	defaults["tuner"] = 1
+	defaults["udpxy"] = ""
 	defaults["update"] = []string{"0000"}
 	defaults["user.agent"] = System.Name
 	defaults["uuid"] = createUUID()
-	defaults["udpxy"] = ""
 	defaults["version"] = System.DBVersion
+	defaults["vlc.options"] = System.VLC.DefaultOptions
+	defaults["xepg.replace.missing.images"] = true
 	defaults["xteveAutoUpdate"] = true
-	defaults["temp.path"] = System.Folder.Temp
 
 	// Set Default Values
 	for key, value := range defaults {
@@ -222,6 +223,14 @@ func saveSettings(settings SettingsStruct) (err error) {
 func setGlobalDomain(domain string) {
 
 	System.Domain = domain
+
+	if Settings.TLSMode {
+		System.ServerProtocol.API = "https"
+		System.ServerProtocol.DVR = "https"
+		System.ServerProtocol.M3U = "https"
+		System.ServerProtocol.WEB = "https"
+		System.ServerProtocol.XML = "https"
+	}
 
 	switch Settings.AuthenticationPMS {
 	case true:

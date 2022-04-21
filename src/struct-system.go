@@ -60,6 +60,7 @@ type SystemStruct struct {
 	Folder struct {
 		Backup       string
 		Cache        string
+		Certificates string
 		Config       string
 		Data         string
 		ImagesCache  string
@@ -303,6 +304,7 @@ type SettingsStruct struct {
 	Port                      string                `json:"port"`
 	SSDP                      bool                  `json:"ssdp"`
 	TempPath                  string                `json:"temp.path"`
+	TLSMode                   bool                  `json:"tlsMode"`
 	Tuner                     int                   `json:"tuner"`
 	Update                    []string              `json:"update"`
 	UpdateURL                 string                `json:"update.url,omitempty"`

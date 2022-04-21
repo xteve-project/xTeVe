@@ -36,6 +36,7 @@ type RequestStruct struct {
 		VLCPath                  *string   `json:"vlc.path,omitempty"`
 		FilesUpdate              *bool     `json:"files.update,omitempty"`
 		TempPath                 *string   `json:"temp.path,omitempty"`
+		TLSMode                  *bool     `json:"tlsMode,omitempty"`
 		Tuner                    *int      `json:"tuner,omitempty"`
 		UDPxy                    *string   `json:"udpxy,omitempty"`
 		Update                   *[]string `json:"update,omitempty"`
@@ -107,6 +108,7 @@ type ResponseStruct struct {
 	Error               string                 `json:"err,omitempty"`
 	Log                 WebScreenLogStruct     `json:"log,required"`
 	LogoURL             string                 `json:"logoURL,omitempty"`
+	NewWebURL           string                 `json:"newWebUrl,omitempty"`
 	OpenLink            string                 `json:"openLink,omitempty"`
 	OpenMenu            string                 `json:"openMenu,omitempty"`
 	Reload              bool                   `json:"reload,omitempty"`

@@ -265,7 +265,7 @@ checkVersion:
 
 			goto checkVersion
 
-		case "2.2.0", "2.2.1":
+		case "2.2.0", "2.2.1", "2.2.2":
 			// If there are changes to the Database in a later update, continue here
 
 			break

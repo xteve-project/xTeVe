@@ -73,6 +73,7 @@ func Init() (err error) {
 	System.Folder.Backup = System.Folder.Config + "backup" + string(os.PathSeparator)
 	System.Folder.Data = System.Folder.Config + "data" + string(os.PathSeparator)
 	System.Folder.Cache = System.Folder.Config + "cache" + string(os.PathSeparator)
+	System.Folder.Certificates = System.Folder.Config + "certificates" + string(os.PathSeparator)
 	System.Folder.ImagesCache = System.Folder.Cache + "images" + string(os.PathSeparator)
 	System.Folder.ImagesUpload = System.Folder.Data + "images" + string(os.PathSeparator)
 	System.Folder.Temp = getDefaultTempDir()

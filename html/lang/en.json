@@ -397,6 +397,10 @@
       "title": "Number of Tuners",
       "description": "Number of parallel connections that can be established to the provider.<br>Available for: Plex, Emby (HDHR), M3U (with active buffer).<br>After a change, xTeVe must be delete in the Plex / Emby DVR settings and set up again."
     },
+    "tlsMode": {
+      "title": "TLS (HTTPS) mode",
+      "description": "Changes web server protocol to HTTPS. Requires xteve.crt and xteve.key in xTeVe config /certificates directory."
+    },
     "filesUpdate":
     {
       "title": "Updates all files at startup",

@@ -28,21 +28,19 @@ type GitHubStruct struct {
 // If you want to fork this project, enter your Github account here. This prevents a newer version of xTeVe from updating your version.
 var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Update: false}
 
-/*
-	Branch: GitHub Branch
-	User: 	GitHub Username
-	Repo: 	GitHub Repository
-	Update: Automatic updates from the GitHub repository [true|false]
-*/
+// Branch:	GitHub Branch
+// User: 	GitHub Username
+// Repo: 	GitHub Repository
+// Update:	Automatic updates from the GitHub repository [true|false]
 
 // Name : Program Name
 const Name = "xTeVe"
 
 // Version : Version, the Build Number is parsed in the main func
-const Version = "2.2.6.0000"
+const Version = "2.3.0.0000"
 
 // DBVersion : Database Version
-const DBVersion = "2.2.1"
+const DBVersion = "2.2.2"
 
 // APIVersion : API Version
 const APIVersion = "1.1.0"
@@ -77,7 +75,7 @@ func main() {
 	system.Name = Name
 	system.Version = strings.Join(build[0:len(build)-1], ".")
 
-	// Panic !!!
+	// Panic
 	defer func() {
 
 		if r := recover(); r != nil {

@@ -251,6 +251,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Invalid filter rule")
 	case 1015:
 		errMsg = fmt.Sprintf("Specified temp folder path is invalid, fallback to %s", os.TempDir())
+	case 1016:
+		errMsg = fmt.Sprintf("Web server could not be stopped.")
 
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")

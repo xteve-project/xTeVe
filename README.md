@@ -160,6 +160,15 @@ gox -output="./xteve-build/{{.Dir}}_{{.OS}}_{{.Arch}}" ./
 
 ---
 
+## Certificate generation
+
+See:
+* <https://pkg.go.dev/net/http#ListenAndServeTLS>
+* <https://github.com/denji/golang-tls>
+* <https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309>
+
+---
+
 ## Fork without pull request :mega:
 
 When creating a fork, the xTeVe GitHub account must be changed from the source code or the update function disabled.

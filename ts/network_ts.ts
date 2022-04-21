@@ -13,8 +13,7 @@ class Server {
     }
 
     SERVER_CONNECTION = true
-    
-    console.log(data)
+
     if (this.cmd != "updateLog") {
       showElement("loading", true)
       UNDO = new Object()
@@ -36,18 +35,11 @@ class Server {
     ws.onopen = function() {
 
       WS_AVAILABLE = true
-
-      console.log("REQUEST (JS):");
-      console.log(data)
-
-      console.log("REQUEST: (JSON)");
-      console.log(JSON.stringify(data))
-
       this.send(JSON.stringify(data));
-      
+
     }
 
-    ws.onerror = function(e) {
+    ws.onerror = function(wsErrEvt) {
       
       console.log("No websocket connection to xTeVe could be established. Check your network configuration.")
       SERVER_CONNECTION = false
@@ -59,34 +51,32 @@ class Server {
     }
 
 
-    ws.onmessage = function (e) {
+    ws.onmessage = function (wsMessageEvt) {
       
       SERVER_CONNECTION = false
       showElement("loading", false)
 
-      console.log("RESPONSE:");
-      var response = JSON.parse(e.data);
-  
-      console.log(response);
+      const response: Object = JSON.parse(wsMessageEvt.data);
 
       if (response.hasOwnProperty("token")) {
-        document.cookie = "Token=" + response["token"]
+        document.cookie = "Token=" + response["token"];
       }
 
       if (response["status"] == false) {
-        
-        alert(response["err"])
-
-        if (response.hasOwnProperty("reload")) {
-          location.reload()
-        }
-
-        return
+        alert(response["err"]);
+        return;
       }
 
+      if (response.hasOwnProperty("newWebUrl")) {
+        window.location = response["newWebUrl"];
+      }
+
+      if (response.hasOwnProperty("reload")) {
+        window.location.reload();
+      }
 
       if (response.hasOwnProperty("alert")) {
-        alert(response["alert"])
+        alert(response["alert"]);
       }
 
       if (response.hasOwnProperty("logoURL")) {
@@ -103,7 +93,6 @@ class Server {
             showLogs(false)
           }
           return
-          break;
         
         default:
           SERVER = new Object()
@@ -125,7 +114,6 @@ class Server {
         location.reload()
       }
 
-
       if (response.hasOwnProperty("wizard")) {
         createLayout()
         configurationWizard[response["wizard"]].createWizard()
@@ -143,5 +131,7 @@ class Server {
 function getCookie(name) {
   var value = "; " + document.cookie;
   var parts = value.split("; " + name + "=");
-  if (parts.length == 2) return parts.pop().split(";").shift();
+  if (parts.length == 2) {
+    return parts.pop().split(";").shift();
+  }
 }

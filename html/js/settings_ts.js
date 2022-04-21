@@ -117,6 +117,17 @@ class SettingsCategory {
                 setting.appendChild(tdRight);
                 break;
             // Checkboxes
+            case "tlsMode":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.tlsMode.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "authentication.web":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.authenticationWEB.title}}" + ":";
@@ -310,6 +321,9 @@ class SettingsCategory {
         var description = document.createElement("TR");
         var text;
         switch (settingsKey) {
+            case "tlsMode":
+                text = "{{.settings.tlsMode.description}}";
+                break;
             case "authentication.web":
                 text = "{{.settings.authenticationWEB.description}}";
                 break;

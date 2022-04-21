@@ -13,7 +13,7 @@ import (
 
 func xTeVeAutoBackup() (err error) {
 
-	var archiv = "xteve_auto_backup_" + time.Now().Format("20060102_1504") + ".zip"
+	var archive = "xteve_auto_backup_" + time.Now().Format("20060102_1504") + ".zip"
 	var target string
 	var sourceFiles = make([]string, 0)
 	var oldBackupFiles = make([]string, 0)
@@ -74,13 +74,16 @@ func xTeVeAutoBackup() (err error) {
 	// Create a Backup
 	if err == nil {
 
-		target = System.Folder.Backup + archiv
+		target = System.Folder.Backup + archive
 
 		for _, i := range SystemFiles {
 			sourceFiles = append(sourceFiles, System.Folder.Config+i)
 		}
 
 		sourceFiles = append(sourceFiles, System.Folder.ImagesUpload)
+		if Settings.TLSMode {
+			sourceFiles = append(sourceFiles, System.Folder.Certificates)
+		}
 
 		err = zipFiles(sourceFiles, target)
 
@@ -98,16 +101,16 @@ func xTeVeAutoBackup() (err error) {
 	return
 }
 
-func xteveBackup() (archiv string, err error) {
+func xteveBackup() (archive string, err error) {
 
 	err = checkFolder(System.Folder.Temp)
 	if err != nil {
 		return
 	}
 
-	archiv = "xteve_backup_" + time.Now().Format("20060102_1504") + ".zip"
+	archive = "xteve_backup_" + time.Now().Format("20060102_1504") + ".zip"
 
-	var target = System.Folder.Temp + archiv
+	var target = System.Folder.Temp + archive
 	var sourceFiles = make([]string, 0)
 
 	for _, i := range SystemFiles {
@@ -115,6 +118,9 @@ func xteveBackup() (archiv string, err error) {
 	}
 
 	sourceFiles = append(sourceFiles, System.Folder.Data)
+	if Settings.TLSMode {
+		sourceFiles = append(sourceFiles, System.Folder.Certificates)
+	}
 
 	err = zipFiles(sourceFiles, target)
 	if err != nil {
