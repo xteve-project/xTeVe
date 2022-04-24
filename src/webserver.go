@@ -60,13 +60,24 @@ func StartWebserver() (err error) {
 		server := http.Server{Addr: ":" + port}
 
 		go func() {
+			var err error
+
 			if Settings.TLSMode {
-				certFile := System.Folder.Certificates + "xteve.crt"
-				keyFile := System.Folder.Certificates + "xteve.key"
-				err = server.ListenAndServeTLS(certFile, keyFile)
+				if allFilesExist(System.File.ServerCertPrivKey, System.File.ServerCert) == false {
+					if err = genCertFiles(); err != nil {
+						ShowError(err, 7000)
+					}
+				}
+
+				err = server.ListenAndServeTLS(System.File.ServerCert, System.File.ServerCertPrivKey)
+				if err != nil && err != http.ErrServerClosed {
+					ShowError(err, 1017)
+					err = server.ListenAndServe()
+				}
 			} else {
 				err = server.ListenAndServe()
 			}
+
 			if err != nil && err != http.ErrServerClosed {
 				ShowError(err, 1001)
 				return

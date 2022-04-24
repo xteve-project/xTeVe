@@ -69,6 +69,15 @@ func checkFile(filename string) (err error) {
 	return
 }
 
+func allFilesExist(list ...string) bool {
+	for _, f := range list {
+		if err := checkFile(f); err != nil {
+			return false
+		}
+	}
+	return true
+}
+
 // GetUserHomeDirectory : User Home Directory
 func GetUserHomeDirectory() (userHomeDirectory string) {
 
@@ -327,6 +336,7 @@ func resolveHostIP() (err error) {
 			if networkIP.IP.To4() != nil {
 
 				System.IPAddressesV4 = append(System.IPAddressesV4, ip)
+				System.IPAddressesV4Raw = append(System.IPAddressesV4Raw, networkIP.IP)
 
 				if !networkIP.IP.IsLoopback() && ip[0:7] != "169.254" {
 					System.IPAddress = ip

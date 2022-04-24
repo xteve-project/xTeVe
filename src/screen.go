@@ -253,6 +253,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Specified temp folder path is invalid, fallback to %s", os.TempDir())
 	case 1016:
 		errMsg = fmt.Sprintf("Web server could not be stopped.")
+	case 1017:
+		errMsg = fmt.Sprintf("Web server could not be started in TLS mode, fallback to default.")
 
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")
@@ -396,6 +398,10 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Update server not available")
 	case 6004:
 		errMsg = fmt.Sprintf("xTeVe update available")
+
+	// Certificates
+	case 7000:
+		errMsg = fmt.Sprintf("Can not generate a certificate")
 
 	default:
 		errMsg = fmt.Sprintf("Unknown error / warning (%d)", errCode)

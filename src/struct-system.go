@@ -1,6 +1,9 @@
 package src
 
-import "xteve/src/internal/imgcache"
+import (
+	"net"
+	"xteve/src/internal/imgcache"
+)
 
 // SystemStruct : Contains all System Information
 type SystemStruct struct {
@@ -35,13 +38,15 @@ type SystemStruct struct {
 	}
 
 	File struct {
-		Authentication string
-		M3U            string
-		PMS            string
-		Settings       string
-		URLS           string
-		XEPG           string
-		XML            string
+		Authentication    string
+		M3U               string
+		PMS               string
+		ServerCert        string
+		ServerCertPrivKey string
+		Settings          string
+		URLS              string
+		XEPG              string
+		XML               string
 	}
 
 	Compressed struct {
@@ -73,6 +78,7 @@ type SystemStruct struct {
 	IPAddress              string
 	IPAddressesList        []string
 	IPAddressesV4          []string
+	IPAddressesV4Raw       []net.IP
 	IPAddressesV6          []string
 	Name                   string
 	OS                     string

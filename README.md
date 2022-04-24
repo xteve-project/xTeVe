@@ -51,6 +51,26 @@ Documentation for setup and configuration is [here](https://github.com/xteve-pro
 
 ---
 
+## TLS mode
+
+This mode can be enabled by ticking the checkbox in `Settings -> General`.
+
+Unless the server's certificate and it's private key already exists in xTeVe config directory, xTeVe will generate a self-signed automatically.
+
+Self-signed certificate will only allow TLS mode to start up but not to actually establish a secure connections.
+For truly working HTTPS, you should [generate](https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309) a certificate by yourself and **also** add the CA certificate to the client-side certificate storage (where the web browser, Plex etc. is).
+
+Certificate and it's private key should be placed in xTeVe config directory like so:
+
+```text
+/home/username/.xteve/certificates/xteve.crt
+/home/username/.xteve/certificates/xteve.key
+```
+
+If the certificate is signed by a certificate authority (CA), it should be the concatenation of the server's certificate, any intermediates, and the CA's certificate.
+
+---
+
 ### xTeVe Beta branch
 
 New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the master branch.
@@ -157,28 +177,6 @@ go get github.com/mitchellh/gox
 go install github.com/mitchellh/gox
 gox -output="./xteve-build/{{.Dir}}_{{.OS}}_{{.Arch}}" ./
 ```
-
----
-
-## TLS mode
-
-Before enabling TLS mode, you should put a self-signed certificate and it's private key into your xTeVe config directory, for example:
-
-```text
-/home/username/.xteve/certificates/xteve.crt
-/home/username/.xteve/certificates/xteve.key
-```
-
-Next, enable this mode by the checkbox in `Settings -> General`.
-
-You can either [generate](https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309) your own or download a 'dummy' certificate and it's key [from this repository](https://github.com/SCP002/xTeVe/tree/master/certeficates).
-
-❗ Certificate from this repository will only allow TLS mode to start up but not to actually establish a secure connections.
-For truly working HTTPS, you should generate it by yourself and **also** add self-signed root CA to client-side certificate storage (where the web browser, Plex etc. is).
-
-See also:
-* <https://pkg.go.dev/net/http#ListenAndServeTLS>
-* <https://github.com/denji/golang-tls>
 
 ---
 
