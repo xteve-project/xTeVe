@@ -239,10 +239,7 @@ checkVersion:
 			}
 
 		case "2.1.0", "2.1.1":
-
 			// Database verison <= 2.1.1 has broken XEPG mapping
-			showWarning(2022)
-			sendAlert("Loaded database had broken XEPG mapping (version <= 2.1.1). It was cleared.")
 
 			// Clear XEPG mapping
 			Data.XEPG.Channels = make(map[string]interface{})
@@ -254,6 +251,10 @@ checkVersion:
 				ShowError(err, 000)
 				return err
 			}
+
+			// Notify user
+			showWarning(2022)
+			sendAlert(getErrMsg(2022))
 
 			// Update database version
 			settingsMap["version"] = "2.2.0"

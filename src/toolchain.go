@@ -16,6 +16,8 @@ import (
 	"runtime"
 	"strings"
 	"text/template"
+
+	"github.com/samber/lo"
 )
 
 // --- System Tools ---
@@ -339,7 +341,7 @@ func resolveHostIP() (err error) {
 				System.IPAddressesV4Raw = append(System.IPAddressesV4Raw, networkIP.IP)
 
 				if !networkIP.IP.IsLoopback() && ip[0:7] != "169.254" {
-					System.IPAddress = ip
+					System.IPAddressesV4Host = append(System.IPAddressesV4Host, ip)
 				}
 
 			} else {
@@ -350,17 +352,22 @@ func resolveHostIP() (err error) {
 
 	}
 
-	if len(System.IPAddress) == 0 {
+	// If IP previously set in settings (including the default, empty) is not available anymore
+	if lo.Contains(System.IPAddressesV4Host, Settings.HostIP) == false {
+		Settings.HostIP = System.IPAddressesV4Host[0]
+	}
+
+	if len(Settings.HostIP) == 0 {
 
 		switch len(System.IPAddressesV4) {
 
 		case 0:
 			if len(System.IPAddressesV6) > 0 {
-				System.IPAddress = System.IPAddressesV6[0]
+				Settings.HostIP = System.IPAddressesV6[0]
 			}
 
 		default:
-			System.IPAddress = System.IPAddressesV4[0]
+			Settings.HostIP = System.IPAddressesV4[0]
 
 		}
 

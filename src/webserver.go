@@ -40,19 +40,19 @@ func StartWebserver() (err error) {
 
 		showInfo("Web server:" + "Starting")
 
-		showInfo("DVR IP:" + System.IPAddress + ":" + Settings.Port)
+		showInfo("DVR IP:" + Settings.HostIP + ":" + Settings.Port)
 
 		var ips = len(System.IPAddressesV4) + len(System.IPAddressesV6) - 1
 		switch ips {
 
 		case 0:
-			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/", System.ServerProtocol.WEB, System.IPAddress, Settings.Port))
+			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/", System.ServerProtocol.WEB, Settings.HostIP, Settings.Port))
 
 		case 1:
-			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, ips))
+			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP.", System.ServerProtocol.WEB, Settings.HostIP, Settings.Port, ips))
 
 		default:
-			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP's.", System.ServerProtocol.WEB, System.IPAddress, Settings.Port, len(System.IPAddressesV4)+len(System.IPAddressesV6)-1))
+			showHighlight(fmt.Sprintf("Web Interface:%s://%s:%s/web/ | xTeVe is also available via the other %d IP's.", System.ServerProtocol.WEB, Settings.HostIP, Settings.Port, len(System.IPAddressesV4)+len(System.IPAddressesV6)-1))
 
 		}
 
@@ -459,6 +459,8 @@ func WS(w http.ResponseWriter, r *http.Request) {
 		case "saveSettings":
 			var authenticationUpdate = Settings.AuthenticationWEB
 			var previousTLSMode = Settings.TLSMode
+			var previousHostIP = Settings.HostIP
+
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
 
@@ -471,17 +473,18 @@ func WS(w http.ResponseWriter, r *http.Request) {
 				if Settings.TLSMode != previousTLSMode {
 					showInfo("Web server:" + "Toggling TLS mode")
 
-					err := Init()
-					if err != nil {
-						ShowError(err, 0)
-					}
+					reinitialize()
 
-					err = StartSystem(true)
-					if err != nil {
-						ShowError(err, 0)
-					}
+					response.OpenLink = System.URLBase + "/web/"
+					restartWebserver <- true
+				}
 
-					response.NewWebURL = System.URLBase + "/web/"
+				if Settings.HostIP != previousHostIP {
+					showInfo("Web server:" + fmt.Sprintf("Changing host IP to %s", Settings.HostIP))
+					
+					reinitialize()
+
+					response.OpenLink = System.URLBase + "/web/"
 					restartWebserver <- true
 				}
 
@@ -1067,6 +1070,8 @@ func setDefaultResponseData(response ResponseStruct, data bool) (defaults Respon
 	defaults.ClientInfo.UUID = Settings.UUID
 	defaults.ClientInfo.Errors = WebScreenLog.Errors
 	defaults.ClientInfo.Warnings = WebScreenLog.Warnings
+	defaults.IPAddressesV4Host = System.IPAddressesV4Host
+	defaults.Settings.HostIP = Settings.HostIP
 	defaults.Notification = System.Notification
 	defaults.Log = WebScreenLog
 

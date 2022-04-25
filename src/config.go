@@ -105,11 +105,6 @@ func Init() (err error) {
 		return
 	}
 
-	err = resolveHostIP()
-	if err != nil {
-		ShowError(err, 1002)
-	}
-
 	// Menu for the Web interface
 	System.WEB.Menu = []string{"playlist", "filter", "xmltv", "mapping", "users", "settings", "log", "logout"}
 
@@ -128,8 +123,6 @@ func Init() (err error) {
 
 	showInfo(fmt.Sprintf("Version:%s Build: %s", System.Version, System.Build))
 	showInfo(fmt.Sprintf("Database Version:%s", System.DBVersion))
-	showInfo(fmt.Sprintf("System IP Addresses:IPv4: %d | IPv6: %d", len(System.IPAddressesV4), len(System.IPAddressesV6)))
-	showInfo("Hostname:" + System.Hostname)
 	showInfo(fmt.Sprintf("System Folder:%s", getPlatformPath(System.Folder.Config)))
 
 	// Create System Files (If not available)
@@ -153,6 +146,14 @@ func Init() (err error) {
 		ShowError(err, 0)
 		return
 	}
+	
+	err = resolveHostIP()
+	if err != nil {
+		ShowError(err, 1002)
+	}
+
+	showInfo(fmt.Sprintf("System IP Addresses:IPv4: %d | IPv6: %d", len(System.IPAddressesV4), len(System.IPAddressesV6)))
+	showInfo("Hostname:" + System.Hostname)
 
 	// Check the permissions on all Folders
 	err = checkFilePermission(System.Folder.Config)
@@ -161,7 +162,7 @@ func Init() (err error) {
 	}
 
 	// Separate tmp Folder for each Instance
-	//System.Folder.Temp = System.Folder.Temp + Settings.UUID + string(os.PathSeparator)
+	// System.Folder.Temp = System.Folder.Temp + Settings.UUID + string(os.PathSeparator)
 	showInfo(fmt.Sprintf("Temporary Folder:%s", getPlatformPath(System.Folder.Temp)))
 
 	err = checkFolder(System.Folder.Temp)
@@ -189,9 +190,9 @@ func Init() (err error) {
 	showInfo(fmt.Sprintf("Git Branch:%s [%s]", System.Branch, System.GitHub.User))
 
 	// Set Domain Names
-	setGlobalDomain(fmt.Sprintf("%s:%s", System.IPAddress, Settings.Port))
+	setGlobalDomain(fmt.Sprintf("%s:%s", Settings.HostIP, Settings.Port))
 
-	System.URLBase = fmt.Sprintf("%s://%s:%s", System.ServerProtocol.WEB, System.IPAddress, Settings.Port)
+	System.URLBase = fmt.Sprintf("%s://%s:%s", System.ServerProtocol.WEB, Settings.HostIP, Settings.Port)
 
 	// Create HTML Files, with dev == true the local HTML Files are used
 	if System.Dev == true {
@@ -257,4 +258,17 @@ func StartSystem(updateProviderFiles bool) (err error) {
 	buildXEPG(false)
 
 	return
+}
+
+// reinitialize : Initialize and start up the system, updating provider files
+func reinitialize() {
+	err := Init()
+	if err != nil {
+		ShowError(err, 0)
+	}
+
+	err = StartSystem(true)
+	if err != nil {
+		ShowError(err, 0)
+	}
 }

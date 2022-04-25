@@ -13,19 +13,19 @@ type SystemStruct struct {
 		XML string
 	}
 
-	APIVersion             string
-	AppName                string
-	ARCH                   string
-	BackgroundProcess      bool
-	Branch                 string
-	Build                  string
-	Compatibility          string
-	ConfigurationWizard    bool
-	DBVersion              string
-	Dev                    bool
-	DeviceID               string
-	Domain                 string
-	PlexChannelLimit       int
+	APIVersion          string
+	AppName             string
+	ARCH                string
+	BackgroundProcess   bool
+	Branch              string
+	Build               string
+	Compatibility       string
+	ConfigurationWizard bool
+	DBVersion           string
+	Dev                 bool
+	DeviceID            string
+	Domain              string
+	PlexChannelLimit    int
 
 	FFmpeg struct {
 		DefaultOptions string
@@ -75,11 +75,11 @@ type SystemStruct struct {
 
 	Hostname               string
 	ImageCachingInProgress int
-	IPAddress              string
-	IPAddressesList        []string
-	IPAddressesV4          []string
-	IPAddressesV4Raw       []net.IP
-	IPAddressesV6          []string
+	IPAddressesList        []string // Every IP address available (IPv4 + IPv6)
+	IPAddressesV4          []string // Every IPv4 address available in string format
+	IPAddressesV4Host      []string // Every IPv4 address available except loopback and link-local
+	IPAddressesV4Raw       []net.IP // Every IPv4 address available in net.IP format
+	IPAddressesV6          []string // Every IPv6 address available
 	Name                   string
 	OS                     string
 	ScanInProgress         int
@@ -302,6 +302,7 @@ type SettingsStruct struct {
 
 	FilesUpdate               bool                  `json:"files.update"`
 	Filter                    map[int64]interface{} `json:"filter"`
+	HostIP                    string                `json:"hostIP"` // IP chosen in web client. Used to form m3u and xml files.
 	Key                       string                `json:"key,omitempty"`
 	Language                  string                `json:"language"`
 	LogEntriesRAM             int                   `json:"log.entries.ram"`

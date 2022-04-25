@@ -35,6 +35,7 @@ type RequestStruct struct {
 		VLCOptions               *string   `json:"vlc.options,omitempty"`
 		VLCPath                  *string   `json:"vlc.path,omitempty"`
 		FilesUpdate              *bool     `json:"files.update,omitempty"`
+		HostIP                   *string   `json:"hostIP,omitempty"` // IP chosen in web client. Used to form m3u and xml files.
 		TempPath                 *string   `json:"temp.path,omitempty"`
 		TLSMode                  *bool     `json:"tlsMode,omitempty"`
 		Tuner                    *int      `json:"tuner,omitempty"`
@@ -106,9 +107,9 @@ type ResponseStruct struct {
 	Alert               string                 `json:"alert,omitempty"`
 	ConfigurationWizard bool                   `json:"configurationWizard,required"`
 	Error               string                 `json:"err,omitempty"`
+	IPAddressesV4Host   []string               `json:"ipAddressesV4Host"`// Every IPv4 address to display in web client
 	Log                 WebScreenLogStruct     `json:"log,required"`
 	LogoURL             string                 `json:"logoURL,omitempty"`
-	NewWebURL           string                 `json:"newWebUrl,omitempty"`
 	OpenLink            string                 `json:"openLink,omitempty"`
 	OpenMenu            string                 `json:"openMenu,omitempty"`
 	Reload              bool                   `json:"reload,omitempty"`

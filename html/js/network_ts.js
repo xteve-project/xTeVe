@@ -44,8 +44,8 @@ class Server {
                 alert(response["err"]);
                 return;
             }
-            if (response.hasOwnProperty("newWebUrl")) {
-                window.location = response["newWebUrl"];
+            if (response.hasOwnProperty('openLink')) {
+                window.location = response['openLink'];
             }
             if (response.hasOwnProperty("reload")) {
                 window.location.reload();
@@ -75,9 +75,6 @@ class Server {
                 var menu = document.getElementById(response["openMenu"]);
                 menu.click();
                 showElement("popup", false);
-            }
-            if (response.hasOwnProperty("openLink")) {
-                window.location = response["openLink"];
             }
             if (response.hasOwnProperty("reload")) {
                 location.reload();

@@ -300,7 +300,23 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
-        // Select
+      // Select
+      case "hostIP":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.hostIP.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var text: any[] = SERVER["ipAddressesV4Host"]
+        var values: any[] = SERVER["ipAddressesV4Host"]
+
+        var select = content.createSelect(text, values, data, settingsKey)
+        select.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(select)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       case "tuner":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.tuner.title}}" + ":"
@@ -490,6 +506,10 @@ class SettingsCategory {
 
       case "epgSource":
         text = "{{.settings.epgSource.description}}"
+        break
+
+      case "hostIP":
+        text = "{{.settings.hostIP.description}}"
         break
 
       case "tuner":

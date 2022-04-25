@@ -397,6 +397,11 @@
       "title": "Number of Tuners",
       "description": "Number of parallel connections that can be established to the provider.<br>Available for: Plex, Emby (HDHR), M3U (with active buffer).<br>After a change, xTeVe must be delete in the Plex / Emby DVR settings and set up again."
     },
+    "hostIP":
+    {
+      "title": "Host IP",
+      "description": "IP address xTeVe will use to form M3U and XMLTV files"
+    },
     "tlsMode": {
       "title": "TLS (HTTPS) mode",
       "description": "Changes web server protocol to HTTPS.<br>For details, see <a>https://github.com/SCP002/xTeVe#tls-mode</a>"
