@@ -26,8 +26,6 @@ import (
 	"github.com/avfs/avfs/vfs/osfs"
 )
 
-// TODO: Removes VFS buffer files but dont write them again (?)
-
 func createStreamID(stream map[int]ThisStream) (streamID int) {
 
 	var debug string
