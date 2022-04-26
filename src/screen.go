@@ -372,6 +372,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Temporary buffer files could not be deleted")
 	case 4006:
 		errMsg = fmt.Sprintf("Server connection timeout")
+	case 4007:
+		errMsg = fmt.Sprintf("Old temporary buffer file could not be deleted")
 
 	// Buffer (M3U8)
 	case 4050:

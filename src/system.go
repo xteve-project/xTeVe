@@ -129,6 +129,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["mapping.first.channel"] = 1000
 	defaults["port"] = "34400"
 	defaults["ssdp"] = true
+	defaults["storeBufferInRAM"] = false
 	defaults["temp.path"] = System.Folder.Temp
 	defaults["tlsMode"] = false
 	defaults["tuner"] = 1
@@ -170,6 +171,9 @@ func loadSettings() (settings SettingsStruct, err error) {
 	if len(settings.VLCPath) == 0 {
 		settings.VLCPath = searchFileInOS("cvlc")
 	}
+
+	// Initialze virutal filesystem for the Buffer
+	initBufferVFS(settings.StoreBufferInRAM)
 
 	settings.TempPath = getValidTempDir(settings.TempPath)
 

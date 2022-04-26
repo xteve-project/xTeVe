@@ -460,6 +460,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			var authenticationUpdate = Settings.AuthenticationWEB
 			var previousTLSMode = Settings.TLSMode
 			var previousHostIP = Settings.HostIP
+			var previousStoreBufferInRAM = Settings.StoreBufferInRAM
 
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
@@ -486,6 +487,10 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 					response.OpenLink = System.URLBase + "/web/"
 					restartWebserver <- true
+				}
+
+				if Settings.StoreBufferInRAM != previousStoreBufferInRAM {
+					initBufferVFS(Settings.StoreBufferInRAM)
 				}
 
 			}

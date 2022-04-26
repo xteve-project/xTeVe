@@ -471,6 +471,11 @@
       "title": "Buffer Size",
       "description": "Buffer size in MB.<br>M3U8: If the TS segment smaller then the buffer size, the file size of the segment is used."
     },
+    "storeBufferInRAM":
+    {
+      "title": "Store buffer in RAM",
+      "description": "If checked, write buffer to RAM instead of writing to disk"
+    },
     "bufferTimeout":
     {
       "title": "Timeout for new client connections",

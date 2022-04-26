@@ -113,6 +113,7 @@ When the branch is changed, an update is only performed if there is a new versio
 
 ### Dependencies
 
+* [avfs](https://github.com/avfs/avfs)
 * [go-ssdp](https://github.com/koron/go-ssdp)
 * [lo](https://github.com/samber/lo)
 * [osext](https://github.com/kardianos/osext)
@@ -132,11 +133,12 @@ go mod tidy
 Or
 
 ```sh
+go get github.com/avfs/avfs@latest 
+go get github.com/gorilla/websocket
+go get github.com/kardianos/osext
 go get github.com/koron/go-ssdp
 go get github.com/samber/lo
-go get github.com/kardianos/osext
 go get github.com/stretchr/testify
-go get github.com/gorilla/websocket
 ```
 
 #### 3. Update dependencies (optional)

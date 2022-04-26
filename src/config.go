@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+
+	"github.com/avfs/avfs"
 )
 
 // System : Contains all System Information
@@ -28,6 +30,9 @@ var BufferInformation sync.Map
 
 // BufferClients : Number of Clients playing a Stream over the Buffer
 var BufferClients sync.Map
+
+// bufferVFS : Filesystem to use for the Buffer
+var bufferVFS avfs.VFS
 
 // Lock : Lock Map
 var Lock = sync.RWMutex{}
