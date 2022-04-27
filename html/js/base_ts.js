@@ -177,7 +177,7 @@ function sortTable(column) {
                     xValue = x.getElementsByTagName("P")[0].innerText.toLowerCase();
                     break;
                 default:
-                    console.log(x.childNodes[0].tagName);
+                    break;
             }
             sortArr.push({ key: xValue ? xValue : i, row: rows[i] });
         }
@@ -295,7 +295,6 @@ function changeChannelNumber(element) {
     }
     data[dbID]["x-channelID"] = newNumber.toString();
     element.value = newNumber;
-    console.log(data[dbID]["x-channelID"]);
     if (COLUMN_TO_SORT == 1) {
         COLUMN_TO_SORT = -1;
         sortTable(1);
@@ -304,10 +303,7 @@ function changeChannelNumber(element) {
 }
 function backup() {
     var data = new Object();
-    console.log("Backup data");
     var cmd = "xteveBackup";
-    console.log("SEND TO SERVER");
-    console.log(data);
     var server = new Server(cmd);
     server.request(data);
     return;
@@ -383,7 +379,6 @@ function restore() {
             if (file) {
                 reader.readAsDataURL(file);
                 reader.onload = function () {
-                    console.log(reader.result);
                     var data = new Object();
                     var cmd = "xteveRestore";
                     data["base64"] = reader.result;
@@ -421,7 +416,6 @@ function uploadLogo() {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = function () {
-                console.log(reader.result);
                 var data = new Object();
                 var cmd = "uploadLogo";
                 data["base64"] = reader.result;
@@ -455,6 +449,7 @@ function checkUndo(key) {
     }
     return;
 }
+// TODO: Probably don't need this anymore. Remove before finishing with xmltv picker.
 function sortSelect(select) {
     const tempArr = [];
     const selectedValue = select.options[select.selectedIndex].value;
@@ -485,7 +480,6 @@ function sortSelect(select) {
     select.selectedIndex = newSelectedIndex;
 }
 function updateLog() {
-    console.log("TOKEN");
     var server = new Server("updateLog");
     server.request(new Object());
 }

@@ -156,17 +156,6 @@ func createXEPGMapping() {
 
 	var tmpMap = make(map[string]interface{})
 
-	var getFriendlyName = func(channel Channel) (friendlyName string) {
-		switch len(channel.DisplayNames) {
-		case 1:
-			friendlyName = channel.DisplayNames[0].Value
-		default:
-			friendlyName = fmt.Sprintf("%s (%s)", channel.DisplayNames[1].Value, channel.DisplayNames[0].Value)
-		}
-
-		return
-	}
-
 	if len(Data.XMLTV.Files) > 0 {
 
 		for i := len(Data.XMLTV.Files) - 1; i >= 0; i-- {
@@ -199,7 +188,6 @@ func createXEPGMapping() {
 
 					channel["id"] = c.ID
 					channel["display-names"] = c.DisplayNames
-					channel["friendly-name"] = getFriendlyName(*c)
 					channel["icon"] = c.Icon.Src
 
 					xmltvMap[c.ID] = channel
@@ -231,7 +219,6 @@ func createXEPGMapping() {
 	for _, i := range times {
 
 		var dummyChannel = make(map[string]interface{})
-		dummyChannel["friendly-name"] = i + " Minutes"
 		dummyChannel["display-names"] = []DisplayName{{Value: i + " Minutes"}}
 		dummyChannel["id"] = i + "_Minutes"
 		dummyChannel["icon"] = ""

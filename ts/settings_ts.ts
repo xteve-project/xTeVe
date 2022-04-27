@@ -635,7 +635,6 @@ class SettingsCategoryItem extends SettingsCategory {
 }
 
 function showSettings() {
-  console.log("SETTINGS");
 
   for (let i = 0; i < settingsCategory.length; i++) {
     settingsCategory[i].createCategory()
@@ -644,7 +643,6 @@ function showSettings() {
 }
 
 function saveSettings() {
-  console.log("Save Settings");
 
   var cmd = "saveSettings"
   var div = document.getElementById("content_settings")
@@ -710,4 +708,5 @@ function saveSettings() {
 
   var server:Server = new Server(cmd)
   server.request(data)
+
 }

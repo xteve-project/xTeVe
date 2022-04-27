@@ -62,13 +62,11 @@ class WizardItem extends WizardCategory {
                 description = "{{.wizard.xmltv.description}}";
                 break;
             default:
-                console.log(key);
                 break;
         }
         var pre = document.createElement("PRE");
         pre.innerHTML = description;
         doc.appendChild(pre);
-        console.log(headline, key);
     }
 }
 function readyForConfiguration(wizard) {
@@ -120,7 +118,6 @@ function saveWizard() {
     data["wizard"] = wizard;
     var server = new Server(cmd);
     server.request(data);
-    console.log(data);
 }
 // Wizard
 var configurationWizard = new Array();

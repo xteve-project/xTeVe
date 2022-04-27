@@ -68,8 +68,6 @@ class MainMenuItem extends MainMenu {
         break
 
     }
-
-    //console.log(this.menuKey, this.tableHeader);
     
   }
 }
@@ -390,15 +388,12 @@ class Content {
         BULK_EDIT = false
         createSearchObj()
         checkUndo("epgMapping")
-        console.log("MAPPING")
         data = SERVER["xepg"]["epgMapping"]
 
         var keys = getOwnObjProps(data)
         keys.forEach(key => {
           var tr = document.createElement("TR")
           tr.id = key
-
-          //tr.setAttribute('oncontextmenu', 'javascript: rightClick(this)')
 
           switch (data[key]["x-active"]) {
             case true:
@@ -422,7 +417,6 @@ class Content {
           cell.child = true
           cell.childType = "INPUTCHANNEL"
           cell.value = data[key]["x-channelID"]
-          //td.setAttribute('onclick', 'javascript: changeChannelNumber("' + key + '", this)')
           tr.appendChild(cell.createCell())
 
           // Logo
@@ -446,13 +440,11 @@ class Content {
           td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)')
           td.id = key          
           tr.appendChild(td)
-          
 
           // Playlist
           var cell:Cell = new Cell()
           cell.child = true
           cell.childType = "P"
-          //cell.value = data[key]["_file.m3u.name"] 
           cell.value = getValueFromProviderFile(data[key]["_file.m3u.id"], "m3u", "name")
           var td = cell.createCell()
           td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)')
@@ -490,7 +482,6 @@ class Content {
           var cell:Cell = new Cell()
           cell.child = true
           cell.childType = "P"
-          //var value = str.substring(1, 4);
           var value = data[key]["x-mapping"]
           if (value.length > 20) {
             value = data[key]["x-mapping"].substring(0, 20) + "..."
@@ -499,7 +490,6 @@ class Content {
           var td = cell.createCell()
           td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)')
           td.id = key
-
           tr.appendChild(td)
 
           // TimeShift
@@ -522,8 +512,6 @@ class Content {
         break
 
       default:
-        console.log("Table content (menuKey):", menuKey);
-        
         break
 
     }
@@ -751,7 +739,6 @@ class ShowContent extends Content {
         break
 
       default:
-        console.log("Show content (menuKey):", menuKey);
         break;
     }
     
@@ -1687,13 +1674,15 @@ function openPopUp(dataType, element) {
       var dbKey: string = 'x-mapping';
       var xmlTv = new XMLTVFile();
       const currentXmlTvId: string = data[dbKey];
-      const xmlTvIdSelect = xmlTv.getPrograms(xmlTvFile, currentXmlTvId);
-      xmlTvIdSelect.setAttribute('name', dbKey);
-      xmlTvIdSelect.setAttribute('id', 'popup-mapping');
-      xmlTvIdSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this, '${xmlTvFile}');`);
-
-      sortSelect(xmlTvIdSelect);
-      content.appendRow('{{.mapping.xmltvChannel.title}}', xmlTvIdSelect);
+      const [xmlTvIdContainer, xmlTvIdInput, xmlTvIdDatalist] = xmlTv.newXmlTvIdPicker(xmlTvFile, currentXmlTvId);
+      xmlTvIdContainer.setAttribute('id', 'xmltv-id-picker-container');
+      xmlTvIdInput.setAttribute('list', 'xmltv-id-picker-datalist');
+      xmlTvIdInput.setAttribute('name', 'x-mapping'); // Should stay x-mapping as it will be used in donePopupData to make a server request
+      xmlTvIdInput.setAttribute('id', 'xmltv-id-picker-input');
+      xmlTvIdInput.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this, '${xmlTvFile}');`);
+      xmlTvIdDatalist.setAttribute('id', 'xmltv-id-picker-datalist');
+      // sortSelect(xmlTvIdDatalist); // TODO: Better sort before adding
+      content.appendRow('{{.mapping.xmltvChannel.title}}', xmlTvIdContainer);
 
       // Timeshift
       var dbKey:string = "x-timeshift"
@@ -1769,36 +1758,61 @@ class XMLTVFile {
     return select
   }
 
-  getPrograms(xmlTvFile: string, currentXmlTvId: string): HTMLSelectElement {
-    const values = getOwnObjProps(SERVER['xepg']['xmltvMap'][xmlTvFile]);
-    const text: string[] = [];
-    let friendlyName: string;
+  // TODO: Display FULL list, see:
+  // > https://stackoverflow.com/questions/37478727/how-can-i-make-a-browser-display-all-datalist-options-when-a-default-value-is-se
+  // > https://www.hongkiat.com/blog/search-select-using-datalist/
+  // > https://jqueryui.com/autocomplete/#combobox OR https://select2.org/dropdown
 
-    for (let i = 0; i < values.length; i++) {
-      if (SERVER['xepg']['xmltvMap'][xmlTvFile][values[i]].hasOwnProperty('friendly-name') == true) {
-        friendlyName = SERVER['xepg']['xmltvMap'][xmlTvFile][values[i]]['friendly-name'];
-      } else {
-        friendlyName = '-';
-      }
-     
-      text[i] = `${friendlyName} (${values[i]})`;
+  /**
+   * @param xmlTvFile XML file path to get EPG from.
+   * @param currentXmlTvId Current XMLTV ID to set initial input value to.
+   * @returns Array of, sequentially:
+   * 1) Container of the picker.
+   * 2) Input field to type at and get choice from.
+   * 3) Datalist containing every option.
+   */
+  newXmlTvIdPicker(xmlTvFile: string, currentXmlTvId: string): [HTMLDivElement, HTMLInputElement, HTMLDataListElement] {
+    const container = document.createElement('div');
+    const input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.value = currentXmlTvId ? currentXmlTvId : '-';
+
+    container.appendChild(input);
+
+    const datalist = document.createElement('datalist');
+
+    const option = document.createElement('option');
+    option.setAttribute('value', '-');
+    option.innerText = '-';
+    datalist.appendChild(option);
+
+    const epg: Object = SERVER['xepg']['xmltvMap'][xmlTvFile];
+
+    if (epg) {
+      const programIds = getOwnObjProps(epg);
+
+      programIds.forEach((programId) => {
+        const program: Object = epg[programId];
+
+        if (program.hasOwnProperty('display-names')) {
+          program['display-names'].forEach((displayName: Object) => {
+            const option: HTMLOptionElement = document.createElement('option');
+            option.setAttribute('value', programId);
+            option.innerText = displayName['Value'];
+            datalist.appendChild(option);
+          });
+        } else {
+          const option: HTMLOptionElement = document.createElement('option');
+          option.setAttribute('value', programId);
+          option.innerText = '-';
+          datalist.appendChild(option);
+        }
+      });
     }
 
-    text.unshift('-');
-    values.unshift('-');
+    container.appendChild(datalist);
 
-    const select = (document.createElement('select') as HTMLSelectElement);
-
-    for (let i = 0; i < text.length; i++) {
-      const option = document.createElement('option');
-      option.setAttribute('value', values[i]);
-      option.innerText = text[i];
-      select.appendChild(option);
-    }
-
-    select.value = (currentXmlTvId == '') ? '-' : currentXmlTvId;
-
-    return select;
+    return [container, input, datalist];
   }
 
   return
@@ -1846,29 +1860,35 @@ function setXmltvChannel(epgMapId: string, xmlTvFileSelect: HTMLSelectElement) {
   const newXmlTvFile = xmlTvFileSelect.value;
 
   // Remove old XMLTV ID selection box
-  const xmlTvIdSelectParent = document.getElementById('popup-mapping').parentElement as HTMLTableCellElement;
-  xmlTvIdSelectParent.innerHTML = '';
+  const xmlTvIdPickerParent = document.getElementById('xmltv-id-picker-container').parentElement as HTMLTableCellElement;
+  xmlTvIdPickerParent.innerHTML = '';
 
   // Create new XMLTV ID selection box
   const tvgId: string = SERVER['xepg']['epgMapping'][epgMapId]['tvg-id'];
 
-  const newXmlTvIdSelect = xmlTv.getPrograms(newXmlTvFile, tvgId);
-  newXmlTvIdSelect.setAttribute('name', 'x-mapping');
-  newXmlTvIdSelect.setAttribute('id', 'popup-mapping');
-  newXmlTvIdSelect.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMapId}', this, '${newXmlTvFile}');`);
-  newXmlTvIdSelect.className = 'changed';
-  sortSelect(newXmlTvIdSelect);
+  const [xmlTvIdContainer, xmlTvIdInput, xmlTvIdDatalist] = xmlTv.newXmlTvIdPicker(newXmlTvFile, tvgId);
+  xmlTvIdContainer.setAttribute('id', 'xmltv-id-picker-container');
+  xmlTvIdInput.setAttribute('list', 'xmltv-id-picker-datalist');
+  xmlTvIdInput.setAttribute('name', 'x-mapping'); // Should stay x-mapping as it will be used in donePopupData to make a server request
+  xmlTvIdInput.setAttribute('id', 'xmltv-id-picker-input');
+  xmlTvIdInput.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMapId}', this, '${newXmlTvFile}');`);
+  xmlTvIdInput.classList.add('changed');
+  xmlTvIdDatalist.setAttribute('id', 'xmltv-id-picker-datalist');
+  // sortSelect(xmlTvIdDatalist); // TODO: Better sort before adding
 
   // Add new XMLTV ID selection box to it's parent
-  xmlTvIdSelectParent.appendChild(newXmlTvIdSelect);
+  xmlTvIdPickerParent.appendChild(xmlTvIdContainer);
 
-  checkXmltvChannel(epgMapId, newXmlTvIdSelect, newXmlTvFile);
+  checkXmltvChannel(epgMapId, xmlTvIdInput, newXmlTvFile);
 
 }
 
-function checkXmltvChannel(epgMapId: string, xmlTvIdSelect: HTMLSelectElement, xmlTvFile: string) {
+function checkXmltvChannel(epgMapId: string, xmlTvIdInput: HTMLInputElement, xmlTvFile: string) {
 
-  const newXmlTvId = xmlTvIdSelect.value;
+  // If empty, set to '-'
+  xmlTvIdInput.value = xmlTvIdInput.value ? xmlTvIdInput.value : '-';
+
+  const newXmlTvId = xmlTvIdInput.value;
   const channelActiveCb = document.getElementById('active') as HTMLInputElement;
 
   const channelActive = newXmlTvId != '-';
@@ -1895,8 +1915,8 @@ function changeChannelLogo(epgMapId: string) {
   const xmlTvFileSelect = document.getElementById('popup-xmltv') as HTMLSelectElement;
   const xmlTvFile = xmlTvFileSelect.options[xmlTvFileSelect.selectedIndex].value;
 
-  const xmlTvIdSelect = document.getElementById('popup-mapping') as HTMLSelectElement;
-  const newXmlTvId = xmlTvIdSelect.options[xmlTvIdSelect.selectedIndex].value;
+  const xmlTvIdInput = document.getElementById('xmltv-id-picker-input') as HTMLInputElement;
+  const newXmlTvId = xmlTvIdInput.value;
 
   const xmlTvLogo = SERVER['xepg']['xmltvMap'][xmlTvFile][newXmlTvId]['icon'];
   const updateLogo = (document.getElementById('update-icon') as HTMLInputElement).checked;
@@ -1927,12 +1947,8 @@ function savePopupData(dataType: string, id: string, remove: Boolean, option: nu
   if (dataType == "mapping") {
     
     let data = {}
-    console.log("Save mapping data")
-      
     let cmd = "saveEpgMapping"
     data["epgMapping"] = SERVER["xepg"]["epgMapping"]
-  
-    console.log("SEND TO SERVER");
  
     let server:Server = new Server(cmd)
     server.request(data)
@@ -1942,7 +1958,6 @@ function savePopupData(dataType: string, id: string, remove: Boolean, option: nu
     return
   }
 
-  console.log("Save popup data")
   let div = document.getElementById("popup-custom")
 
   let inputs = div.getElementsByTagName("TABLE")[0].getElementsByTagName("INPUT");
@@ -2099,7 +2114,6 @@ function savePopupData(dataType: string, id: string, remove: Boolean, option: nu
       break
 
     default:
-      console.log(dataType, id);
       return
 
   }
@@ -2112,10 +2126,6 @@ function savePopupData(dataType: string, id: string, remove: Boolean, option: nu
     }
 
   }
-  
-  console.log("SEND TO SERVER");
-  
-  console.log(data);
 
   let server:Server = new Server(cmd)
   server.request(data)
@@ -2127,12 +2137,10 @@ function donePopupData(dataType:string, idsStr:string) {
   let ids:string[] = idsStr.split(',');
   let div = document.getElementById("popup-custom")
   let inputs = div.getElementsByClassName("changed")
-  
+
   ids.forEach(id => {
     let input: Object;
     input = SERVER["xepg"]["epgMapping"][id]
-
-    console.log(input);
 
     for (let i = 0; i < inputs.length; i++) {
 
@@ -2226,7 +2234,6 @@ function donePopupData(dataType:string, idsStr:string) {
       document.getElementById(id).className = "activeEPG"
     }
 
-    console.log(input["tvg-logo"]);
     (document.getElementById(id).childNodes[2].firstChild as HTMLElement).setAttribute("src", input["tvg-logo"])
     
 

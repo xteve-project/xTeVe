@@ -83,15 +83,12 @@ class WizardItem extends WizardCategory {
       break
 
       default:
-        console.log(key)
         break;
     }
 
     var pre = document.createElement("PRE")
     pre.innerHTML = description
     doc.appendChild(pre)
-
-    console.log(headline, key)
   }
 
 
@@ -166,7 +163,6 @@ function saveWizard() {
   var server:Server = new Server(cmd)
   server.request(data)
 
-  console.log(data)
 }
 
 // Wizard
