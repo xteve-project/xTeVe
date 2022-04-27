@@ -449,36 +449,6 @@ function checkUndo(key) {
     }
     return;
 }
-// TODO: Probably don't need this anymore. Remove before finishing with xmltv picker.
-function sortSelect(select) {
-    const tempArr = [];
-    const selectedValue = select.options[select.selectedIndex].value;
-    for (const selectOption of select.options) {
-        tempArr.push(selectOption);
-    }
-    tempArr.sort((o1, o2) => {
-        if (o1.text < o2.text) {
-            return -1;
-        }
-        if (o1.text > o2.text) {
-            return 1;
-        }
-        return 0;
-    });
-    while (select.options.length > 0) {
-        select.options[0] = null;
-    }
-    ;
-    let newSelectedIndex = 0;
-    for (let i = 0; i < tempArr.length; i++) {
-        select.options[i] = tempArr[i];
-        if (select.options[i].value == selectedValue) {
-            newSelectedIndex = i;
-        }
-    }
-    // Set new selected index after sorting
-    select.selectedIndex = newSelectedIndex;
-}
 function updateLog() {
     var server = new Server("updateLog");
     server.request(new Object());

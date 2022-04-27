@@ -1356,7 +1356,6 @@ function openPopUp(dataType, element) {
             xmlTvIdInput.setAttribute('id', 'xmltv-id-picker-input');
             xmlTvIdInput.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this, '${xmlTvFile}');`);
             xmlTvIdDatalist.setAttribute('id', 'xmltv-id-picker-datalist');
-            // sortSelect(xmlTvIdDatalist); // TODO: Better sort before adding
             content.appendRow('{{.mapping.xmltvChannel.title}}', xmlTvIdContainer);
             // Timeshift
             var dbKey = "x-timeshift";
@@ -1507,7 +1506,6 @@ function setXmltvChannel(epgMapId, xmlTvFileSelect) {
     xmlTvIdInput.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMapId}', this, '${newXmlTvFile}');`);
     xmlTvIdInput.classList.add('changed');
     xmlTvIdDatalist.setAttribute('id', 'xmltv-id-picker-datalist');
-    // sortSelect(xmlTvIdDatalist); // TODO: Better sort before adding
     // Add new XMLTV ID selection box to it's parent
     xmlTvIdPickerParent.appendChild(xmlTvIdContainer);
     checkXmltvChannel(epgMapId, xmlTvIdInput, newXmlTvFile);
