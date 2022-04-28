@@ -1082,6 +1082,11 @@ function openPopUp(dataType, element) {
                     var input = content.createInput("text", dbKey, data[dbKey]);
                     input.setAttribute("placeholder", "{{.filter.filterRule.placeholder}}");
                     content.appendRow("{{.filter.filterRule.title}}", input);
+                    // Starting Channel Number Mapping
+                    var dbKey = "startingChannel";
+                    var input = content.createInput("text", dbKey, data[dbKey]);
+                    input.setAttribute("placeholder", "{{.filter.startingChannel.placeholder}}");
+                    content.appendRow("{{.filter.startingChannel.title}}", input);
                     break;
                 case "group-title":
                     //alert(dbKey + " " + filterType)
