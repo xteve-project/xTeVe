@@ -1757,10 +1757,6 @@ class XMLTVFile {
     return select
   }
 
-  // TODO: Display FULL list, see:
-  // > https://stackoverflow.com/questions/37478727/how-can-i-make-a-browser-display-all-datalist-options-when-a-default-value-is-se
-  // > https://www.hongkiat.com/blog/search-select-using-datalist/
-
   /**
    * @param xmlTvFile XML file path to get EPG from.
    * @param currentXmlTvId Current XMLTV ID to set initial input value to.
