@@ -1,6 +1,7 @@
 class Log {
     createLog(entry) {
         var element = document.createElement("PRE");
+        entry = String(entry);
         if (entry.indexOf("WARNING") != -1) {
             element.className = "warningMsg";
         }
