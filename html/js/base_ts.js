@@ -209,7 +209,7 @@ function createSearchObj() {
     SEARCH_MAPPING = new Object();
     var data = SERVER["xepg"]["epgMapping"];
     var channels = getOwnObjProps(data);
-    var channelKeys = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"];
+    var channelKeys = ["x-active", "x-channelID", "x-name", "updateChannelNameRegex", "_file.m3u.name", "x-group-title", "x-xmltv-file"];
     channels.forEach(id => {
         channelKeys.forEach(key => {
             if (key == "x-active") {

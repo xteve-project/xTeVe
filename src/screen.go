@@ -255,6 +255,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Web server could not be stopped.")
 	case 1017:
 		errMsg = fmt.Sprintf("Web server could not be started in TLS mode, fallback to default.")
+	case 1018:
+		errMsg = fmt.Sprintf("Failed to compile channel name update regex")
 
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")

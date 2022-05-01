@@ -289,7 +289,7 @@ function createSearchObj() {
   var data = SERVER["xepg"]["epgMapping"]
   var channels = getOwnObjProps(data)
 
-  var channelKeys:string[] = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"]
+  var channelKeys:string[] = ["x-active", "x-channelID", "x-name", "updateChannelNameRegex", "_file.m3u.name", "x-group-title", "x-xmltv-file"]
 
   channels.forEach(id => {
 

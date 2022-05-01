@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"regexp"
 	"runtime"
 	"sort"
 
@@ -166,7 +167,6 @@ func createXEPGMapping() {
 			var fileID = strings.TrimSuffix(getFilenameFromPath(file), path.Ext(getFilenameFromPath(file)))
 			showInfo("XEPG:" + "Parse XMLTV file: " + getProviderParameter(fileID, "xmltv", "name"))
 
-			//xmltv, err = getLocalXMLTV(file)
 			var xmltv XMLTV
 
 			err = getLocalXMLTV(file, &xmltv)
@@ -247,7 +247,7 @@ func createXEPGDatabase() (err error) {
 
 	var createNewID = func() (xepg string) {
 
-		var firstID = 0 //len(Data.XEPG.Channels)
+		var firstID = 0
 
 	newXEPGID:
 
@@ -340,7 +340,7 @@ func createXEPGDatabase() (err error) {
 
 		Data.Cache.Streams.Active = append(Data.Cache.Streams.Active, m3uChannel.Name+m3uChannel.FileM3UID)
 
-		// Try to find the channel based on matching all known values.  If that fails, then move to full channel scan
+		// Try to find the channel based on matching all known values. If that fails, then move to full channel scan
 		m3uChannelHash := generateHashForChannel(m3uChannel.FileM3UID, m3uChannel.Name, m3uChannel.GroupTitle, m3uChannel.TvgID, m3uChannel.TvgName, m3uChannel.UUIDKey, m3uChannel.UUIDValue)
 		if val, ok := xepgChannelsValuesMap[m3uChannelHash]; ok {
 			channelExists = true
@@ -371,6 +371,7 @@ func createXEPGDatabase() (err error) {
 						}
 
 					} else {
+
 						// Compare the Stream to the Channel in the Database using the Channel Name
 						if dxc.Name == m3uChannel.Name {
 							channelExists = true
@@ -379,6 +380,40 @@ func createXEPGDatabase() (err error) {
 						}
 
 					}
+
+					// Rename the Channel if names are different, update regex is specified and matches new channel name
+					if dxc.Name == m3uChannel.Name {
+						continue
+					}
+					if len(dxc.UpdateChannelNameRegex) == 0 {
+						continue
+					}
+					nameRx, err := regexp.Compile(dxc.UpdateChannelNameRegex)
+					if err != nil {
+						ShowError(err, 1018)
+						continue
+					}
+					if nameRx.MatchString(m3uChannel.Name) == false {
+						continue
+					}
+					if len(dxc.UpdateChannelNameByGroupRegex) > 0 {
+						groupRx, err := regexp.Compile(dxc.UpdateChannelNameByGroupRegex)
+						if err != nil {
+							ShowError(err, 1018)
+							continue
+						}
+						if groupRx.MatchString(dxc.XGroupTitle) == false {
+							// Found the channel name to update but it has wrong group
+							continue
+						}
+					}
+					showInfo("XEPG:" + fmt.Sprintf("Renaming the channel '%v' to '%v'", dxc.Name, m3uChannel.Name))
+					channelExists = true
+					// dxc.Name will be assigned later in channelExists switch
+					dxc.XName = m3uChannel.Name
+					currentXEPGID = dxc.XEPG
+					Data.XEPG.Channels[currentXEPGID] = dxc
+					break
 
 				}
 
@@ -649,7 +684,6 @@ func mapping() (err error) {
 func createXMLTVFile() (err error) {
 
 	// Image Cache
-	// 4edd81ab7c368208cc6448b615051b37.jpg
 	var imgc = Data.Cache.Images
 
 	Data.Cache.ImagesFiles = []string{}
@@ -755,7 +789,6 @@ func getProgramData(xepgChannel XEPGChannelStruct) (xepgXML XMLTV, err error) {
 	for _, xmltvProgram := range xmltv.Program {
 
 		if xmltvProgram.Channel == channelID {
-			//fmt.Println(&channelID)
 			var program = &Program{}
 
 			// Channel ID
@@ -1040,8 +1073,6 @@ func createM3UFile() {
 
 // Clean up the XEPG Database
 func cleanupXEPG() {
-
-	//fmt.Println(Settings.Files.M3U)
 
 	var sourceIDs []string
 

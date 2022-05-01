@@ -226,6 +226,7 @@
       "chNo": "Ch. No.",
       "logo": "Logo",
       "channelName": "Channel Name",
+      "updateChannelNameRegex": "Upd. Rx.",
       "playlist": "Playlist",
       "groupTitle": "Group Title",
       "xmltvFile": "XMLTV File",
@@ -255,6 +256,18 @@
       "title": "Update Channel Name",
       "placeholder": "",
       "description": ""
+    },
+    "updateChannelNameRegex":
+    {
+      "title": "Channel name update regex",
+      "placeholder": "For example ^PPV.?1.*",
+      "description": "On update, if any new channel name matches this regex, rename current channel to the first matching name"
+    },
+    "updateChannelNameByGroupRegex":
+    {
+      "title": "Only by group regex",
+      "placeholder": "",
+      "description": "Rename this channel only if current user-defined group matches this regex"
     },
     "updateChannelGroup":
     {

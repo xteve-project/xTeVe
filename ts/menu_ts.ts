@@ -64,7 +64,7 @@ class MainMenuItem extends MainMenu {
         break
 
       case "mapping":
-        this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}", "{{.mapping.table.timeshift}}"]
+        this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.updateChannelNameRegex}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}", "{{.mapping.table.timeshift}}"]
         break
 
     }
@@ -441,6 +441,16 @@ class Content {
           td.id = key          
           tr.appendChild(td)
 
+          // Update channel name regex
+          var cell:Cell = new Cell()
+          cell.child = true
+          cell.childType = "P"
+          cell.value = data[key]["update-channel-name-regex"]
+          var td = cell.createCell()
+          td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)')
+          td.id = key          
+          tr.appendChild(td)
+
           // Playlist
           var cell:Cell = new Cell()
           cell.child = true
@@ -778,20 +788,25 @@ class ShowContent extends Content {
             cell.onclick = true
             cell.onclickFunction = "javascript: sortTable(3);"
           }
-  
-          if (element == "{{.mapping.table.playlist}}") {
+
+          if (element == "{{.mapping.table.updateChannelNameRegex}}") {
             cell.onclick = true
             cell.onclickFunction = "javascript: sortTable(4);"
           }
   
-          if (element == "{{.mapping.table.groupTitle}}") {
+          if (element == "{{.mapping.table.playlist}}") {
             cell.onclick = true
             cell.onclickFunction = "javascript: sortTable(5);"
           }
   
+          if (element == "{{.mapping.table.groupTitle}}") {
+            cell.onclick = true
+            cell.onclickFunction = "javascript: sortTable(6);"
+          }
+  
           if (element == "{{.mapping.table.timeshift}}") {
             cell.onclick = true
-            cell.onclickFunction = "javascript: sortTable(8);"
+            cell.onclickFunction = "javascript: sortTable(9);"
           }
 
         }
@@ -1611,7 +1626,7 @@ function openPopUp(dataType, element) {
       input.setAttribute("onchange", "javascript: this.className = 'changed'")
       content.appendRow("{{.mapping.description.title}}", input)
 
-      // Update the channel name
+      // Update the channel x-name
       if (data.hasOwnProperty("_uuid.key")) {
         if (data["_uuid.key"] != "") {
           var dbKey:string = "x-update-channel-name"
@@ -1621,6 +1636,22 @@ function openPopUp(dataType, element) {
           content.appendRow("{{.mapping.updateChannelName.title}}", input)
         }
       }
+
+      // Channel name regex for updating the channel name
+      var dbKey:string = "update-channel-name-regex"
+      var input = content.createInput("text", dbKey, data[dbKey])
+      input.setAttribute("placeholder", "{{.mapping.updateChannelNameRegex.placeholder}}")
+      input.setAttribute("onchange", "javascript: this.className = 'changed'")
+      content.appendRow("{{.mapping.updateChannelNameRegex.title}}", input)
+      content.description("{{.mapping.updateChannelNameRegex.description}}")
+
+      // Channel group regex for updating the channel name
+      var dbKey:string = "update-channel-name-by-group-regex"
+      var input = content.createInput("text", dbKey, data[dbKey])
+      input.setAttribute("placeholder", "{{.mapping.updateChannelNameByGroupRegex.placeholder}}")
+      input.setAttribute("onchange", "javascript: this.className = 'changed'")
+      content.appendRow("{{.mapping.updateChannelNameByGroupRegex.title}}", input)
+      content.description("{{.mapping.updateChannelNameByGroupRegex.description}}")
 
       // Logo URL (Channel) 
       var dbKey:string = "tvg-logo"
@@ -2200,8 +2231,12 @@ function donePopupData(dataType:string, idsStr:string) {
           (document.getElementById(id).childNodes[3].firstChild as HTMLElement).className = value
           break
 
+        case "update-channel-name-regex":
+          (document.getElementById(id).childNodes[4].firstChild as HTMLElement).innerHTML = value
+          break
+
         case "x-group-title":
-          (document.getElementById(id).childNodes[5].firstChild as HTMLElement).innerHTML = value
+          (document.getElementById(id).childNodes[6].firstChild as HTMLElement).innerHTML = value
           break
 
         case "x-xmltv-file":
@@ -2213,7 +2248,7 @@ function donePopupData(dataType:string, idsStr:string) {
             input["x-active"] = false
           }
 
-          (document.getElementById(id).childNodes[6].firstChild as HTMLElement).innerHTML = value
+          (document.getElementById(id).childNodes[7].firstChild as HTMLElement).innerHTML = value
           break
 
         case "x-mapping":
@@ -2221,12 +2256,12 @@ function donePopupData(dataType:string, idsStr:string) {
             input["x-active"] = false
           }
 
-          (document.getElementById(id).childNodes[7].firstChild as HTMLElement).innerHTML = value
+          (document.getElementById(id).childNodes[8].firstChild as HTMLElement).innerHTML = value
    
           break
 
         case "x-timeshift":
-          (document.getElementById(id).childNodes[8].firstChild as HTMLElement).innerHTML = value
+          (document.getElementById(id).childNodes[9].firstChild as HTMLElement).innerHTML = value
           break
 
         default: 

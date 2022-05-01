@@ -183,33 +183,35 @@ type Filter struct {
 
 // XEPGChannelStruct : XEPG Structure
 type XEPGChannelStruct struct {
-	FileM3UID           string `json:"_file.m3u.id,required"`
-	FileM3UName         string `json:"_file.m3u.name,required"`
-	FileM3UPath         string `json:"_file.m3u.path,required"`
-	GroupTitle          string `json:"group-title,required"`
-	Name                string `json:"name,required"`
-	TvgID               string `json:"tvg-id,required"`
-	TvgLogo             string `json:"tvg-logo,required"`
-	TvgName             string `json:"tvg-name,required"`
-	TvgShift            string `json:"tvg-shift,required"`
-	URL                 string `json:"url,required"`
-	UUIDKey             string `json:"_uuid.key,required"`
-	UUIDValue           string `json:"_uuid.value,omitempty"`
-	Values              string `json:"_values,required"`
-	XActive             bool   `json:"x-active,required"`
-	XCategory           string `json:"x-category,required"`
-	XChannelID          string `json:"x-channelID,required"`
-	XEPG                string `json:"x-epg,required"`
-	XGroupTitle         string `json:"x-group-title,required"`
-	XMapping            string `json:"x-mapping,required"`
-	XmltvFile           string `json:"x-xmltv-file,required"`
-	XName               string `json:"x-name,required"`
-	XUpdateChannelIcon  bool   `json:"x-update-channel-icon,required"`
-	XUpdateChannelName  bool   `json:"x-update-channel-name,required"`
-	XUpdateChannelGroup bool   `json:"x-update-channel-group,required"`
-	XDescription        string `json:"x-description,required"`
-	XTimeshift          string `json:"x-timeshift,required"`
-	DefaultMissingEPG   string `json:"x-default-missing-epg,required"`
+	FileM3UID                     string `json:"_file.m3u.id,required"`
+	FileM3UName                   string `json:"_file.m3u.name,required"`
+	FileM3UPath                   string `json:"_file.m3u.path,required"`
+	GroupTitle                    string `json:"group-title,required"`
+	Name                          string `json:"name,required"`
+	TvgID                         string `json:"tvg-id,required"`
+	TvgLogo                       string `json:"tvg-logo,required"`
+	TvgName                       string `json:"tvg-name,required"`
+	TvgShift                      string `json:"tvg-shift,required"`
+	UpdateChannelNameRegex        string `json:"update-channel-name-regex,required"`
+	UpdateChannelNameByGroupRegex string `json:"update-channel-name-by-group-regex,required"`
+	URL                           string `json:"url,required"`
+	UUIDKey                       string `json:"_uuid.key,required"`
+	UUIDValue                     string `json:"_uuid.value,omitempty"`
+	Values                        string `json:"_values,required"`
+	XActive                       bool   `json:"x-active,required"`
+	XCategory                     string `json:"x-category,required"`
+	XChannelID                    string `json:"x-channelID,required"`
+	XEPG                          string `json:"x-epg,required"`
+	XGroupTitle                   string `json:"x-group-title,required"`
+	XMapping                      string `json:"x-mapping,required"`
+	XmltvFile                     string `json:"x-xmltv-file,required"`
+	XName                         string `json:"x-name,required"`
+	XUpdateChannelIcon            bool   `json:"x-update-channel-icon,required"`
+	XUpdateChannelName            bool   `json:"x-update-channel-name,required"`
+	XUpdateChannelGroup           bool   `json:"x-update-channel-group,required"`
+	XDescription                  string `json:"x-description,required"`
+	XTimeshift                    string `json:"x-timeshift,required"`
+	DefaultMissingEPG             string `json:"x-default-missing-epg,required"`
 }
 
 // M3UChannelStructXEPG : M3U Structure for XEPG
