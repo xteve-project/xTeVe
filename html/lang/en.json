@@ -260,7 +260,7 @@
     "updateChannelNameRegex":
     {
       "title": "Channel name update regex",
-      "placeholder": "For example ^PPV.?1.*",
+      "placeholder": "For example ^PPV[ \\\\-_]?1.*",
       "description": "On update, if any new channel name matches this regex, rename current channel to the first matching name"
     },
     "updateChannelNameByGroupRegex":
