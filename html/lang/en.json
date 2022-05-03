@@ -400,6 +400,11 @@
       "title": "API Interface",
       "description": "Via API interface it is possible to send commands to xTeVe. API documentation is <a href='https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md#api'>here</a>"
     },
+    "disallowURLDuplicates":
+    {
+      "title": "Disallow URL duplicates",
+      "description": "If checked, do not add a new channel from playlist if channel with such URL already exists"
+    },
     "epgSource":
     {
       "title": "EPG Source",

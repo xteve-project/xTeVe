@@ -24,6 +24,7 @@ import (
 
 	"github.com/avfs/avfs/vfs/memfs"
 	"github.com/avfs/avfs/vfs/osfs"
+	"github.com/samber/lo"
 )
 
 func createStreamID(stream map[int]ThisStream) (streamID int) {
@@ -368,7 +369,7 @@ func bufferingStream(playlistID, streamingURL, channelName string, w http.Respon
 
 							}
 
-							var n = indexOfString(f, oldSegments)
+							var n = lo.IndexOf(oldSegments, f)
 
 							if n > 20 {
 
@@ -440,7 +441,7 @@ func getBufTmpFiles(stream *ThisStream) (tmpFiles []string) {
 
 				var fileName = fmt.Sprintf("%d.ts", int64(file))
 
-				if indexOfString(fileName, stream.OldSegments) == -1 {
+				if lo.IndexOf(stream.OldSegments, fileName) == -1 {
 					tmpFiles = append(tmpFiles, fileName)
 					stream.OldSegments = append(stream.OldSegments, fileName)
 				}

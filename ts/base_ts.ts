@@ -21,7 +21,7 @@ menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.p
 
 // Settings categories
 var settingsCategory = new Array()
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "tlsMode,xteveAutoUpdate,hostIP,tuner,epgSource,api"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "tlsMode,xteveAutoUpdate,hostIP,tuner,epgSource,disallowURLDuplicates,api"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,udpxy,buffer.size.kb,storeBufferInRAM,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.backup}}", "backup.path,backup.keep"))

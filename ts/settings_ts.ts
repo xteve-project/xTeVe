@@ -160,6 +160,20 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
+      case "disallowURLDuplicates":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.disallowURLDuplicates.title}}" + ":"
+  
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+  
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       case "authentication.web":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.authenticationWEB.title}}" + ":"
@@ -448,6 +462,10 @@ class SettingsCategory {
         text = "{{.settings.tlsMode.description}}"
         break
 
+      case "disallowURLDuplicates":
+        text = "{{.settings.disallowURLDuplicates.description}}"
+        break
+  
       case "authentication.web":
         text = "{{.settings.authenticationWEB.description}}"
         break

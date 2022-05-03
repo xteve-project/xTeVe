@@ -800,6 +800,7 @@ func buildDatabaseDVR() (err error) {
 
 	var availableFileTypes = []string{"m3u", "hdhr"}
 
+	var urlValuesMap = make(map[string]string)
 	var tmpGroupsM3U = make(map[string]int64)
 
 	err = createFilterRules()
@@ -844,6 +845,15 @@ func buildDatabaseDVR() (err error) {
 				s["_file.m3u.path"] = i
 				s["_file.m3u.name"] = playlistName
 				s["_file.m3u.id"] = id
+
+				if Settings.DisallowURLDuplicates {
+					if _, haveURL := urlValuesMap[s["url"]]; haveURL {
+						showInfo("Streams:" + fmt.Sprintf("Found duplicated URL %v, ignoring the channel %v", s["url"], s["name"]))
+						continue
+					} else {
+						urlValuesMap[s["url"]] = s["_values"]
+					}
+				}
 
 				// Calculate Compatibility
 				for _, key := range keys {

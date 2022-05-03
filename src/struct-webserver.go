@@ -29,6 +29,7 @@ type RequestStruct struct {
 		BufferSize               *int      `json:"buffer.size.kb, omitempty"`
 		BufferTimeout            *float64  `json:"buffer.timeout,omitempty"`
 		CacheImages              *bool     `json:"cache.images,omitempty"`
+		DisallowURLDuplicates    *bool     `json:"disallowURLDuplicates,omitempty"`
 		EpgSource                *string   `json:"epgSource,omitempty"`
 		FFmpegOptions            *string   `json:"ffmpeg.options,omitempty"`
 		FFmpegPath               *string   `json:"ffmpeg.path,omitempty"`
@@ -108,7 +109,7 @@ type ResponseStruct struct {
 	Alert               string                 `json:"alert,omitempty"`
 	ConfigurationWizard bool                   `json:"configurationWizard,required"`
 	Error               string                 `json:"err,omitempty"`
-	IPAddressesV4Host   []string               `json:"ipAddressesV4Host"`// Every IPv4 address to display in web client
+	IPAddressesV4Host   []string               `json:"ipAddressesV4Host"` // Every IPv4 address to display in web client
 	Log                 WebScreenLogStruct     `json:"log,required"`
 	LogoURL             string                 `json:"logoURL,omitempty"`
 	OpenLink            string                 `json:"openLink,omitempty"`

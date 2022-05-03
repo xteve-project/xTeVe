@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
+
+	"github.com/samber/lo"
 )
 
 func makeInteraceFromHDHR(content []byte, playlistName, id string) (channels []interface{}, err error) {
@@ -222,7 +224,7 @@ func getGuideNumberPMS(channelName string) (pmsID string, err error) {
 			ids = append(ids, v)
 		}
 
-		if indexOfString(id, ids) != -1 {
+		if lo.IndexOf(ids, id) != -1 {
 			i++
 			goto newID
 		}

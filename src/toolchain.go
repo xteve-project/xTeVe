@@ -451,28 +451,6 @@ func parseTemplate(content string, tmpMap map[string]interface{}) (result string
 	return
 }
 
-func indexOfString(element string, data []string) int {
-
-	for k, v := range data {
-		if element == v {
-			return k
-		}
-	}
-
-	return -1
-}
-
-func indexOfFloat64(element float64, data []float64) int {
-
-	for k, v := range data {
-		if element == v {
-			return (k)
-		}
-	}
-
-	return -1
-}
-
 func getMD5(str string) string {
 
 	md5Hasher := md5.New()

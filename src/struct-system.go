@@ -275,26 +275,27 @@ type Notification struct {
 
 // SettingsStruct : Content of settings.json
 type SettingsStruct struct {
-	API               bool     `json:"api"`
-	AuthenticationAPI bool     `json:"authentication.api"`
-	AuthenticationM3U bool     `json:"authentication.m3u"`
-	AuthenticationPMS bool     `json:"authentication.pms"`
-	AuthenticationWEB bool     `json:"authentication.web"`
-	AuthenticationXML bool     `json:"authentication.xml"`
-	BackupKeep        int      `json:"backup.keep"`
-	BackupPath        string   `json:"backup.path"`
-	Branch            string   `json:"git.branch,omitempty"`
-	Buffer            string   `json:"buffer"`
-	BufferSize        int      `json:"buffer.size.kb"`
-	BufferTimeout     float64  `json:"buffer.timeout"`
-	CacheImages       bool     `json:"cache.images"`
-	EpgSource         string   `json:"epgSource"`
-	FFmpegOptions     string   `json:"ffmpeg.options"`
-	FFmpegPath        string   `json:"ffmpeg.path"`
-	VLCOptions        string   `json:"vlc.options"`
-	VLCPath           string   `json:"vlc.path"`
-	FileM3U           []string `json:"file,omitempty"`  // In the Wizard, the M3U is saved in a Slice
-	FileXMLTV         []string `json:"xmltv,omitempty"` // Old Storage System of the provider XML File Slice (Required for the conversion to the new one)
+	API                   bool     `json:"api"`
+	AuthenticationAPI     bool     `json:"authentication.api"`
+	AuthenticationM3U     bool     `json:"authentication.m3u"`
+	AuthenticationPMS     bool     `json:"authentication.pms"`
+	AuthenticationWEB     bool     `json:"authentication.web"`
+	AuthenticationXML     bool     `json:"authentication.xml"`
+	BackupKeep            int      `json:"backup.keep"`
+	BackupPath            string   `json:"backup.path"`
+	Branch                string   `json:"git.branch,omitempty"`
+	Buffer                string   `json:"buffer"`
+	BufferSize            int      `json:"buffer.size.kb"`
+	BufferTimeout         float64  `json:"buffer.timeout"`
+	CacheImages           bool     `json:"cache.images"`
+	DisallowURLDuplicates bool     `json:"disallowURLDuplicates"`
+	EpgSource             string   `json:"epgSource"`
+	FFmpegOptions         string   `json:"ffmpeg.options"`
+	FFmpegPath            string   `json:"ffmpeg.path"`
+	VLCOptions            string   `json:"vlc.options"`
+	VLCPath               string   `json:"vlc.path"`
+	FileM3U               []string `json:"file,omitempty"`  // In the Wizard, the M3U is saved in a Slice
+	FileXMLTV             []string `json:"xmltv,omitempty"` // Old Storage System of the provider XML File Slice (Required for the conversion to the new one)
 
 	Files struct {
 		HDHR  map[string]interface{} `json:"hdhr"`

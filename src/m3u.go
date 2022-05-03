@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/samber/lo"
 	m3u "xteve/src/internal/m3u-parser"
 )
 
@@ -198,7 +199,7 @@ func buildM3U(groups []string) (m3u string, err error) {
 
 				if len(groups) > 0 {
 
-					if indexOfString(xepgChannel.XGroupTitle, groups) == -1 {
+					if lo.IndexOf(groups, xepgChannel.XGroupTitle) == -1 {
 						goto Done
 					}
 

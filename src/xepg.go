@@ -18,6 +18,8 @@ import (
 	"time"
 
 	"xteve/src/internal/imgcache"
+
+	"github.com/samber/lo"
 )
 
 // Check provider XMLTV File
@@ -202,7 +204,6 @@ func createXEPGMapping() {
 		}
 
 		Data.XMLTV.Mapping = tmpMap
-		tmpMap = make(map[string]interface{})
 
 	} else {
 
@@ -274,7 +275,7 @@ func createXEPGDatabase() (err error) {
 
 		for {
 
-			if indexOfFloat64(firstFreeNumber, allChannelNumbers) == -1 {
+			if lo.IndexOf(allChannelNumbers, firstFreeNumber) == -1 {
 				xChannelID = fmt.Sprintf("%g", firstFreeNumber)
 				allChannelNumbers = append(allChannelNumbers, firstFreeNumber)
 				return
@@ -284,7 +285,6 @@ func createXEPGDatabase() (err error) {
 
 		}
 
-		return
 	}
 
 	var generateHashForChannel = func(m3uID string, name string, groupTitle string, tvgID string, tvgName string, uuidKey string, uuidValue string) string {
@@ -382,6 +382,7 @@ func createXEPGDatabase() (err error) {
 					}
 
 					// Rename the Channel if names are different, update regex is specified and matches new channel name
+					// TODO: Bugs here. Make regex length check first. Move this block above uuid checks. Replace continue with break (?)
 					if dxc.Name == m3uChannel.Name {
 						continue
 					}
@@ -579,24 +580,24 @@ func mapping() (err error) {
 								xmltvNameSolid := strings.ReplaceAll(xmltvName.Value, " ", "")
 								xepgNameSolid := strings.ReplaceAll(xepgChannel.Name, " ", "")
 
-								if strings.EqualFold(xmltvNameSolid, xepgNameSolid) {
-									xepgChannel.XmltvFile = file
-									xepgChannel.XMapping = xmltvChannel.(map[string]interface{})["id"].(string)
-									// xepgChannel.XActive = true
-
-									// If there is a Logo in the XMLTV file, this will be used.
-									// If not, then the Logo from the M3U file.
-									if icon, ok := xmltvChannel.(map[string]interface{})["icon"].(string); ok {
-										if len(icon) > 0 {
-											xepgChannel.TvgLogo = icon
-										}
-									}
-
-									break xmltvMapLoop
+								if strings.EqualFold(xmltvNameSolid, xepgNameSolid) == false {
+									continue
 								}
 
-							}
+								xepgChannel.XmltvFile = file
+								xepgChannel.XMapping = xmltvChannel.(map[string]interface{})["id"].(string)
+								// xepgChannel.XActive = true
 
+								// If there is a Logo in the XMLTV file, this will be used.
+								// If not, then the Logo from the M3U file.
+								if icon, ok := xmltvChannel.(map[string]interface{})["icon"].(string); ok {
+									if len(icon) > 0 {
+										xepgChannel.TvgLogo = icon
+									}
+								}
+
+								break xmltvMapLoop
+							}
 						}
 
 					}
@@ -695,7 +696,7 @@ func createXMLTVFile() (err error) {
 
 		for _, file := range files {
 
-			if indexOfString(file.Name(), Data.Cache.ImagesCache) == -1 {
+			if lo.IndexOf(Data.Cache.ImagesCache, file.Name()) == -1 {
 				Data.Cache.ImagesCache = append(Data.Cache.ImagesCache, file.Name())
 			}
 
@@ -1088,25 +1089,22 @@ func cleanupXEPG() {
 	Data.XEPG.XEPGCount = 0
 
 	for id, dxc := range Data.XEPG.Channels {
-
 		var xepgChannel XEPGChannelStruct
 		err := json.Unmarshal([]byte(mapToJSON(dxc)), &xepgChannel)
-		if err == nil {
-
-			if indexOfString(xepgChannel.Name+xepgChannel.FileM3UID, Data.Cache.Streams.Active) == -1 {
-				delete(Data.XEPG.Channels, id)
-			} else {
-				if xepgChannel.XActive == true {
-					Data.XEPG.XEPGCount++
-				}
-			}
-
-			if indexOfString(xepgChannel.FileM3UID, sourceIDs) == -1 {
-				delete(Data.XEPG.Channels, id)
-			}
-
+		if err != nil {
+			continue
 		}
-
+		if lo.IndexOf(Data.Cache.Streams.Active, xepgChannel.Name+xepgChannel.FileM3UID) == -1 {
+			delete(Data.XEPG.Channels, id)
+			continue
+		}
+		if lo.IndexOf(sourceIDs, xepgChannel.FileM3UID) == -1 {
+			delete(Data.XEPG.Channels, id)
+			continue
+		}
+		if xepgChannel.XActive {
+			Data.XEPG.XEPGCount++
+		}
 	}
 
 	err := saveMapToJSONFile(System.File.XEPG, Data.XEPG.Channels)
