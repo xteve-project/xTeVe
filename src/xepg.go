@@ -381,8 +381,12 @@ func createXEPGDatabase() (err error) {
 
 					}
 
-					// Rename the Channel if names are different, update regex is specified and matches new channel name
+					// Rename the Channel if it's update regex matches new channel name
 					if len(dxc.UpdateChannelNameRegex) == 0 {
+						continue
+					}
+					// Guard against the situation when both channels have UUIDValue, they are different, but names are the same
+					if dxc.Name == m3uChannel.Name {
 						continue
 					}
 					nameRx, err := regexp.Compile(dxc.UpdateChannelNameRegex)
