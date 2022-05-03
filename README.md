@@ -124,6 +124,10 @@ When the branch is changed, an update is only performed if there is a new versio
 
 #### 1. Download source code
 
+```sh
+git clone https://github.com/SCP002/xTeVe.git
+```
+
 #### 2. Install dependencies
 
 ```sh
@@ -147,7 +151,7 @@ go get github.com/stretchr/testify
 go get -u ./...
 ```
 
-#### 4. Update web files (optional)
+#### 5. Update web files (optional)
 
 If TypeScript files were changed, run:
 
