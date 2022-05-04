@@ -85,7 +85,6 @@ function getLocalData(dataType, id):object {
         data["type"] = "group-title"
         data["preserveMapping"] = true
         data["startingChannel"] = SERVER["settings"]["mapping.first.channel"]
-        data["defaultMissingEPG"] = "-"
         SERVER["settings"]["filter"][id] = data
       }
       data = SERVER["settings"]["filter"][id]

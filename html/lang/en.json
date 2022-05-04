@@ -124,14 +124,7 @@
       "title": "Starting Channel Number",
       "placeholder": "",
       "description": ""
-    },
-    "defaultMissingEPG":
-    {
-      "title": "Fill Missing EPG Data",
-      "placeholder": "",
-      "description": "When there is no matching EPG data for channel, <br>autofill with xTeVe dummy EPG data?"
     }
-
   },
   "playlist":
   {

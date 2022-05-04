@@ -178,7 +178,6 @@ type Filter struct {
 	Rule              string
 	Type              string
 	StartingChannel   string
-	DefaultMissingEPG string
 }
 
 // XEPGChannelStruct : XEPG Structure
@@ -211,7 +210,6 @@ type XEPGChannelStruct struct {
 	XUpdateChannelGroup           bool   `json:"x-update-channel-group,required"`
 	XDescription                  string `json:"x-description,required"`
 	XTimeshift                    string `json:"x-timeshift,required"`
-	DefaultMissingEPG             string `json:"x-default-missing-epg,required"`
 }
 
 // M3UChannelStructXEPG : M3U Structure for XEPG
@@ -231,7 +229,6 @@ type M3UChannelStructXEPG struct {
 	Values            string `json:"_values,required"`
 	PreserveMapping   string `json:"_preserve-mapping,required"`
 	StartingChannel   string `json:"_starting-channel,required"`
-	DefaultMissingEPG string `json:"_default-missing-epg,required"`
 }
 
 // FilterStruct : Filter Structure
@@ -247,7 +244,6 @@ type FilterStruct struct {
 	Rule              string `json:"rule,omitempty"`
 	Type              string `json:"type,required"`
 	StartingChannel   string `json:"startingChannel,required"`
-	DefaultMissingEPG string `json:"defaultMissingEPG,required"`
 }
 
 // StreamingURLS : Information on all Streaming URL's
