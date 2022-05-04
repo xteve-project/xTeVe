@@ -26,9 +26,10 @@ type RequestStruct struct {
 		BackupKeep               *int      `json:"backup.keep,omitempty"`
 		BackupPath               *string   `json:"backup.path,omitempty"`
 		Buffer                   *string   `json:"buffer,omitempty"`
-		BufferSize               *int      `json:"buffer.size.kb, omitempty"`
+		BufferSize               *int      `json:"buffer.size.kb,omitempty"`
 		BufferTimeout            *float64  `json:"buffer.timeout,omitempty"`
 		CacheImages              *bool     `json:"cache.images,omitempty"`
+		DefaultMissingEPG        *string   `json:"defaultMissingEPG,omitempty"`
 		DisallowURLDuplicates    *bool     `json:"disallowURLDuplicates,omitempty"`
 		EpgSource                *string   `json:"epgSource,omitempty"`
 		FFmpegOptions            *string   `json:"ffmpeg.options,omitempty"`

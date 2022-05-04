@@ -534,8 +534,14 @@ func mapping() (err error) {
 				var tvgID = xepgChannel.TvgID
 
 				// Set default for new Channel
-				xepgChannel.XmltvFile = "-"
-				xepgChannel.XMapping = "-"
+				if Settings.DefaultMissingEPG != "-" {
+					xepgChannel.XmltvFile = "xTeVe Dummy"
+					xepgChannel.XMapping = Settings.DefaultMissingEPG
+					// xepgChannel.XActive = true
+				} else {
+					xepgChannel.XmltvFile = "-"
+					xepgChannel.XMapping = "-"
+				}
 
 				Data.XEPG.Channels[xepg] = xepgChannel
 

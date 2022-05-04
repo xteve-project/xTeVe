@@ -301,6 +301,23 @@ class SettingsCategory {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "defaultMissingEPG":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.defaultMissingEPG.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var text = [
+                    "-", "30 Minutes (30_Minutes)", "60 Minutes (60_Minutes)", "90 Minutes (90_Minutes)",
+                    "120 Minutes (120_Minutes)", "180 Minutes (30_Minutes)", "240 Minutes (30_Minutes)", "360 Minutes (30_Minutes)"
+                ];
+                var values = [
+                    "-", "30_Minutes", "60_Minutes", "90_Minutes", "120_Minutes", "180_Minutes", "240_Minutes", "360_Minutes"
+                ];
+                var select = content.createSelect(text, values, data, settingsKey);
+                select.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(select);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "backup.keep":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.backupKeep.title}}" + ":";
@@ -431,6 +448,9 @@ class SettingsCategory {
                 break;
             case "api":
                 text = "{{.settings.api.description}}";
+                break;
+            case "defaultMissingEPG":
+                text = "{{.settings.defaultMissingEPG.description}}";
                 break;
             case "files.update":
                 text = "{{.settings.filesUpdate.description}}";

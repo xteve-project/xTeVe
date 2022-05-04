@@ -284,6 +284,7 @@ type SettingsStruct struct {
 	BufferSize            int      `json:"buffer.size.kb"`
 	BufferTimeout         float64  `json:"buffer.timeout"`
 	CacheImages           bool     `json:"cache.images"`
+	DefaultMissingEPG     string   `json:"defaultMissingEPG,required"`
 	DisallowURLDuplicates bool     `json:"disallowURLDuplicates"`
 	EpgSource             string   `json:"epgSource"`
 	FFmpegOptions         string   `json:"ffmpeg.options"`

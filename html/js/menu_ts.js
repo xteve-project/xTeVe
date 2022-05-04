@@ -1137,24 +1137,6 @@ function openPopUp(dataType, element) {
                     var input = content.createInput("text", dbKey, data[dbKey]);
                     input.setAttribute("placeholder", "{{.filter.startingChannel.placeholder}}");
                     content.appendRow("{{.filter.startingChannel.title}}", input);
-                    // Fill Missing EPG Data
-                    // The following code only works when xTeVe Dummy already exists
-                    // var dbKey:string = "defaultMissingEPG"
-                    // var xmltv:XMLTVFile = new XMLTVFile()
-                    // var select = xmltv.getPrograms("xTeVe Dummy", data[dbKey])
-                    // select.setAttribute("name", dbKey)
-                    // select.setAttribute("id", "popup-missing-epg")
-                    // The workaround is currently to hard code the xTeVe Dummy data
-                    var dbKey = "defaultMissingEPG";
-                    var listOptions = { "text": ["-", "30 Minutes (30_Minutes)", "60 Minutes (60_Minutes)", "90 Minutes (90_Minutes)",
-                            "120 Minutes (120_Minutes)", "180 Minutes (30_Minutes)", "240 Minutes (30_Minutes)", "360 Minutes (30_Minutes)"],
-                        "value": ["-", "30_Minutes", "60_Minutes", "90_Minutes", "120_Minutes", "180_Minutes", "240_Minutes", "360_Minutes",] };
-                    var text = listOptions["text"];
-                    var values = listOptions["value"];
-                    var select = content.createSelect(text, values, data[dbKey], dbKey);
-                    select.setAttribute("onchange", "javascript: this.className = 'changed'");
-                    content.appendRow("{{.filter.defaultMissingEPG.title}}", select);
-                    content.description("{{.filter.defaultMissingEPG.description}}");
                     break;
                 default:
                     break;

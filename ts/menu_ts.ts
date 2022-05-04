@@ -1423,7 +1423,7 @@ function openPopUp(dataType, element) {
           input.setAttribute("placeholder", "{{.filter.startingChannel.placeholder}}")
           content.appendRow("{{.filter.startingChannel.title}}", input)
 
-          break
+          break;
       
         default:
           break;

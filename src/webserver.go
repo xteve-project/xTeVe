@@ -462,7 +462,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			var previousTLSMode = Settings.TLSMode
 			var previousHostIP = Settings.HostIP
 			var previousStoreBufferInRAM = Settings.StoreBufferInRAM
-
+			// TODO: Auto assign here if enabled
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
 
