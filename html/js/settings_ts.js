@@ -307,7 +307,7 @@ class SettingsCategory {
                 var tdRight = document.createElement("TD");
                 var text = [
                     "-", "30 Minutes (30_Minutes)", "60 Minutes (60_Minutes)", "90 Minutes (90_Minutes)",
-                    "120 Minutes (120_Minutes)", "180 Minutes (30_Minutes)", "240 Minutes (30_Minutes)", "360 Minutes (30_Minutes)"
+                    "120 Minutes (120_Minutes)", "180 Minutes (180_Minutes)", "240 Minutes (240_Minutes)", "360 Minutes (360_Minutes)"
                 ];
                 var values = [
                     "-", "30_Minutes", "60_Minutes", "90_Minutes", "120_Minutes", "180_Minutes", "240_Minutes", "360_Minutes"

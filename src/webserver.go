@@ -462,7 +462,8 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			var previousTLSMode = Settings.TLSMode
 			var previousHostIP = Settings.HostIP
 			var previousStoreBufferInRAM = Settings.StoreBufferInRAM
-			// TODO: Auto assign here if enabled
+			var previousDefaultMissingEPG = Settings.DefaultMissingEPG
+
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
 
@@ -492,6 +493,12 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 				if Settings.StoreBufferInRAM != previousStoreBufferInRAM {
 					initBufferVFS(Settings.StoreBufferInRAM)
+				}
+
+				if Settings.DefaultMissingEPG != "-" && previousDefaultMissingEPG == "-" {
+					System.ScanInProgress = 1
+					mapping()
+					System.ScanInProgress = 0
 				}
 
 			}
