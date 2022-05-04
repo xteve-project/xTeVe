@@ -116,6 +116,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["buffer.timeout"] = 500
 	defaults["buffer"] = "-"
 	defaults["cache.images"] = false
+	defaults["clearXMLTVCache"] = false
 	defaults["defaultMissingEPG"] = "-"
 	defaults["disallowURLDuplicates"] = false
 	defaults["enableMappedChannels"] = false

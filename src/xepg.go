@@ -96,7 +96,9 @@ func buildXEPG(background bool) {
 
 				System.ScanInProgress = 0
 
-				// clearXMLTVCache()
+				if Settings.ClearXMLTVCache {
+					clearXMLTVCache()
+				}
 
 			}()
 
@@ -136,7 +138,9 @@ func buildXEPG(background bool) {
 
 				System.ScanInProgress = 0
 
-				// clearXMLTVCache()
+				if Settings.ClearXMLTVCache {
+					clearXMLTVCache()
+				}
 
 			}()
 

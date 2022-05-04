@@ -314,6 +314,20 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
+      case "clearXMLTVCache":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.clearXMLTVCache.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       case "api":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.api.title}}" + ":"
@@ -589,6 +603,10 @@ class SettingsCategory {
 
       case "update":
         text = "{{.settings.update.description}}"
+        break
+
+      case "clearXMLTVCache":
+        text = "{{.settings.clearXMLTVCache.description}}"
         break
 
       case "api":

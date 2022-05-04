@@ -284,6 +284,7 @@ type SettingsStruct struct {
 	BufferSize            int      `json:"buffer.size.kb"`
 	BufferTimeout         float64  `json:"buffer.timeout"`
 	CacheImages           bool     `json:"cache.images"`
+	ClearXMLTVCache       bool     `json:"clearXMLTVCache"`
 	DefaultMissingEPG     string   `json:"defaultMissingEPG,required"`
 	DisallowURLDuplicates bool     `json:"disallowURLDuplicates"`
 	EnableMappedChannels  bool     `json:"enableMappedChannels"`

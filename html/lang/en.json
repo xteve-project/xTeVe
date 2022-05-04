@@ -394,6 +394,11 @@
       "title": "API Interface",
       "description": "Via API interface it is possible to send commands to xTeVe. API documentation is <a href='https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md#api'>here</a>"
     },
+    "clearXMLTVCache":
+    {
+      "title": "Clear XMLTV cache",
+      "description": "If checked, do not keep XMLTV cache in memory.<br>Significally reduces RAM usage in idle mode,<br>but significally slowing down every subsequent update in XEPG database."
+    },
     "defaultMissingEPG":
     {
       "title": "Fill Missing EPG Data",

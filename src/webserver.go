@@ -462,6 +462,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			var previousTLSMode = Settings.TLSMode
 			var previousHostIP = Settings.HostIP
 			var previousStoreBufferInRAM = Settings.StoreBufferInRAM
+			var previousClearXMLTVCache = Settings.ClearXMLTVCache
 
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
@@ -492,6 +493,10 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 				if Settings.StoreBufferInRAM != previousStoreBufferInRAM {
 					initBufferVFS(Settings.StoreBufferInRAM)
+				}
+
+				if Settings.ClearXMLTVCache && previousClearXMLTVCache == false {
+					clearXMLTVCache()
 				}
 
 			}

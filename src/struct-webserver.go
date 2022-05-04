@@ -29,6 +29,7 @@ type RequestStruct struct {
 		BufferSize               *int      `json:"buffer.size.kb,omitempty"`
 		BufferTimeout            *float64  `json:"buffer.timeout,omitempty"`
 		CacheImages              *bool     `json:"cache.images,omitempty"`
+		ClearXMLTVCache          *bool     `json:"clearXMLTVCache,omitempty"`
 		DefaultMissingEPG        *string   `json:"defaultMissingEPG,omitempty"`
 		DisallowURLDuplicates    *bool     `json:"disallowURLDuplicates,omitempty"`
 		EnableMappedChannels     *bool     `json:"enableMappedChannels,omitempty"`
