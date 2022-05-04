@@ -25,8 +25,6 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 	var createXEPGFiles = false
 	var debug string
 
-	// -vvv [URL] --sout '#transcode{vcodec=mp4v, acodec=mpga} :standard{access=http, mux=ogg}'
-
 	for key, value := range newSettings {
 
 		if _, ok := oldSettings[key]; ok {
@@ -101,6 +99,18 @@ func updateServerSettings(request RequestStruct) (settings SettingsStruct, err e
 
 			case "scheme.m3u", "scheme.xml":
 				createXEPGFiles = true
+
+			case "defaultMissingEPG":
+				// If DefaultMissingEPG was set, rebuild DVR and XEPG database
+				if newSettings["defaultMissingEPG"] != "-" && oldSettings["defaultMissingEPG"] == "-" {
+					reloadData = true
+				}
+
+			case "enableMappedChannels":
+				// If EnableMappedChannels was turned on, rebuild DVR and XEPG database
+				if newSettings["enableMappedChannels"] == true && oldSettings["enableMappedChannels"] == false {
+					reloadData = true
+				}
 
 			}
 
