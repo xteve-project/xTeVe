@@ -463,6 +463,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			var previousHostIP = Settings.HostIP
 			var previousStoreBufferInRAM = Settings.StoreBufferInRAM
 			var previousDefaultMissingEPG = Settings.DefaultMissingEPG
+			var previousEnableMappedChannels = Settings.EnableMappedChannels
 
 			response.Settings, err = updateServerSettings(request)
 			if err == nil {
@@ -496,9 +497,17 @@ func WS(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if Settings.DefaultMissingEPG != "-" && previousDefaultMissingEPG == "-" {
+					// TODO: Probably will have to run these two when with auto enable it will not reflect changes in m3u
+					// buildDatabaseDVR()
+					// buildXEPG(false)
 					System.ScanInProgress = 1
 					mapping()
 					System.ScanInProgress = 0
+				}
+
+				if Settings.EnableMappedChannels && previousEnableMappedChannels == false {
+					buildDatabaseDVR()
+					buildXEPG(false)
 				}
 
 			}

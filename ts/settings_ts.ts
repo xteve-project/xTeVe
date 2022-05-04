@@ -328,6 +328,20 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
+      case "enableMappedChannels":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.enableMappedChannels.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       // Select
       case "hostIP":
         var tdLeft = document.createElement("TD")
@@ -583,6 +597,10 @@ class SettingsCategory {
 
       case "defaultMissingEPG":
         text = "{{.settings.defaultMissingEPG.description}}"
+        break
+
+      case "enableMappedChannels":
+        text = "{{.settings.enableMappedChannels.description}}"
         break
 
       case "files.update":

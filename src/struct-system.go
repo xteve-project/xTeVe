@@ -286,6 +286,7 @@ type SettingsStruct struct {
 	CacheImages           bool     `json:"cache.images"`
 	DefaultMissingEPG     string   `json:"defaultMissingEPG,required"`
 	DisallowURLDuplicates bool     `json:"disallowURLDuplicates"`
+	EnableMappedChannels  bool     `json:"enableMappedChannels"`
 	EpgSource             string   `json:"epgSource"`
 	FFmpegOptions         string   `json:"ffmpeg.options"`
 	FFmpegPath            string   `json:"ffmpeg.path"`

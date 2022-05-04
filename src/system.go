@@ -118,6 +118,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["cache.images"] = false
 	defaults["defaultMissingEPG"] = "-"
 	defaults["disallowURLDuplicates"] = false
+	defaults["enableMappedChannels"] = false
 	defaults["epgSource"] = "PMS"
 	defaults["ffmpeg.options"] = System.FFmpeg.DefaultOptions
 	defaults["files.update"] = true

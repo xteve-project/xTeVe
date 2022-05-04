@@ -31,6 +31,7 @@ type RequestStruct struct {
 		CacheImages              *bool     `json:"cache.images,omitempty"`
 		DefaultMissingEPG        *string   `json:"defaultMissingEPG,omitempty"`
 		DisallowURLDuplicates    *bool     `json:"disallowURLDuplicates,omitempty"`
+		EnableMappedChannels     *bool     `json:"enableMappedChannels,omitempty"`
 		EpgSource                *string   `json:"epgSource,omitempty"`
 		FFmpegOptions            *string   `json:"ffmpeg.options,omitempty"`
 		FFmpegPath               *string   `json:"ffmpeg.path,omitempty"`

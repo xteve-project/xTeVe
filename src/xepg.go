@@ -537,7 +537,6 @@ func mapping() (err error) {
 				if Settings.DefaultMissingEPG != "-" {
 					xepgChannel.XmltvFile = "xTeVe Dummy"
 					xepgChannel.XMapping = Settings.DefaultMissingEPG
-					// xepgChannel.XActive = true
 				} else {
 					xepgChannel.XmltvFile = "-"
 					xepgChannel.XMapping = "-"
@@ -554,7 +553,6 @@ func mapping() (err error) {
 
 							xepgChannel.XmltvFile = file
 							xepgChannel.XMapping = channelID
-							xepgChannel.XActive = true
 
 							// If there is a Logo in the XMLTV file, this will be used. If not, then the Logo from the M3U file
 							if icon, ok := channel.(map[string]interface{})["icon"].(string); ok {
@@ -584,7 +582,6 @@ func mapping() (err error) {
 
 								xepgChannel.XmltvFile = file
 								xepgChannel.XMapping = xmltvChannel.(map[string]interface{})["id"].(string)
-								// xepgChannel.XActive = true
 
 								// If there is a Logo in the XMLTV file, this will be used.
 								// If not, then the Logo from the M3U file.
@@ -594,6 +591,7 @@ func mapping() (err error) {
 									}
 								}
 
+								Data.XEPG.Channels[xepg] = xepgChannel
 								break xmltvMapLoop
 							}
 						}
@@ -602,10 +600,12 @@ func mapping() (err error) {
 
 				}
 
-				Data.XEPG.Channels[xepg] = xepgChannel
-
 			}
 
+		}
+
+		if Settings.EnableMappedChannels && (xepgChannel.XmltvFile != "-" || xepgChannel.XMapping != "-") {
+			xepgChannel.XActive = true
 		}
 
 		// Check whether the assigned XMLTV Files and Channels still exist.
