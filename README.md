@@ -117,7 +117,7 @@ docker create \
 docker start xteve
 ```
 
-### Attach to a started container
+#### Attach to a started container
 
 ```sh
 docker attach xteve
@@ -125,12 +125,12 @@ docker attach xteve
 
 To detach from a container, press `Ctrl + C`.
 
-### Access web UI
+#### Access web UI
 
 Open `http(s)://<ip>:<port>/web/` in browser, for example:
 `http://192.168.88.218:34400/web/`
 
-### Stop a running container
+#### Stop a running container
 
 ```sh
 docker stop xteve
