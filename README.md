@@ -71,6 +71,73 @@ If the certificate is signed by a certificate authority (CA), it should be the c
 
 ---
 
+## Docker
+
+### Get an image
+
+Pull from dockerhub:
+
+```sh
+docker pull scp002/xteve:latest
+```
+
+**OR** build your own image based on Dockerfile from this repository:
+
+```sh
+git clone https://github.com/SCP002/xTeVe.git
+cd xTeVe
+docker build --tag scp002/xteve .
+```
+
+### Create a container
+
+```sh
+docker create \
+    --tty \
+    --publish 34400:34400 \
+    --name xteve \
+    scp002/xteve
+```
+
+With the specific timezone, ip and port:
+
+```sh
+docker create \
+    --tty \
+    --env TZ=Europe/Amsterdam \
+    --env XTEVE_PORT=12345 \
+    --publish 192.168.88.218:12345:12345 \
+    --name xteve \
+    scp002/xteve
+```
+
+### Start a container
+
+```sh
+docker start xteve
+```
+
+### Attach to a started container
+
+```sh
+docker attach xteve
+```
+
+To detach from a container, press `Ctrl + C`.
+
+### Access web UI
+
+Open `http(s)://<ip>:<port>/web/` in browser, for example:
+`http://192.168.88.218:34400/web/`
+
+### Stop a running container
+
+```sh
+docker stop xteve
+```
+
+---
+
 ### xTeVe Beta branch
 
 New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the master branch.
@@ -186,20 +253,17 @@ gox -output="./xteve-build/{{.Dir}}_{{.OS}}_{{.Arch}}" ./
 
 ---
 
-## Fork without pull request :mega:
+## Forks
 
 When creating a fork, the xTeVe GitHub account must be changed from the source code or the update function disabled.
-Future updates of the xteve-project would update your fork. :wink:
 
 xteve.go - Line: 29
 
 ```go
-var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-Downloads", Update: true}
+var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Update: true}
 
-/*
-  Branch: GitHub Branch
-  User:   GitHub Username
-  Repo:   GitHub Repository
-  Update: Automatic updates from the GitHub repository [true|false]
-*/
+// Branch: GitHub Branch
+// User:   GitHub Username
+// Repo:   GitHub Repository
+// Update: Automatic updates from the GitHub repository [true|false]
 ```
