@@ -1,36 +1,20 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var WizardCategory = /** @class */ (function () {
-    function WizardCategory() {
+class WizardCategory {
+    constructor() {
         this.DocumentID = "content";
     }
-    WizardCategory.prototype.createCategoryHeadline = function (value) {
+    createCategoryHeadline(value) {
         var element = document.createElement("H4");
         element.innerHTML = value;
         return element;
-    };
-    return WizardCategory;
-}());
-var WizardItem = /** @class */ (function (_super) {
-    __extends(WizardItem, _super);
-    function WizardItem(key, headline) {
-        var _this = _super.call(this) || this;
-        _this.headline = headline;
-        _this.key = key;
-        return _this;
     }
-    WizardItem.prototype.createWizard = function () {
+}
+class WizardItem extends WizardCategory {
+    constructor(key, headline) {
+        super();
+        this.headline = headline;
+        this.key = key;
+    }
+    createWizard() {
         var headline = this.createCategoryHeadline(this.headline);
         var key = this.key;
         var content = new PopupContent();
@@ -78,16 +62,13 @@ var WizardItem = /** @class */ (function (_super) {
                 description = "{{.wizard.xmltv.description}}";
                 break;
             default:
-                console.log(key);
                 break;
         }
         var pre = document.createElement("PRE");
         pre.innerHTML = description;
         doc.appendChild(pre);
-        console.log(headline, key);
-    };
-    return WizardItem;
-}(WizardCategory));
+    }
+}
 function readyForConfiguration(wizard) {
     var server = new Server("getServerConfig");
     server.request(new Object());
@@ -106,7 +87,7 @@ function saveWizard() {
             case "SELECT":
                 name = config[i].name;
                 value = config[i].value;
-                // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+                // If the value is a number, store it as a number
                 if (isNaN(value)) {
                     wizard[name] = value;
                 }
@@ -137,7 +118,6 @@ function saveWizard() {
     data["wizard"] = wizard;
     var server = new Server(cmd);
     server.request(data);
-    console.log(data);
 }
 // Wizard
 var configurationWizard = new Array();

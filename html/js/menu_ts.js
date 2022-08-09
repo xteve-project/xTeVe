@@ -1,53 +1,37 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var MainMenu = /** @class */ (function () {
-    function MainMenu() {
+class MainMenu {
+    constructor() {
         this.DocumentID = "main-menu";
         this.HTMLTag = "LI";
         this.ImagePath = "img/";
     }
-    MainMenu.prototype.createIMG = function (src) {
-        var element = document.createElement("IMG");
+    createIMG(src) {
+        let element = document.createElement("IMG");
         element.setAttribute("src", this.ImagePath + src);
         return element;
-    };
-    MainMenu.prototype.createValue = function (value) {
-        var element = document.createElement("P");
+    }
+    createValue(value) {
+        let element = document.createElement("P");
         element.innerHTML = value;
         return element;
-    };
-    return MainMenu;
-}());
-var MainMenuItem = /** @class */ (function (_super) {
-    __extends(MainMenuItem, _super);
-    function MainMenuItem(menuKey, value, image, headline) {
-        var _this = _super.call(this) || this;
-        _this.menuKey = menuKey;
-        _this.value = value;
-        _this.imgSrc = image;
-        _this.headline = headline;
-        return _this;
     }
-    MainMenuItem.prototype.createItem = function () {
-        var item = document.createElement("LI");
+}
+class MainMenuItem extends MainMenu {
+    constructor(menuKey, value, image, headline) {
+        super();
+        this.menuKey = menuKey;
+        this.value = value;
+        this.imgSrc = image;
+        this.headline = headline;
+    }
+    createItem() {
+        let item = document.createElement("LI");
         item.setAttribute("onclick", "javascript: openThisMenu(this)");
         item.setAttribute("id", this.id);
-        var img = this.createIMG(this.imgSrc);
-        var value = this.createValue(this.value);
+        let img = this.createIMG(this.imgSrc);
+        let value = this.createValue(this.value);
         item.appendChild(img);
         item.appendChild(value);
-        var doc = document.getElementById(this.DocumentID);
+        let doc = document.getElementById(this.DocumentID);
         doc.appendChild(item);
         switch (this.menuKey) {
             case "playlist":
@@ -57,65 +41,63 @@ var MainMenuItem = /** @class */ (function (_super) {
                 this.tableHeader = ["{{.xmltv.table.guide}}", "{{.xmltv.table.lastUpdate}}", "{{.xmltv.table.availability}} %", "{{.xmltv.table.channels}}", "{{.xmltv.table.programs}}"];
                 break;
             case "filter":
-                this.tableHeader = ["{{.filter.table.name}}", "{{.filter.table.type}}", "{{.filter.table.filter}}"];
+                this.tableHeader = ["{{.filter.table.startingChannel}}", "{{.filter.table.name}}", "{{.filter.table.type}}", "{{.filter.table.filter}}"];
                 break;
             case "users":
                 this.tableHeader = ["{{.users.table.username}}", "{{.users.table.password}}", "{{.users.table.web}}", "{{.users.table.pms}}", "{{.users.table.m3u}}", "{{.users.table.xml}}", "{{.users.table.api}}"];
                 break;
             case "mapping":
-                this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}"];
+                this.tableHeader = ["BULK", "{{.mapping.table.chNo}}", "{{.mapping.table.logo}}", "{{.mapping.table.channelName}}", "{{.mapping.table.updateChannelNameRegex}}", "{{.mapping.table.playlist}}", "{{.mapping.table.groupTitle}}", "{{.mapping.table.xmltvFile}}", "{{.mapping.table.xmltvID}}", "{{.mapping.table.timeshift}}"];
                 break;
         }
-        //console.log(this.menuKey, this.tableHeader);
-    };
-    return MainMenuItem;
-}(MainMenu));
-var Content = /** @class */ (function () {
-    function Content() {
+    }
+}
+class Content {
+    constructor() {
         this.DocumentID = "content";
         this.TableID = "content_table";
         this.headerClass = "content_table_header";
         this.interactionID = "content-interaction";
     }
-    Content.prototype.createHeadline = function (value) {
-        var element = document.createElement("H3");
+    createHeadline(value) {
+        let element = document.createElement("H3");
         element.innerHTML = value;
         return element;
-    };
-    Content.prototype.createHR = function () {
-        var element = document.createElement("HR");
-        return element;
-    };
-    Content.prototype.createInteraction = function () {
-        var element = document.createElement("DIV");
+    }
+    createHR() {
+        return document.createElement("HR");
+    }
+    createInteraction() {
+        let element = document.createElement("DIV");
         element.setAttribute("id", this.interactionID);
         return element;
-    };
-    Content.prototype.createDIV = function () {
-        var element = document.createElement("DIV");
+    }
+    createDIV() {
+        let element = document.createElement("DIV");
         element.id = this.DivID;
         return element;
-    };
-    Content.prototype.createTABLE = function () {
-        var element = document.createElement("TABLE");
+    }
+    createTABLE() {
+        let element = document.createElement("TABLE");
         element.id = this.TableID;
         return element;
-    };
-    Content.prototype.createTableRow = function () {
-        var element = document.createElement("TR");
+    }
+    createTableRow() {
+        let element = document.createElement("TR");
         element.className = this.headerClass;
         return element;
-    };
-    Content.prototype.createTableContent = function (menuKey) {
-        var data = new Object();
-        var rows = new Array();
+    }
+    createTableContent(menuKey) {
+        let data = {};
+        let rows = [];
+        let fileTypes = [];
         switch (menuKey) {
             case "playlist":
-                var fileTypes = new Array("m3u", "hdhr");
-                fileTypes.forEach(function (fileType) {
+                fileTypes = ["m3u", "hdhr"];
+                fileTypes.forEach(fileType => {
                     data = SERVER["settings"]["files"][fileType];
-                    var keys = getObjKeys(data);
-                    keys.forEach(function (key) {
+                    var keys = getOwnObjProps(data);
+                    keys.forEach(key => {
                         var tr = document.createElement("TR");
                         tr.id = key;
                         tr.setAttribute('onclick', 'javascript: openPopUp("' + fileType + '", this)');
@@ -176,11 +158,16 @@ var Content = /** @class */ (function () {
             case "filter":
                 delete SERVER["settings"]["filter"][-1];
                 data = SERVER["settings"]["filter"];
-                var keys = getObjKeys(data);
-                keys.forEach(function (key) {
+                var keys = getOwnObjProps(data);
+                keys.forEach(key => {
                     var tr = document.createElement("TR");
                     tr.id = key;
                     tr.setAttribute('onclick', 'javascript: openPopUp("' + data[key]["type"] + '", this)');
+                    var cell = new Cell();
+                    cell.child = true;
+                    cell.childType = "P";
+                    cell.value = data[key]["startingChannel"];
+                    tr.appendChild(cell.createCell());
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
@@ -209,11 +196,11 @@ var Content = /** @class */ (function () {
                 });
                 break;
             case "xmltv":
-                var fileTypes = new Array("xmltv");
-                fileTypes.forEach(function (fileType) {
+                fileTypes = new Array("xmltv");
+                fileTypes.forEach(fileType => {
                     data = SERVER["settings"]["files"][fileType];
-                    var keys = getObjKeys(data);
-                    keys.forEach(function (key) {
+                    var keys = getOwnObjProps(data);
+                    keys.forEach(key => {
                         var tr = document.createElement("TR");
                         tr.id = key;
                         tr.setAttribute('onclick', 'javascript: openPopUp("' + fileType + '", this)');
@@ -247,11 +234,11 @@ var Content = /** @class */ (function () {
                 });
                 break;
             case "users":
-                var fileTypes = new Array("users");
-                fileTypes.forEach(function (fileType) {
+                fileTypes = new Array("users");
+                fileTypes.forEach(fileType => {
                     data = SERVER[fileType];
-                    var keys = getObjKeys(data);
-                    keys.forEach(function (key) {
+                    var keys = getOwnObjProps(data);
+                    keys.forEach(key => {
                         var tr = document.createElement("TR");
                         tr.id = key;
                         tr.setAttribute('onclick', 'javascript: openPopUp("' + fileType + '", this)');
@@ -323,13 +310,11 @@ var Content = /** @class */ (function () {
                 BULK_EDIT = false;
                 createSearchObj();
                 checkUndo("epgMapping");
-                console.log("MAPPING");
                 data = SERVER["xepg"]["epgMapping"];
-                var keys = getObjKeys(data);
-                keys.forEach(function (key) {
+                var keys = getOwnObjProps(data);
+                keys.forEach(key => {
                     var tr = document.createElement("TR");
                     tr.id = key;
-                    //tr.setAttribute('oncontextmenu', 'javascript: rightClick(this)')
                     switch (data[key]["x-active"]) {
                         case true:
                             tr.className = "activeEPG";
@@ -344,12 +329,11 @@ var Content = /** @class */ (function () {
                     cell.childType = "BULK";
                     cell.value = false;
                     tr.appendChild(cell.createCell());
-                    // Kanalnummer
+                    // Channel number
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "INPUTCHANNEL";
                     cell.value = data[key]["x-channelID"];
-                    //td.setAttribute('onclick', 'javascript: changeChannelNumber("' + key + '", this)')
                     tr.appendChild(cell.createCell());
                     // Logo
                     var cell = new Cell();
@@ -360,7 +344,7 @@ var Content = /** @class */ (function () {
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
                     td.id = key;
                     tr.appendChild(td);
-                    // Kanalname
+                    // Channel name
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
@@ -370,17 +354,25 @@ var Content = /** @class */ (function () {
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
                     td.id = key;
                     tr.appendChild(td);
+                    // Update channel name regex
+                    var cell = new Cell();
+                    cell.child = true;
+                    cell.childType = "P";
+                    cell.value = data[key]["update-channel-name-regex"];
+                    var td = cell.createCell();
+                    td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
+                    td.id = key;
+                    tr.appendChild(td);
                     // Playlist
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
-                    //cell.value = data[key]["_file.m3u.name"] 
                     cell.value = getValueFromProviderFile(data[key]["_file.m3u.id"], "m3u", "name");
                     var td = cell.createCell();
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
                     td.id = key;
                     tr.appendChild(td);
-                    // Gruppe (group-title)
+                    // Group (group-title)
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
@@ -389,7 +381,7 @@ var Content = /** @class */ (function () {
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
                     td.id = key;
                     tr.appendChild(td);
-                    // XMLTV Datei
+                    // XMLTV file
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
@@ -403,16 +395,24 @@ var Content = /** @class */ (function () {
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
                     td.id = key;
                     tr.appendChild(td);
-                    // XMLTV Kanal
+                    // XMLTV Channel
                     var cell = new Cell();
                     cell.child = true;
                     cell.childType = "P";
-                    //var value = str.substring(1, 4);
                     var value = data[key]["x-mapping"];
                     if (value.length > 20) {
                         value = data[key]["x-mapping"].substring(0, 20) + "...";
                     }
                     cell.value = value;
+                    var td = cell.createCell();
+                    td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
+                    td.id = key;
+                    tr.appendChild(td);
+                    // TimeShift
+                    var cell = new Cell();
+                    cell.child = true;
+                    cell.childType = "P";
+                    cell.value = data[key]["x-timeshift"];
                     var td = cell.createCell();
                     td.setAttribute('onclick', 'javascript: openPopUp("mapping", this)');
                     td.id = key;
@@ -424,18 +424,14 @@ var Content = /** @class */ (function () {
                 alert();
                 break;
             default:
-                console.log("Table content (menuKey):", menuKey);
                 break;
         }
         return rows;
-    };
-    return Content;
-}());
-var Cell = /** @class */ (function () {
-    function Cell() {
     }
-    Cell.prototype.createCell = function () {
-        var td = document.createElement("TD");
+}
+class Cell {
+    createCell() {
+        let td = document.createElement("TD");
         if (this.child == true) {
             var element;
             switch (this.childType) {
@@ -482,47 +478,44 @@ var Cell = /** @class */ (function () {
             td.innerHTML = this.value;
         }
         if (this.onclick == true) {
-            td.setAttribute("onclick", this.onclickFunktion);
+            td.setAttribute("onclick", this.onclickFunction);
             td.className = "pointer";
         }
         if (this.tdClassName != undefined) {
             td.className = this.tdClassName;
         }
         return td;
-    };
-    return Cell;
-}());
-var ShowContent = /** @class */ (function (_super) {
-    __extends(ShowContent, _super);
-    function ShowContent(menuID) {
-        var _this = _super.call(this) || this;
-        _this.menuID = menuID;
-        return _this;
     }
-    ShowContent.prototype.createInput = function (type, name, value) {
-        var input = document.createElement("INPUT");
+}
+class ShowContent extends Content {
+    constructor(menuID) {
+        super();
+        this.menuID = menuID;
+    }
+    createInput(type, name, value) {
+        let input = document.createElement("INPUT");
         input.setAttribute("type", type);
         input.setAttribute("name", name);
         input.setAttribute("value", value);
         return input;
-    };
-    ShowContent.prototype.show = function () {
+    }
+    show() {
         COLUMN_TO_SORT = -1;
-        // Alten Inhalt löschen
-        var doc = document.getElementById(this.DocumentID);
+        // Delete old content
+        let doc = document.getElementById(this.DocumentID);
         doc.innerHTML = "";
         showPreview(false);
-        // Überschrift
-        var headline = menuItems[this.menuID].headline;
-        var menuKey = menuItems[this.menuID].menuKey;
-        var h = this.createHeadline(headline);
+        // Headline
+        let headline = menuItems[this.menuID].headline;
+        let menuKey = menuItems[this.menuID].menuKey;
+        let h = this.createHeadline(headline);
         doc.appendChild(h);
-        var hr = this.createHR();
+        let hr = this.createHR();
         doc.appendChild(hr);
-        // Interaktion
-        var div = this.createInteraction();
+        // Interaction
+        let div = this.createInteraction();
         doc.appendChild(div);
-        var interaction = document.getElementById(this.interactionID);
+        let interaction = document.getElementById(this.interactionID);
         switch (menuKey) {
             case "playlist":
                 var input = this.createInput("button", menuKey, "{{.button.new}}");
@@ -581,7 +574,6 @@ var ShowContent = /** @class */ (function (_super) {
                 wrapper.appendChild(settings);
                 showSettings();
                 return;
-                break;
             case "log":
                 var input = this.createInput("button", menuKey, "{{.button.resetLogs}}");
                 input.setAttribute("onclick", 'javascript: resetLogs();');
@@ -594,16 +586,14 @@ var ShowContent = /** @class */ (function (_super) {
                 wrapper.appendChild(logs);
                 showLogs(true);
                 return;
-                break;
             case "logout":
                 location.reload();
                 document.cookie = "Token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
                 break;
             default:
-                console.log("Show content (menuKey):", menuKey);
                 break;
         }
-        // Tabelle erstellen (falls benötigt)
+        // Create table (if needed)
         var tableHeader = menuItems[this.menuID].tableHeader;
         if (tableHeader.length > 0) {
             var wrapper = document.createElement("DIV");
@@ -613,8 +603,8 @@ var ShowContent = /** @class */ (function (_super) {
             wrapper.appendChild(table);
             var header = this.createTableRow();
             table.appendChild(header);
-            // Kopfzeile der Tablle
-            tableHeader.forEach(function (element) {
+            // Table header
+            tableHeader.forEach(element => {
                 var cell = new Cell();
                 cell.child = true;
                 cell.childType = "P";
@@ -626,28 +616,55 @@ var ShowContent = /** @class */ (function (_super) {
                 if (menuKey == "mapping") {
                     if (element == "{{.mapping.table.chNo}}") {
                         cell.onclick = true;
-                        cell.onclickFunktion = "javascript: sortTable(1);";
+                        cell.onclickFunction = "javascript: sortTable(1);";
                         cell.tdClassName = "sortThis";
                     }
                     if (element == "{{.mapping.table.channelName}}") {
                         cell.onclick = true;
-                        cell.onclickFunktion = "javascript: sortTable(3);";
+                        cell.onclickFunction = "javascript: sortTable(3);";
+                    }
+                    if (element == "{{.mapping.table.updateChannelNameRegex}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(4);";
                     }
                     if (element == "{{.mapping.table.playlist}}") {
                         cell.onclick = true;
-                        cell.onclickFunktion = "javascript: sortTable(4);";
+                        cell.onclickFunction = "javascript: sortTable(5);";
                     }
                     if (element == "{{.mapping.table.groupTitle}}") {
                         cell.onclick = true;
-                        cell.onclickFunktion = "javascript: sortTable(5);";
+                        cell.onclickFunction = "javascript: sortTable(6);";
+                    }
+                    if (element == "{{.mapping.table.timeshift}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(9);";
+                    }
+                }
+                if (menuKey == "filter") {
+                    if (element == "{{.filter.table.startingChannel}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(0);";
+                        cell.tdClassName = "sortThis";
+                    }
+                    if (element == "{{.filter.table.name}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(1);";
+                    }
+                    if (element == "{{.filter.table.type}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(2);";
+                    }
+                    if (element == "{{.filter.table.filter}}") {
+                        cell.onclick = true;
+                        cell.onclickFunction = "javascript: sortTable(3);";
                     }
                 }
                 header.appendChild(cell.createCell());
             });
             table.appendChild(header);
-            // Inhalt der Tabelle
+            // Content of the table
             var rows = this.createTableContent(menuKey);
-            rows.forEach(function (tr) {
+            rows.forEach(tr => {
                 table.appendChild(tr);
             });
         }
@@ -665,12 +682,11 @@ var ShowContent = /** @class */ (function (_super) {
                 break;
         }
         showElement("loading", false);
-    };
-    return ShowContent;
-}(Content));
+    }
+}
 function PageReady() {
-    var server = new Server("getServerConfig");
-    server.request(new Object());
+    let server = new Server("getServerConfig");
+    server.request({});
     window.addEventListener("resize", function () {
         calculateWrapperHeight();
     }, true);
@@ -681,8 +697,8 @@ function PageReady() {
 }
 function createLayout() {
     // Client Info
-    var obj = SERVER["clientInfo"];
-    var keys = getObjKeys(obj);
+    let obj = SERVER["clientInfo"];
+    let keys = getOwnObjProps(obj);
     for (var i = 0; i < keys.length; i++) {
         if (document.getElementById(keys[i])) {
             document.getElementById(keys[i]).innerHTML = obj[keys[i]];
@@ -691,90 +707,87 @@ function createLayout() {
     if (!document.getElementById("main-menu")) {
         return;
     }
-    // Menü erstellen
+    // Create menu
     document.getElementById("main-menu").innerHTML = "";
-    for (var i_1 = 0; i_1 < menuItems.length; i_1++) {
-        menuItems[i_1].id = i_1;
-        switch (menuItems[i_1]["menuKey"]) {
+    for (let i = 0; i < menuItems.length; i++) {
+        menuItems[i].id = i;
+        switch (menuItems[i]["menuKey"]) {
             case "users":
             case "logout":
                 if (SERVER["settings"]["authentication.web"] == true) {
-                    menuItems[i_1].createItem();
+                    menuItems[i].createItem();
                 }
                 break;
             case "mapping":
             case "xmltv":
                 if (SERVER["clientInfo"]["epgSource"] == "XEPG") {
-                    menuItems[i_1].createItem();
+                    menuItems[i].createItem();
                 }
                 break;
             default:
-                menuItems[i_1].createItem();
+                menuItems[i].createItem();
                 break;
         }
     }
     return;
 }
 function openThisMenu(element) {
-    var id = element.id;
-    var content = new ShowContent(id);
+    let id = element.id;
+    let content = new ShowContent(id);
     content.show();
     calculateWrapperHeight();
     return;
 }
-var PopupWindow = /** @class */ (function () {
-    function PopupWindow() {
+class PopupWindow {
+    constructor() {
         this.DocumentID = "popup-custom";
         this.InteractionID = "interaction";
         this.doc = document.getElementById(this.DocumentID);
     }
-    PopupWindow.prototype.createTitle = function (title) {
-        var td = document.createElement("TD");
+    createTitle(title) {
+        let td = document.createElement("TD");
         td.className = "left";
         td.innerHTML = title + ":";
         return td;
-    };
-    PopupWindow.prototype.createContent = function (element) {
-        var td = document.createElement("TD");
+    }
+    createContent(element) {
+        let td = document.createElement("TD");
         td.appendChild(element);
         return td;
-    };
-    PopupWindow.prototype.createInteraction = function () {
-        var div = document.createElement("div");
+    }
+    createInteraction() {
+        let div = document.createElement("div");
         div.setAttribute("id", "popup-interaction");
         div.className = "interaction";
         this.doc.appendChild(div);
-    };
-    return PopupWindow;
-}());
-var PopupContent = /** @class */ (function (_super) {
-    __extends(PopupContent, _super);
-    function PopupContent() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.table = document.createElement("TABLE");
-        return _this;
     }
-    PopupContent.prototype.createHeadline = function (headline) {
+}
+class PopupContent extends PopupWindow {
+    constructor() {
+        super(...arguments);
+        this.table = document.createElement("TABLE");
+    }
+    createHeadline(headline) {
         this.doc.innerHTML = "";
         var element = document.createElement("H3");
         element.innerHTML = headline.toUpperCase();
         this.doc.appendChild(element);
-        // Tabelle erstellen
+        // Create table
         this.table = document.createElement("TABLE");
         this.doc.appendChild(this.table);
-    };
-    PopupContent.prototype.appendRow = function (title, element) {
-        var tr = document.createElement("TR");
-        // Bezeichnung
+    }
+    appendRow(title, element) {
+        let tr = document.createElement("TR");
+        // Title
         if (title.length != 0) {
             tr.appendChild(this.createTitle(title));
         }
         // Content
         tr.appendChild(this.createContent(element));
         this.table.appendChild(tr);
-    };
-    PopupContent.prototype.createInput = function (type, name, value) {
-        var input = document.createElement("INPUT");
+    }
+    createInput(type, name, value) {
+        let input = document.createElement("INPUT");
         if (value == undefined) {
             value = "";
         }
@@ -782,18 +795,19 @@ var PopupContent = /** @class */ (function (_super) {
         input.setAttribute("name", name);
         input.setAttribute("value", value);
         return input;
-    };
-    PopupContent.prototype.createCheckbox = function (name) {
-        var input = document.createElement("INPUT");
+    }
+    createCheckbox(name) {
+        let input = document.createElement("INPUT");
         input.setAttribute("type", "checkbox");
         input.setAttribute("name", name);
         return input;
-    };
-    PopupContent.prototype.createSelect = function (text, values, set, dbKey) {
-        var select = document.createElement("SELECT");
+    }
+    // Creates a selection of multiple options values with text descriptions
+    createSelect(text, values, set, dbKey) {
+        let select = document.createElement("SELECT");
         select.setAttribute("name", dbKey);
-        for (var i = 0; i < text.length; i++) {
-            var option = document.createElement("OPTION");
+        for (let i = 0; i < text.length; i++) {
+            let option = document.createElement("OPTION");
             option.setAttribute("value", values[i]);
             option.innerText = text[i];
             select.appendChild(option);
@@ -805,32 +819,31 @@ var PopupContent = /** @class */ (function (_super) {
             select.value = values[0];
         }
         return select;
-    };
-    PopupContent.prototype.selectOption = function (select, value) {
+    }
+    selectOption(select, value) {
         //select.selectedOptions = value
-        var s = select;
+        let s = select;
         s.options[s.selectedIndex].value = value;
         return select;
-    };
-    PopupContent.prototype.description = function (value) {
-        var tr = document.createElement("TR");
-        var td = document.createElement("TD");
-        var span = document.createElement("PRE");
+    }
+    description(value) {
+        let tr = document.createElement("TR");
+        let td = document.createElement("TD");
+        let span = document.createElement("PRE");
         span.innerHTML = value;
         tr.appendChild(td);
         tr.appendChild(this.createContent(span));
         this.table.appendChild(tr);
-    };
-    // Interaktion
-    PopupContent.prototype.addInteraction = function (element) {
-        var interaction = document.getElementById("popup-interaction");
+    }
+    // Interaction
+    addInteraction(element) {
+        let interaction = document.getElementById("popup-interaction");
         interaction.appendChild(element);
-    };
-    return PopupContent;
-}(PopupWindow));
+    }
+}
 function openPopUp(dataType, element) {
-    var data = new Object();
-    var id;
+    let data = {};
+    let id;
     switch (element) {
         case undefined:
             switch (dataType) {
@@ -860,7 +873,7 @@ function openPopUp(dataType, element) {
             data = getLocalData(dataType, id);
             break;
     }
-    var content = new PopupContent();
+    let content = new PopupContent();
     switch (dataType) {
         case "playlist":
             content.createHeadline("{{.playlist.playlistType.title}}");
@@ -871,13 +884,13 @@ function openPopUp(dataType, element) {
             select.setAttribute("id", "type");
             select.setAttribute("onchange", 'javascript: changeButtonAction(this, "next", "onclick")'); // changeButtonAction
             content.appendRow("{{.playlist.type.title}}", select);
-            // Interaktion
+            // Interaction
             content.createInteraction();
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Weiter
+            // Next
             var input = content.createInput("button", "next", "{{.button.next}}");
             input.setAttribute("onclick", 'javascript: openPopUp("m3u")');
             input.setAttribute("id", 'next');
@@ -890,7 +903,7 @@ function openPopUp(dataType, element) {
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.playlist.name.placeholder}}");
             content.appendRow("{{.playlist.name.title}}", input);
-            // Beschreibung
+            // Description
             var dbKey = "description";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.playlist.description.placeholder}}");
@@ -902,8 +915,8 @@ function openPopUp(dataType, element) {
             content.appendRow("{{.playlist.fileM3U.title}}", input);
             // Tuner
             if (SERVER["settings"]["buffer"] != "-") {
-                var text = new Array();
-                var values = new Array();
+                var text = [];
+                var values = [];
                 for (var i = 1; i <= 100; i++) {
                     text.push(i.toString());
                     values.push(i.toString());
@@ -924,9 +937,9 @@ function openPopUp(dataType, element) {
                 content.appendRow("{{.playlist.tuner.title}}", input);
             }
             content.description("{{.playlist.tuner.description}}");
-            // Interaktion
+            // Interation
             content.createInteraction();
-            // Löschen
+            // Delete
             if (data["id.provider"] != "-") {
                 var input = content.createInput("button", "delete", "{{.button.delete}}");
                 input.className = "delete";
@@ -938,17 +951,17 @@ function openPopUp(dataType, element) {
                 input.setAttribute("onclick", 'javascript: openPopUp("playlist")');
                 content.addInteraction(input);
             }
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Aktualisieren
+            // Update
             if (data["id.provider"] != "-") {
                 var input = content.createInput("button", "update", "{{.button.update}}");
                 input.setAttribute('onclick', 'javascript: savePopupData("m3u", "' + id + '", false, 1)');
                 content.addInteraction(input);
             }
-            // Speichern
+            // Save
             var input = content.createInput("button", "save", "{{.button.save}}");
             input.setAttribute('onclick', 'javascript: savePopupData("m3u", "' + id + '", false, 0)');
             content.addInteraction(input);
@@ -960,7 +973,7 @@ function openPopUp(dataType, element) {
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.playlist.name.placeholder}}");
             content.appendRow("{{.playlist.name.title}}", input);
-            // Beschreibung
+            // Description
             var dbKey = "description";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.playlist.description.placeholder}}");
@@ -972,8 +985,8 @@ function openPopUp(dataType, element) {
             content.appendRow("{{.playlist.fileHDHR.title}}", input);
             // Tuner
             if (SERVER["settings"]["buffer"] != "-") {
-                var text = new Array();
-                var values = new Array();
+                var text = [];
+                var values = [];
                 for (var i = 1; i <= 100; i++) {
                     text.push(i.toString());
                     values.push(i.toString());
@@ -994,9 +1007,9 @@ function openPopUp(dataType, element) {
                 content.appendRow("{{.playlist.tuner.title}}", input);
             }
             content.description("{{.playlist.tuner.description}}");
-            // Interaktion
+            // Interaction
             content.createInteraction();
-            // Löschen
+            // Delete
             if (data["id.provider"] != "-") {
                 var input = content.createInput("button", "delete", "{{.button.delete}}");
                 input.setAttribute('onclick', 'javascript: savePopupData("hdhr", "' + id + '", true, 0)');
@@ -1008,17 +1021,17 @@ function openPopUp(dataType, element) {
                 input.setAttribute("onclick", 'javascript: openPopUp("playlist")');
                 content.addInteraction(input);
             }
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Aktualisieren
+            // Update
             if (data["id.provider"] != "-") {
                 var input = content.createInput("button", "update", "{{.button.update}}");
                 input.setAttribute('onclick', 'javascript: savePopupData("hdhr", "' + id + '", false, 1)');
                 content.addInteraction(input);
             }
-            // Speichern
+            // Save
             var input = content.createInput("button", "save", "{{.button.save}}");
             input.setAttribute('onclick', 'javascript: savePopupData("hdhr", "' + id + '", false, 0)');
             content.addInteraction(input);
@@ -1033,13 +1046,13 @@ function openPopUp(dataType, element) {
             select.setAttribute("id", id);
             select.setAttribute("onchange", 'javascript: changeButtonAction(this, "next", "onclick");'); // changeButtonAction
             content.appendRow("{{.filter.type.title}}", select);
-            // Interaktion
+            // Interaction
             content.createInteraction();
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Weiter
+            // Next
             var input = content.createInput("button", "next", "{{.button.next}}");
             input.setAttribute("onclick", 'javascript: openPopUp("group-title")');
             input.setAttribute("id", 'next');
@@ -1049,10 +1062,10 @@ function openPopUp(dataType, element) {
         case "group-title":
             switch (dataType) {
                 case "custom-filter":
-                    content.createHeadline("{{.filter.custom}}");
+                    content.createHeadline("{{.filter.custom}}" + " Filter");
                     break;
                 case "group-title":
-                    content.createHeadline("{{.filter.group}}");
+                    content.createHeadline("{{.filter.group}}" + " Filter");
                     break;
             }
             // Name      
@@ -1060,32 +1073,37 @@ function openPopUp(dataType, element) {
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.filter.name.placeholder}}");
             content.appendRow("{{.filter.name.title}}", input);
-            // Beschreibung
+            // Description
             var dbKey = "description";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.filter.description.placeholder}}");
             content.appendRow("{{.filter.description.title}}", input);
-            // Typ
+            // Type
             var dbKey = "type";
             var input = content.createInput("hidden", dbKey, data[dbKey]);
             content.appendRow("", input);
             var filterType = data[dbKey];
             switch (filterType) {
                 case "custom-filter":
-                    // Groß- Kleinschreibung beachten
+                    // Case sensitive
                     var dbKey = "caseSensitive";
                     var input = content.createCheckbox(dbKey);
                     input.checked = data[dbKey];
                     content.appendRow("{{.filter.caseSensitive.title}}", input);
-                    // Filterregel (Benutzerdefiniert)
+                    // Filter Rule (Custom)
                     var dbKey = "filter";
                     var input = content.createInput("text", dbKey, data[dbKey]);
                     input.setAttribute("placeholder", "{{.filter.filterRule.placeholder}}");
                     content.appendRow("{{.filter.filterRule.title}}", input);
+                    // Starting Channel Number Mapping
+                    var dbKey = "startingChannel";
+                    var input = content.createInput("text", dbKey, data[dbKey]);
+                    input.setAttribute("placeholder", "{{.filter.startingChannel.placeholder}}");
+                    content.appendRow("{{.filter.startingChannel.title}}", input);
                     break;
                 case "group-title":
                     //alert(dbKey + " " + filterType)
-                    // Filter basierend auf den Gruppen in der M3U
+                    // Filter based on the groups in the M3U
                     var dbKey = "filter";
                     var groupsM3U = getLocalData("m3uGroups", "");
                     var text = groupsM3U["text"];
@@ -1094,7 +1112,7 @@ function openPopUp(dataType, element) {
                     select.setAttribute("onchange", "javascript: this.className = 'changed'");
                     content.appendRow("{{.filter.filterGroup.title}}", select);
                     content.description("{{.filter.filterGroup.description}}");
-                    // Groß- Kleinschreibung beachten
+                    // Case sensetive
                     var dbKey = "caseSensitive";
                     var input = content.createCheckbox(dbKey);
                     input.checked = data[dbKey];
@@ -1109,22 +1127,32 @@ function openPopUp(dataType, element) {
                     input.setAttribute("placeholder", "{{.filter.exclude.placeholder}}");
                     content.appendRow("{{.filter.exclude.title}}", input);
                     content.description("{{.filter.exclude.description}}");
+                    // Preserve M3U Playlist Channel Mapping
+                    var dbKey = "preserveMapping";
+                    var input = content.createCheckbox(dbKey);
+                    input.checked = data[dbKey];
+                    content.appendRow("{{.filter.preserveMapping.title}}", input);
+                    // Starting Channel Number Mapping
+                    var dbKey = "startingChannel";
+                    var input = content.createInput("text", dbKey, data[dbKey]);
+                    input.setAttribute("placeholder", "{{.filter.startingChannel.placeholder}}");
+                    content.appendRow("{{.filter.startingChannel.title}}", input);
                     break;
                 default:
                     break;
             }
-            // Interaktion
+            // Interaction
             content.createInteraction();
-            // Löschen
+            // Delete
             var input = content.createInput("button", "delete", "{{.button.delete}}");
             input.setAttribute('onclick', 'javascript: savePopupData("filter", "' + id + '", true, 0)');
             input.className = "delete";
             content.addInteraction(input);
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Speichern
+            // Save
             var input = content.createInput("button", "save", "{{.button.save}}");
             input.setAttribute('onclick', 'javascript: savePopupData("filter", "' + id + '", false, 0)');
             content.addInteraction(input);
@@ -1136,7 +1164,7 @@ function openPopUp(dataType, element) {
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.xmltv.name.placeholder}}");
             content.appendRow("{{.xmltv.name.title}}", input);
-            // Beschreibung
+            // Description
             var dbKey = "description";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.xmltv.description.placeholder}}");
@@ -1146,48 +1174,48 @@ function openPopUp(dataType, element) {
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.xmltv.fileXMLTV.placeholder}}");
             content.appendRow("{{.xmltv.fileXMLTV.title}}", input);
-            // Interaktion
+            // Interaction
             content.createInteraction();
-            // Löschen
+            // Delete
             if (data["id.provider"] != "-") {
                 var input = content.createInput("button", "delete", "{{.button.delete}}");
                 input.setAttribute('onclick', 'javascript: savePopupData("xmltv", "' + id + '", true, 0)');
                 input.className = "delete";
                 content.addInteraction(input);
             }
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Aktualisieren
+            // Update
             if (data["id.provider"] != "-") {
                 var input = content.createInput("button", "update", "{{.button.update}}");
                 input.setAttribute('onclick', 'javascript: savePopupData("xmltv", "' + id + '", false, 1)');
                 content.addInteraction(input);
             }
-            // Speichern
+            // Save
             var input = content.createInput("button", "save", "{{.button.save}}");
             input.setAttribute('onclick', 'javascript: savePopupData("xmltv", "' + id + '", false, 0)');
             content.addInteraction(input);
             break;
         case "users":
             content.createHeadline("{{.mainMenu.item.users}}");
-            // Benutzername 
+            // User name
             var dbKey = "username";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.users.username.placeholder}}");
             content.appendRow("{{.users.username.title}}", input);
-            // Neues Passwort 
+            // New Parssword
             var dbKey = "password";
             var input = content.createInput("password", dbKey, "");
             input.setAttribute("placeholder", "{{.users.password.placeholder}}");
             content.appendRow("{{.users.password.title}}", input);
-            // Bestätigung 
+            // Confirmation
             var dbKey = "confirm";
             var input = content.createInput("password", dbKey, "");
             input.setAttribute("placeholder", "{{.users.confirm.placeholder}}");
             content.appendRow("{{.users.confirm.title}}", input);
-            // Berechtigung WEB
+            // Authentication WEB
             var dbKey = "authentication.web";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
@@ -1195,47 +1223,47 @@ function openPopUp(dataType, element) {
                 input.setAttribute("onclick", "javascript: return false");
             }
             content.appendRow("{{.users.web.title}}", input);
-            // Berechtigung PMS
+            // Authentication PMS
             var dbKey = "authentication.pms";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
             content.appendRow("{{.users.pms.title}}", input);
-            // Berechtigung M3U
+            // Authentication M3U
             var dbKey = "authentication.m3u";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
             content.appendRow("{{.users.m3u.title}}", input);
-            // Berechtigung XML
+            // Authentication XML
             var dbKey = "authentication.xml";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
             content.appendRow("{{.users.xml.title}}", input);
-            // Berechtigung API
+            // Authentication API
             var dbKey = "authentication.api";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
             content.appendRow("{{.users.api.title}}", input);
-            // Interaktion
+            // Interaction
             content.createInteraction();
-            // Löschen
+            // Delete
             if (data["defaultUser"] != true && id != "-") {
                 var input = content.createInput("button", "delete", "{{.button.delete}}");
                 input.className = "delete";
                 input.setAttribute('onclick', 'javascript: savePopupData("' + dataType + '", "' + id + '", true, 0)');
                 content.addInteraction(input);
             }
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Speichern
+            // Save
             var input = content.createInput("button", "save", "{{.button.save}}");
             input.setAttribute("onclick", 'javascript: savePopupData("' + dataType + '", "' + id + '", "false");');
             content.addInteraction(input);
             break;
         case "mapping":
             content.createHeadline("{{.mainMenu.item.mapping}}");
-            // Aktiv 
+            // Active
             var dbKey = "x-active";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
@@ -1243,7 +1271,7 @@ function openPopUp(dataType, element) {
             //input.setAttribute("onchange", "javascript: this.className = 'changed'")
             input.setAttribute("onchange", "javascript: toggleChannelStatus('" + id + "', this)");
             content.appendRow("{{.mapping.active.title}}", input);
-            // Kanalname 
+            // Channel name
             var dbKey = "x-name";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("onchange", "javascript: this.className = 'changed'");
@@ -1253,13 +1281,13 @@ function openPopUp(dataType, element) {
             }
             content.appendRow("{{.mapping.channelName.title}}", input);
             content.description(data["name"]);
-            // Beschreibung 
+            // Description
             var dbKey = "x-description";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("placeholder", "{{.mapping.description.placeholder}}");
             input.setAttribute("onchange", "javascript: this.className = 'changed'");
             content.appendRow("{{.mapping.description.title}}", input);
-            // Aktualisierung des Kanalnamens
+            // Update the channel x-name
             if (data.hasOwnProperty("_uuid.key")) {
                 if (data["_uuid.key"] != "") {
                     var dbKey = "x-update-channel-name";
@@ -1269,65 +1297,99 @@ function openPopUp(dataType, element) {
                     content.appendRow("{{.mapping.updateChannelName.title}}", input);
                 }
             }
-            // Logo URL (Kanal) 
+            // Channel name regex for updating the channel name
+            var dbKey = "update-channel-name-regex";
+            var input = content.createInput("text", dbKey, data[dbKey]);
+            input.setAttribute("placeholder", "{{.mapping.updateChannelNameRegex.placeholder}}");
+            input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            content.appendRow("{{.mapping.updateChannelNameRegex.title}}", input);
+            content.description("{{.mapping.updateChannelNameRegex.description}}");
+            // Channel group regex for updating the channel name
+            var dbKey = "update-channel-name-by-group-regex";
+            var input = content.createInput("text", dbKey, data[dbKey]);
+            input.setAttribute("placeholder", "{{.mapping.updateChannelNameByGroupRegex.placeholder}}");
+            input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            content.appendRow("{{.mapping.updateChannelNameByGroupRegex.title}}", input);
+            content.description("{{.mapping.updateChannelNameByGroupRegex.description}}");
+            // Logo URL (Channel) 
             var dbKey = "tvg-logo";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("onchange", "javascript: this.className = 'changed'");
             input.setAttribute("id", "channel-icon");
             content.appendRow("{{.mapping.channelLogo.title}}", input);
-            // Aktualisierung des Kanallogos
+            // Channel logo update
             var dbKey = "x-update-channel-icon";
             var input = content.createCheckbox(dbKey);
             input.checked = data[dbKey];
             input.setAttribute("id", "update-icon");
             input.setAttribute("onchange", "javascript: this.className = 'changed'; changeChannelLogo('" + id + "');");
             content.appendRow("{{.mapping.updateChannelLogo.title}}", input);
-            // Erweitern der EPG Kategorie
+            // Expand EPG category
             var dbKey = "x-category";
             var text = ["-", "Kids (Emby only)", "News", "Movie", "Series", "Sports"];
             var values = ["", "Kids", "News", "Movie", "Series", "Sports"];
             var select = content.createSelect(text, values, data[dbKey], dbKey);
             select.setAttribute("onchange", "javascript: this.className = 'changed'");
             content.appendRow("{{.mapping.epgCategory.title}}", select);
-            // M3U Gruppentitel
+            // M3U group title
             var dbKey = "x-group-title";
             var input = content.createInput("text", dbKey, data[dbKey]);
             input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            input.dataset.oldValue = data[dbKey];
             content.appendRow("{{.mapping.m3uGroupTitle.title}}", input);
             if (data["group-title"] != undefined) {
                 content.description(data["group-title"]);
             }
-            // XMLTV Datei
-            var dbKey = "x-xmltv-file";
-            var xmlFile = data[dbKey];
-            var xmltv = new XMLTVFile();
-            var select = xmltv.getFiles(data[dbKey]);
-            select.setAttribute("name", dbKey);
-            select.setAttribute("id", "popup-xmltv");
-            select.setAttribute("onchange", "javascript: this.className = 'changed'; setXmltvChannel('" + id + "',this);");
-            content.appendRow("{{.mapping.xmltvFile.title}}", select);
-            var file = data[dbKey];
+            if (data["x-update-channel-group"] == true) {
+                input.disabled = true;
+            }
+            // Update channel group checkbox
+            var dbKey = "x-update-channel-group";
+            var input = content.createCheckbox(dbKey);
+            input.setAttribute("onchange", "javascript: toggleGroupUpdateCb('" + id + "', this);");
+            input.checked = data[dbKey];
+            content.appendRow("{{.mapping.updateChannelGroup.title}}", input);
+            content.description("{{.mapping.updateChannelGroup.description}}");
+            // XMLTV file
+            var dbKey = 'x-xmltv-file';
+            const xmlTvFile = data[dbKey];
+            var xmlTv = new XMLTVFile();
+            const xmlTvFileSelect = xmlTv.getFiles(data[dbKey]);
+            xmlTvFileSelect.setAttribute('name', dbKey);
+            xmlTvFileSelect.setAttribute('id', 'popup-xmltv');
+            xmlTvFileSelect.setAttribute('onchange', `javascript: this.className = 'changed'; setXmltvChannel('${id}', this);`);
+            content.appendRow('{{.mapping.xmltvFile.title}}', xmlTvFileSelect);
             // XMLTV Mapping
-            var dbKey = "x-mapping";
-            var xmltv = new XMLTVFile();
-            var select = xmltv.getPrograms(file, data[dbKey]);
-            select.setAttribute("name", dbKey);
-            select.setAttribute("id", "popup-mapping");
-            select.setAttribute("onchange", "javascript: this.className = 'changed'; checkXmltvChannel('" + id + "',this,'" + xmlFile + "');");
-            sortSelect(select);
-            content.appendRow("{{.mapping.xmltvChannel.title}}", select);
-            // Interaktion
+            var dbKey = 'x-mapping';
+            var xmlTv = new XMLTVFile();
+            const currentXmlTvId = data[dbKey];
+            const [xmlTvIdContainer, xmlTvIdInput, xmlTvIdDatalist] = xmlTv.newXmlTvIdPicker(xmlTvFile, currentXmlTvId);
+            xmlTvIdContainer.setAttribute('id', 'xmltv-id-picker-container');
+            xmlTvIdInput.setAttribute('list', 'xmltv-id-picker-datalist');
+            xmlTvIdInput.setAttribute('name', 'x-mapping'); // Should stay x-mapping as it will be used in donePopupData to make a server request
+            xmlTvIdInput.setAttribute('id', 'xmltv-id-picker-input');
+            xmlTvIdInput.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${id}', this.value, '${xmlTvFile}');`);
+            xmlTvIdDatalist.setAttribute('id', 'xmltv-id-picker-datalist');
+            content.appendRow('{{.mapping.xmltvChannel.title}}', xmlTvIdContainer);
+            // Timeshift
+            var dbKey = "x-timeshift";
+            var input = content.createInput("text", dbKey, data[dbKey]);
+            input.setAttribute("onchange", "javascript: this.className = 'changed'");
+            input.setAttribute("placeholder", "{{.mapping.timeshift.placeholder}}");
+            input.setAttribute("id", "timeshift");
+            content.appendRow("{{.mapping.timeshift.title}}", input);
+            // Interaction
             content.createInteraction();
-            // Logo hochladen
+            // Upload logo
             var input = content.createInput("button", "cancel", "{{.button.uploadLogo}}");
             input.setAttribute("onclick", 'javascript: uploadLogo();');
             content.addInteraction(input);
-            // Abbrechen
+            // Abort
             var input = content.createInput("button", "cancel", "{{.button.cancel}}");
             input.setAttribute("onclick", 'javascript: showElement("popup", false);');
             content.addInteraction(input);
-            // Fertig
-            var ids = new Array();
+            // Finished
+            var ids = [];
             ids = getAllSelectedChannels();
             if (ids.length == 0) {
                 ids.push(id);
@@ -1341,14 +1403,12 @@ function openPopUp(dataType, element) {
     }
     showPopUpElement('popup-custom');
 }
-var XMLTVFile = /** @class */ (function () {
-    function XMLTVFile() {
-    }
-    XMLTVFile.prototype.getFiles = function (set) {
-        var fileIDs = getObjKeys(SERVER["xepg"]["xmltvMap"]);
-        var values = new Array("-");
-        var text = new Array("-");
-        for (var i = 0; i < fileIDs.length; i++) {
+class XMLTVFile {
+    getFiles(set) {
+        let fileIDs = getOwnObjProps(SERVER["xepg"]["xmltvMap"]);
+        let values = new Array("-");
+        let text = new Array("-");
+        for (let i = 0; i < fileIDs.length; i++) {
             if (fileIDs[i] != "xTeVe Dummy") {
                 values.push(getValueFromProviderFile(fileIDs[i], "xmltv", "file.xteve"));
                 text.push(getValueFromProviderFile(fileIDs[i], "xmltv", "name"));
@@ -1358,8 +1418,8 @@ var XMLTVFile = /** @class */ (function () {
                 text.push(fileIDs[i]);
             }
         }
-        var select = document.createElement("SELECT");
-        for (var i = 0; i < text.length; i++) {
+        let select = document.createElement("SELECT");
+        for (let i = 0; i < text.length; i++) {
             var option = document.createElement("OPTION");
             option.setAttribute("value", values[i]);
             option.innerText = text[i];
@@ -1369,46 +1429,70 @@ var XMLTVFile = /** @class */ (function () {
             select.value = set;
         }
         return select;
-    };
-    XMLTVFile.prototype.getPrograms = function (file, set) {
-        //var fileIDs:string[] = getObjKeys(SERVER["xepg"]["xmltvMap"])
-        var values = getObjKeys(SERVER["xepg"]["xmltvMap"][file]);
-        var text = new Array();
-        var displayName;
-        for (var i = 0; i < values.length; i++) {
-            if (SERVER["xepg"]["xmltvMap"][file][values[i]].hasOwnProperty('display-name') == true) {
-                displayName = SERVER["xepg"]["xmltvMap"][file][values[i]]["display-name"];
-            }
-            else {
-                displayName = "-";
-            }
-            text[i] = displayName + " (" + values[i] + ")";
+    }
+    /**
+     * @param xmlTvFile XML file path to get EPG from.
+     * @param currentXmlTvId Current XMLTV ID to set initial input value to.
+     * @returns Array of, sequentially:
+     * 1) Container of the picker.
+     * 2) Input field to type at and get choice from.
+     * 3) Datalist containing every option.
+     */
+    newXmlTvIdPicker(xmlTvFile, currentXmlTvId) {
+        const container = document.createElement('div');
+        const input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        // Initially, set value to '-' if input is empty
+        input.value = (currentXmlTvId) ? currentXmlTvId : '-';
+        // When input is focused, remove '-' from it
+        input.addEventListener('focus', (evt) => {
+            const target = evt.target;
+            target.value = (target.value === '-') ? '' : target.value;
+        });
+        // When input lose focus or take a value, if it's empty, set value to '-'
+        input.addEventListener('blur', setFallbackValue);
+        input.addEventListener('change', setFallbackValue);
+        function setFallbackValue(evt) {
+            const target = evt.target;
+            target.value = (target.value) ? target.value : '-';
         }
-        text.unshift("-");
-        values.unshift("-");
-        var select = document.createElement("SELECT");
-        for (var i = 0; i < text.length; i++) {
-            var option = document.createElement("OPTION");
-            option.setAttribute("value", values[i]);
-            option.innerText = text[i];
-            select.appendChild(option);
+        container.appendChild(input);
+        const datalist = document.createElement('datalist');
+        const option = document.createElement('option');
+        option.setAttribute('value', '-');
+        option.innerText = '-';
+        datalist.appendChild(option);
+        const epg = SERVER['xepg']['xmltvMap'][xmlTvFile];
+        if (epg) {
+            const programIds = getOwnObjProps(epg);
+            programIds.forEach((programId) => {
+                const program = epg[programId];
+                if (program.hasOwnProperty('display-names')) {
+                    program['display-names'].forEach((displayName) => {
+                        const option = document.createElement('option');
+                        option.setAttribute('value', programId);
+                        option.innerText = displayName['Value'];
+                        datalist.appendChild(option);
+                    });
+                }
+                else {
+                    const option = document.createElement('option');
+                    option.setAttribute('value', programId);
+                    option.innerText = '-';
+                    datalist.appendChild(option);
+                }
+            });
         }
-        if (set != "") {
-            select.value = set;
-        }
-        if (select.value != set) {
-            select.value = "-";
-        }
-        return select;
-    };
-    return XMLTVFile;
-}());
+        container.appendChild(datalist);
+        return [container, input, datalist];
+    }
+}
 function getValueFromProviderFile(file, fileType, key) {
     if (file == "xTeVe Dummy") {
         return file;
     }
-    var fileID;
-    var indicator = file.charAt(0);
+    let fileID;
+    let indicator = file.charAt(0);
     switch (indicator) {
         case "M":
             fileType = "m3u";
@@ -1429,96 +1513,78 @@ function getValueFromProviderFile(file, fileType, key) {
     }
     return;
 }
-function setXmltvChannel(id, element) {
-    var xmltv = new XMLTVFile();
-    var xmlFile = element.value;
-    var tvgId = SERVER["xepg"]["epgMapping"][id]["tvg-id"];
-    var td = document.getElementById("popup-mapping").parentElement;
-    td.innerHTML = "";
-    var select = xmltv.getPrograms(element.value, tvgId);
-    select.setAttribute("name", "x-mapping");
-    select.setAttribute("id", "popup-mapping");
-    select.setAttribute("onchange", "javascript: this.className = 'changed'; checkXmltvChannel('" + id + "',this,'" + xmlFile + "');");
-    select.className = "changed";
-    sortSelect(select);
-    td.appendChild(select);
-    checkXmltvChannel(id, select, xmlFile);
+function setXmltvChannel(epgMapId, xmlTvFileSelect) {
+    const xmlTv = new XMLTVFile();
+    const newXmlTvFile = xmlTvFileSelect.value;
+    // Remove old XMLTV ID selection box
+    const xmlTvIdPickerParent = document.getElementById('xmltv-id-picker-container').parentElement;
+    xmlTvIdPickerParent.innerHTML = '';
+    // Create new XMLTV ID selection box
+    const tvgId = SERVER['xepg']['epgMapping'][epgMapId]['tvg-id'];
+    const [xmlTvIdContainer, xmlTvIdInput, xmlTvIdDatalist] = xmlTv.newXmlTvIdPicker(newXmlTvFile, tvgId);
+    xmlTvIdContainer.setAttribute('id', 'xmltv-id-picker-container');
+    xmlTvIdInput.setAttribute('list', 'xmltv-id-picker-datalist');
+    xmlTvIdInput.setAttribute('name', 'x-mapping'); // Should stay x-mapping as it will be used in donePopupData to make a server request
+    xmlTvIdInput.setAttribute('id', 'xmltv-id-picker-input');
+    xmlTvIdInput.setAttribute('onchange', `javascript: this.className = 'changed'; checkXmltvChannel('${epgMapId}', this.value, '${newXmlTvFile}');`);
+    xmlTvIdInput.classList.add('changed');
+    xmlTvIdDatalist.setAttribute('id', 'xmltv-id-picker-datalist');
+    // Add new XMLTV ID selection box to it's parent
+    xmlTvIdPickerParent.appendChild(xmlTvIdContainer);
+    checkXmltvChannel(epgMapId, xmlTvIdInput.value, newXmlTvFile);
 }
-function checkXmltvChannel(id, element, xmlFile) {
-    var value = element.value;
-    var bool;
-    var checkbox = document.getElementById('active');
-    var channel = SERVER["xepg"]["epgMapping"][id];
-    var updateLogo;
-    if (value == "-") {
-        bool = false;
-    }
-    else {
-        bool = true;
-    }
-    checkbox.checked = bool;
-    checkbox.className = "changed";
-    console.log(xmlFile);
-    // Kanallogo aktualisieren
-    /*
-    updateLogo = (document.getElementById("update-icon") as HTMLInputElement).checked
-    console.log(updateLogo);
-    */
-    if (xmlFile != "xTeVe Dummy" && bool == true) {
-        //(document.getElementById("update-icon") as HTMLInputElement).checked = true;
-        //(document.getElementById("update-icon") as HTMLInputElement).className = "changed";
-        console.log("ID", id);
-        changeChannelLogo(id);
+function checkXmltvChannel(epgMapId, newXmlTvId, xmlTvFile) {
+    const channelActiveCb = document.getElementById('active');
+    const channelActive = newXmlTvId != '-';
+    channelActiveCb.checked = channelActive;
+    channelActiveCb.className = 'changed';
+    if (xmlTvFile != 'xTeVe Dummy' && channelActive == true) {
+        changeChannelLogo(epgMapId);
         return;
     }
-    if (xmlFile == "xTeVe Dummy") {
-        document.getElementById("update-icon").checked = false;
-        document.getElementById("update-icon").className = "changed";
+    if (xmlTvFile == 'xTeVe Dummy') {
+        document.getElementById('update-icon').checked = false;
+        document.getElementById('update-icon').className = 'changed';
     }
-    return;
 }
-function changeChannelLogo(id) {
-    var updateLogo;
-    var channel = SERVER["xepg"]["epgMapping"][id];
-    var f = document.getElementById("popup-xmltv");
-    var xmltvFile = f.options[f.selectedIndex].value;
-    var m = document.getElementById("popup-mapping");
-    var xMapping = m.options[m.selectedIndex].value;
-    var xmltvLogo = SERVER["xepg"]["xmltvMap"][xmltvFile][xMapping]["icon"];
-    updateLogo = document.getElementById("update-icon").checked;
-    if (updateLogo == true && xmltvFile != "xTeVe Dummy") {
-        if (SERVER["xepg"]["xmltvMap"][xmltvFile].hasOwnProperty(xMapping)) {
-            var logo = xmltvLogo;
+function changeChannelLogo(epgMapId) {
+    const channel = SERVER['xepg']['epgMapping'][epgMapId];
+    const xmlTvFileSelect = document.getElementById('popup-xmltv');
+    const xmlTvFile = xmlTvFileSelect.options[xmlTvFileSelect.selectedIndex].value;
+    const xmlTvIdInput = document.getElementById('xmltv-id-picker-input');
+    const newXmlTvId = xmlTvIdInput.value;
+    const updateLogo = document.getElementById('update-icon').checked;
+    let logo;
+    if (updateLogo == true && xmlTvFile != 'xTeVe Dummy') {
+        if (SERVER['xepg']['xmltvMap'][xmlTvFile].hasOwnProperty(newXmlTvId)) {
+            logo = SERVER['xepg']['xmltvMap'][xmlTvFile][newXmlTvId]['icon'];
         }
         else {
-            logo = channel["tvg-logo"];
+            logo = channel['tvg-logo'];
         }
-        var logoInput = document.getElementById("channel-icon");
+        var logoInput = document.getElementById('channel-icon');
         logoInput.value = logo;
         if (BULK_EDIT == false) {
-            logoInput.className = "changed";
+            logoInput.className = 'changed';
         }
     }
 }
 function savePopupData(dataType, id, remove, option) {
     if (dataType == "mapping") {
-        var data = new Object();
-        console.log("Save mapping data");
-        cmd = "saveEpgMapping";
+        let data = {};
+        let cmd = "saveEpgMapping";
         data["epgMapping"] = SERVER["xepg"]["epgMapping"];
-        console.log("SEND TO SERVER");
-        var server = new Server(cmd);
+        let server = new Server(cmd);
         server.request(data);
         delete UNDO["epgMapping"];
         return;
     }
-    console.log("Save popup data");
-    var div = document.getElementById("popup-custom");
-    var inputs = div.getElementsByTagName("TABLE")[0].getElementsByTagName("INPUT");
-    var selects = div.getElementsByTagName("TABLE")[0].getElementsByTagName("SELECT");
-    var input = new Object();
-    var confirmMsg;
-    for (var i = 0; i < selects.length; i++) {
+    let div = document.getElementById("popup-custom");
+    let inputs = div.getElementsByTagName("TABLE")[0].getElementsByTagName("INPUT");
+    let selects = div.getElementsByTagName("TABLE")[0].getElementsByTagName("SELECT");
+    let input = {};
+    let confirmMsg;
+    for (let i = 0; i < selects.length; i++) {
         var name;
         name = selects[i].name;
         var value = selects[i].value;
@@ -1531,7 +1597,7 @@ function savePopupData(dataType, id, remove, option) {
                 break;
         }
     }
-    for (var i = 0; i < inputs.length; i++) {
+    for (let i = 0; i < inputs.length; i++) {
         switch (inputs[i].type) {
             case "checkbox":
                 name = inputs[i].name;
@@ -1552,8 +1618,8 @@ function savePopupData(dataType, id, remove, option) {
                 break;
         }
     }
-    var data = new Object();
-    var cmd;
+    let data = {};
+    let cmd;
     if (remove == true) {
         input["delete"] = true;
     }
@@ -1566,7 +1632,7 @@ function savePopupData(dataType, id, remove, option) {
             }
             else {
                 cmd = "saveUserData";
-                var d = new Object();
+                let d = {};
                 d[id] = input;
                 data["userData"] = d;
             }
@@ -1583,8 +1649,8 @@ function savePopupData(dataType, id, remove, option) {
                     cmd = "updateFileM3U";
                     break;
             }
-            data["files"] = new Object;
-            data["files"][dataType] = new Object;
+            data["files"] = {};
+            data["files"][dataType] = {};
             data["files"][dataType][id] = input;
             break;
         case "hdhr":
@@ -1599,8 +1665,8 @@ function savePopupData(dataType, id, remove, option) {
                     cmd = "updateFileHDHR";
                     break;
             }
-            data["files"] = new Object;
-            data["files"][dataType] = new Object;
+            data["files"] = {};
+            data["files"][dataType] = {};
             data["files"][dataType][id] = input;
             break;
         case "xmltv":
@@ -1615,20 +1681,18 @@ function savePopupData(dataType, id, remove, option) {
                     cmd = "updateFileXMLTV";
                     break;
             }
-            data["files"] = new Object;
-            data["files"][dataType] = new Object;
+            data["files"] = {};
+            data["files"][dataType] = {};
             data["files"][dataType][id] = input;
             break;
         case "filter":
             confirmMsg = "Delete this filter?";
             cmd = "saveFilter";
-            data["filter"] = new Object;
+            data["filter"] = {};
             data["filter"][id] = input;
             break;
         default:
-            console.log(dataType, id);
             return;
-            break;
     }
     if (remove == true) {
         if (!confirm(confirmMsg)) {
@@ -1636,22 +1700,19 @@ function savePopupData(dataType, id, remove, option) {
             return;
         }
     }
-    console.log("SEND TO SERVER");
-    console.log(data);
-    var server = new Server(cmd);
+    let server = new Server(cmd);
     server.request(data);
 }
 function donePopupData(dataType, idsStr) {
-    var ids = idsStr.split(',');
-    var div = document.getElementById("popup-custom");
-    var inputs = div.getElementsByClassName("changed");
-    ids.forEach(function (id) {
-        var input = new Object();
+    let ids = idsStr.split(',');
+    let div = document.getElementById("popup-custom");
+    let inputs = div.getElementsByClassName("changed");
+    ids.forEach(id => {
+        let input;
         input = SERVER["xepg"]["epgMapping"][id];
-        console.log(input);
-        for (var i = 0; i < inputs.length; i++) {
-            var name;
-            var value;
+        for (let i = 0; i < inputs.length; i++) {
+            let name;
+            let value;
             switch (inputs[i].tagName) {
                 case "INPUT":
                     switch (inputs[i].type) {
@@ -1683,8 +1744,11 @@ function donePopupData(dataType, idsStr) {
                 case "x-category":
                     document.getElementById(id).childNodes[3].firstChild.className = value;
                     break;
+                case "update-channel-name-regex":
+                    document.getElementById(id).childNodes[4].firstChild.innerHTML = value;
+                    break;
                 case "x-group-title":
-                    document.getElementById(id).childNodes[5].firstChild.innerHTML = value;
+                    document.getElementById(id).childNodes[6].firstChild.innerHTML = value;
                     break;
                 case "x-xmltv-file":
                     if (value != "xTeVe Dummy" && value != "-") {
@@ -1693,13 +1757,16 @@ function donePopupData(dataType, idsStr) {
                     if (value == "-") {
                         input["x-active"] = false;
                     }
-                    document.getElementById(id).childNodes[6].firstChild.innerHTML = value;
+                    document.getElementById(id).childNodes[7].firstChild.innerHTML = value;
                     break;
                 case "x-mapping":
                     if (value == "-") {
                         input["x-active"] = false;
                     }
-                    document.getElementById(id).childNodes[7].firstChild.innerHTML = value;
+                    document.getElementById(id).childNodes[8].firstChild.innerHTML = value;
+                    break;
+                case "x-timeshift":
+                    document.getElementById(id).childNodes[9].firstChild.innerHTML = value;
                     break;
                 default:
             }
@@ -1712,29 +1779,27 @@ function donePopupData(dataType, idsStr) {
         else {
             document.getElementById(id).className = "activeEPG";
         }
-        console.log(input["tvg-logo"]);
         document.getElementById(id).childNodes[2].firstChild.setAttribute("src", input["tvg-logo"]);
     });
     showElement("popup", false);
     return;
 }
 function showPreview(element) {
-    var div = document.getElementById("myStreamsBox");
+    let div = document.getElementById("myStreamsBox");
     switch (element) {
         case false:
             div.className = "notVisible";
             return;
-            break;
     }
-    var streams = ["activeStreams", "inactiveStreams"];
-    streams.forEach(function (preview) {
-        var table = document.getElementById(preview);
+    let streams = ["activeStreams", "inactiveStreams"];
+    streams.forEach(preview => {
+        let table = document.getElementById(preview);
         table.innerHTML = "";
-        var obj = SERVER["data"]["StreamPreviewUI"][preview];
-        obj.forEach(function (channel) {
-            var tr = document.createElement("TR");
-            var tdKey = document.createElement("TD");
-            var tdVal = document.createElement("TD");
+        let obj = SERVER["data"]["StreamPreviewUI"][preview];
+        obj.forEach(channel => {
+            let tr = document.createElement("TR");
+            let tdKey = document.createElement("TD");
+            let tdVal = document.createElement("TD");
             tdKey.className = "tdKey";
             tdVal.className = "tdVal";
             switch (preview) {

@@ -575,14 +575,6 @@ loopToken:
   return
 }
 
-func mapToJSON(tmpMap interface{}) string {
-  jsonString, err := json.MarshalIndent(tmpMap, "", "  ")
-  if err != nil {
-    return "{}"
-  }
-  return string(jsonString)
-}
-
 // SetCookieToken : set cookie
 func SetCookieToken(w http.ResponseWriter, token string) http.ResponseWriter {
   expiration := time.Now().Add(time.Minute * time.Duration(tokenValidity))

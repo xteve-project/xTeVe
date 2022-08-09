@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 	"time"
 )
 
-// Entwicklerinfos anzeigen
+// Show Developer Information
 func showDevInfo() {
 
 	if System.Dev == true {
@@ -28,7 +27,7 @@ func showDevInfo() {
 	return
 }
 
-// Alle Systemordner erstellen
+// Create all System Folders
 func createSystemFolders() (err error) {
 
 	e := reflect.ValueOf(&System.Folder).Elem()
@@ -48,7 +47,7 @@ func createSystemFolders() (err error) {
 	return
 }
 
-// Alle Systemdateien erstellen
+// Create all System Files
 func createSystemFiles() (err error) {
 
 	var debug string
@@ -58,7 +57,7 @@ func createSystemFiles() (err error) {
 
 		err = checkFile(filename)
 		if err != nil {
-			// Datei existiert nicht, wird jetzt erstellt
+			// File does not exist, will be created now
 			err = saveMapToJSONFile(filename, make(map[string]interface{}))
 			if err != nil {
 				return
@@ -89,7 +88,7 @@ func createSystemFiles() (err error) {
 	return
 }
 
-// Einstellungen laden und default Werte setzen (xTeVe)
+// Load Settings and set Default Values (xTeVe)
 func loadSettings() (settings SettingsStruct, err error) {
 
 	settingsMap, err := loadJSONFileToMap(System.File.Settings)
@@ -97,7 +96,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 		return
 	}
 
-	// Deafult Werte setzten
+	// Set Deafult Values
 	var defaults = make(map[string]interface{})
 	var dataMap = make(map[string]interface{})
 
@@ -113,34 +112,41 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["authentication.xml"] = false
 	defaults["backup.keep"] = 10
 	defaults["backup.path"] = System.Folder.Backup
-	defaults["buffer"] = "-"
 	defaults["buffer.size.kb"] = 1024
 	defaults["buffer.timeout"] = 500
+	defaults["buffer"] = "-"
 	defaults["cache.images"] = false
+	defaults["clearXMLTVCache"] = false
+	defaults["defaultMissingEPG"] = "-"
+	defaults["disallowURLDuplicates"] = false
+	defaults["enableMappedChannels"] = false
 	defaults["epgSource"] = "PMS"
 	defaults["ffmpeg.options"] = System.FFmpeg.DefaultOptions
-	defaults["vlc.options"] = System.VLC.DefaultOptions
-	defaults["files"] = dataMap
 	defaults["files.update"] = true
+	defaults["files"] = dataMap
 	defaults["filter"] = make(map[string]interface{})
 	defaults["git.branch"] = System.Branch
+	defaults["hostIP"] = "" // Will be set in resolveHostIP()
 	defaults["language"] = "en"
 	defaults["log.entries.ram"] = 500
-	defaults["mapping.first.channel"] = 1000
-	defaults["xepg.replace.missing.images"] = true
 	defaults["m3u8.adaptive.bandwidth.mbps"] = 10
+	defaults["mapping.first.channel"] = 1000
 	defaults["port"] = "34400"
 	defaults["ssdp"] = true
+	defaults["storeBufferInRAM"] = false
+	defaults["temp.path"] = System.Folder.Temp
+	defaults["tlsMode"] = false
 	defaults["tuner"] = 1
+	defaults["udpxy"] = ""
 	defaults["update"] = []string{"0000"}
 	defaults["user.agent"] = System.Name
 	defaults["uuid"] = createUUID()
-	defaults["udpxy"] = ""
 	defaults["version"] = System.DBVersion
+	defaults["vlc.options"] = System.VLC.DefaultOptions
+	defaults["xepg.replace.missing.images"] = true
 	defaults["xteveAutoUpdate"] = true
-	defaults["temp.path"] = System.Folder.Temp
 
-	// Default Werte setzen
+	// Set Default Values
 	for key, value := range defaults {
 		if _, ok := settingsMap[key]; !ok {
 			settingsMap[key] = value
@@ -152,7 +158,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 		return
 	}
 
-	// Einstellungen von den Flags übernehmen
+	// Adopt the settings from the Flags
 	if len(System.Flag.Port) > 0 {
 		settings.Port = System.Flag.Port
 	}
@@ -170,11 +176,14 @@ func loadSettings() (settings SettingsStruct, err error) {
 		settings.VLCPath = searchFileInOS("cvlc")
 	}
 
-	settings.Version = System.DBVersion
+	// Initialze virutal filesystem for the Buffer
+	initBufferVFS(settings.StoreBufferInRAM)
+
+	settings.TempPath = getValidTempDir(settings.TempPath)
 
 	err = saveSettings(settings)
 
-	// Warung wenn FFmpeg nicht gefunden wurde
+	// Warning if FFmpeg was not found
 	if len(Settings.FFmpegPath) == 0 && Settings.Buffer == "ffmpeg" {
 		showWarning(2020)
 	}
@@ -186,7 +195,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 	return
 }
 
-// Einstellungen speichern (xTeVe)
+// Save Settings (xTeVe)
 func saveSettings(settings SettingsStruct) (err error) {
 
 	if settings.BackupKeep == 0 {
@@ -201,7 +210,11 @@ func saveSettings(settings SettingsStruct) (err error) {
 		settings.BufferTimeout = 0
 	}
 
-	System.Folder.Temp = settings.TempPath + settings.UUID + string(os.PathSeparator)
+	if System.Dev == true {
+		Settings.UUID = "2019-01-DEV-xTeVe!"
+	}
+
+	System.Folder.Temp = getValidTempDir(settings.TempPath + settings.UUID)
 
 	err = writeByteToFile(System.File.Settings, []byte(mapToJSON(settings)))
 	if err != nil {
@@ -210,19 +223,23 @@ func saveSettings(settings SettingsStruct) (err error) {
 
 	Settings = settings
 
-	if System.Dev == true {
-		Settings.UUID = "2019-01-DEV-xTeVe!"
-	}
-
 	setDeviceID()
 
 	return
 }
 
-// Zugriff über die Domain ermöglichen
+// Enable access via the Domain
 func setGlobalDomain(domain string) {
 
 	System.Domain = domain
+
+	if Settings.TLSMode {
+		System.ServerProtocol.API = "https"
+		System.ServerProtocol.DVR = "https"
+		System.ServerProtocol.M3U = "https"
+		System.ServerProtocol.WEB = "https"
+		System.ServerProtocol.XML = "https"
+	}
 
 	switch Settings.AuthenticationPMS {
 	case true:
@@ -253,13 +270,13 @@ func setGlobalDomain(domain string) {
 	return
 }
 
-// UUID generieren
+// Generate UUID
 func createUUID() (uuid string) {
 	uuid = time.Now().Format("2006-01") + "-" + randomString(4) + "-" + randomString(6)
 	return
 }
 
-// Eindeutige Geräte ID für Plex generieren
+// Generate Unique Device ID for Plex
 func setDeviceID() {
 
 	var id = Settings.UUID
@@ -275,7 +292,7 @@ func setDeviceID() {
 	return
 }
 
-// Provider Streaming-URL zu xTeVe Streaming-URL konvertieren
+// Convert Provider Streaming URL to xTeVe Streaming URL
 func createStreamingURL(streamingType, playlistID, channelNumber, channelName, url string) (streamingURL string, err error) {
 
 	var streamInfo StreamInfo

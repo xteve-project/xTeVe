@@ -1,8 +1,10 @@
 package src
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -124,7 +126,7 @@ func showWarning(errCode int) {
 	return
 }
 
-// ShowError : Zeigt die Fehlermeldungen in der Konsole
+// ShowError : Shows the Error Messages in the Console
 func ShowError(err error, errCode int) {
 
 	var mutex = sync.RWMutex{}
@@ -214,7 +216,7 @@ func logCleanUp() {
 	return
 }
 
-// Fehlercodes
+// Return Error Message from numeric Error Codes
 func getErrMsg(errCode int) (errMsg string) {
 
 	switch errCode {
@@ -247,11 +249,19 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Invalid settings file (settings.json), file must be at least version %s", System.Compatibility)
 	case 1014:
 		errMsg = fmt.Sprintf("Invalid filter rule")
+	case 1015:
+		errMsg = fmt.Sprintf("Specified temp folder path is invalid, fallback to %s", os.TempDir())
+	case 1016:
+		errMsg = fmt.Sprintf("Web server could not be stopped.")
+	case 1017:
+		errMsg = fmt.Sprintf("Web server could not be started in TLS mode, fallback to default.")
+	case 1018:
+		errMsg = fmt.Sprintf("Failed to compile channel name update regex")
 
 	case 1020:
 		errMsg = fmt.Sprintf("Data could not be saved, invalid keyword")
 
-	// Datenbank Update
+	// Database Update
 	case 1030:
 		errMsg = fmt.Sprintf("Invalid settings file (%s)", System.File.Settings)
 	case 1031:
@@ -264,13 +274,15 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1060:
 		errMsg = fmt.Sprintf("Invalid characters found in the tvg parameters, streams with invalid parameters were skipped.")
 
-	// Dateisystem
+	// Filesystem
 	case 1070:
 		errMsg = fmt.Sprintf("Folder could not be created.")
 	case 1071:
 		errMsg = fmt.Sprintf("File could not be created")
 	case 1072:
 		errMsg = fmt.Sprintf("File not found")
+	case 1073:
+		errMsg = fmt.Sprintf("Can not remove old config folder contents before recover")
 
 	// Backup
 	case 1090:
@@ -288,7 +300,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 1200:
 		errMsg = fmt.Sprintf("Could not create file")
 
-	// Stream URL Fehler
+	// Stream URL Error
 	case 1201:
 		errMsg = fmt.Sprintf("Plex stream error")
 	case 1202:
@@ -300,9 +312,11 @@ func getErrMsg(errCode int) (errMsg string) {
 
 	// Warnings
 	case 2000:
-		errMsg = fmt.Sprintf("Plex can not handle more than %d streams. If you do not use Plex, you can ignore this warning.", System.PlexChannelLimit)
+		errMsg = fmt.Sprintf("Plex can not handle more than %d streams. Use filter to reduce the number of streams. "+
+			"If you do not use Plex, ignore this warning.", System.PlexChannelLimit)
 	case 2001:
-		errMsg = fmt.Sprintf("%s has loaded more than %d streams. Use the filter to reduce the number of streams.", System.Name, System.UnfilteredChannelLimit)
+		// Free slot
+		return
 	case 2002:
 		errMsg = fmt.Sprintf("PMS can not play m3u8 streams")
 	case 2003:
@@ -317,6 +331,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("FFmpeg binary was not found. Check the FFmpeg binary path in the xTeVe settings.")
 	case 2021:
 		errMsg = fmt.Sprintf("VLC binary was not found. Check the VLC path binary in the xTeVe settings.")
+	case 2022:
+		errMsg = fmt.Sprintf("Loaded database had broken XEPG mapping (version <= 2.1.1). It was cleared.")
 
 	case 2099:
 		errMsg = fmt.Sprintf("Updates have been disabled by the developer")
@@ -337,7 +353,7 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 2302:
 		errMsg = fmt.Sprintf("Channel ID in the XMLTV file has changed. Channel has been deactivated.")
 
-	// Benutzerauthentifizierung
+	// User Authentication
 	case 3000:
 		errMsg = fmt.Sprintf("Database for user authentication could not be initialized.")
 	case 3001:
@@ -358,6 +374,8 @@ func getErrMsg(errCode int) (errMsg string) {
 		errMsg = fmt.Sprintf("Temporary buffer files could not be deleted")
 	case 4006:
 		errMsg = fmt.Sprintf("Server connection timeout")
+	case 4007:
+		errMsg = fmt.Sprintf("Old temporary buffer file could not be deleted")
 
 	// Buffer (M3U8)
 	case 4050:
@@ -385,11 +403,29 @@ func getErrMsg(errCode int) (errMsg string) {
 	case 6004:
 		errMsg = fmt.Sprintf("xTeVe update available")
 
+	// Certificates
+	case 7000:
+		errMsg = fmt.Sprintf("Can not generate a certificate")
+
 	default:
 		errMsg = fmt.Sprintf("Unknown error / warning (%d)", errCode)
 	}
 
 	return errMsg
+}
+
+func sendAlert(text string) {
+
+	select {
+	case webAlerts <- text:
+		//
+	default:
+		err := errors.New(fmt.Sprintf("Client alert buffer is full, dropping the message: %v", text))
+		ShowError(err, 0)
+	}
+
+	return
+
 }
 
 func addNotification(notification Notification) (err error) {

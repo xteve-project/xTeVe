@@ -1,11 +1,11 @@
 package src
 
-// RequestStruct : Anfragen über die Websocket Schnittstelle
+// RequestStruct : Requests via the Websocket Interface
 type RequestStruct struct {
-	// Befehle an xTeVe
+	// Commands to xTeVe
 	Cmd string `json:"cmd,required"`
 
-	// Benutzer
+	// User
 	DeleteUser bool                   `json:"deleteUser,omitempty"`
 	UserData   map[string]interface{} `json:"userData,omitempty"`
 
@@ -15,7 +15,7 @@ type RequestStruct struct {
 	// Restore
 	Base64 string `json:"base64,omitempty"`
 
-	// Neue Werte für die Einstellungen (settings.json)
+	// New Values for the Settings (settings.json)
 	Settings struct {
 		API                      *bool     `json:"api,omitempty"`
 		AuthenticationAPI        *bool     `json:"authentication.api,omitempty"`
@@ -26,16 +26,22 @@ type RequestStruct struct {
 		BackupKeep               *int      `json:"backup.keep,omitempty"`
 		BackupPath               *string   `json:"backup.path,omitempty"`
 		Buffer                   *string   `json:"buffer,omitempty"`
-		BufferSize               *int      `json:"buffer.size.kb, omitempty"`
+		BufferSize               *int      `json:"buffer.size.kb,omitempty"`
 		BufferTimeout            *float64  `json:"buffer.timeout,omitempty"`
 		CacheImages              *bool     `json:"cache.images,omitempty"`
+		ClearXMLTVCache          *bool     `json:"clearXMLTVCache,omitempty"`
+		DefaultMissingEPG        *string   `json:"defaultMissingEPG,omitempty"`
+		DisallowURLDuplicates    *bool     `json:"disallowURLDuplicates,omitempty"`
+		EnableMappedChannels     *bool     `json:"enableMappedChannels,omitempty"`
 		EpgSource                *string   `json:"epgSource,omitempty"`
 		FFmpegOptions            *string   `json:"ffmpeg.options,omitempty"`
 		FFmpegPath               *string   `json:"ffmpeg.path,omitempty"`
 		VLCOptions               *string   `json:"vlc.options,omitempty"`
 		VLCPath                  *string   `json:"vlc.path,omitempty"`
 		FilesUpdate              *bool     `json:"files.update,omitempty"`
+		HostIP                   *string   `json:"hostIP,omitempty"` // IP chosen in web client. Used to form m3u and xml files.
 		TempPath                 *string   `json:"temp.path,omitempty"`
+		TLSMode                  *bool     `json:"tlsMode,omitempty"`
 		Tuner                    *int      `json:"tuner,omitempty"`
 		UDPxy                    *string   `json:"udpxy,omitempty"`
 		Update                   *[]string `json:"update,omitempty"`
@@ -44,6 +50,7 @@ type RequestStruct struct {
 		XteveAutoUpdate          *bool     `json:"xteveAutoUpdate,omitempty"`
 		SchemeM3U                *string   `json:"scheme.m3u,omitempty"`
 		SchemeXML                *string   `json:"scheme.xml,omitempty"`
+		StoreBufferInRAM         *bool     `json:"storeBufferInRAM,omitempty"`
 	} `json:"settings,omitempty"`
 
 	// Upload Logo
@@ -52,7 +59,7 @@ type RequestStruct struct {
 	// Filter
 	Filter map[int64]interface{} `json:"filter,omitempty"`
 
-	// Dateien (M3U, HDHR, XMLTV)
+	// Files (M3U, HDHR, XMLTV)
 	Files struct {
 		HDHR  map[string]interface{} `json:"hdhr,omitempty"`
 		M3U   map[string]interface{} `json:"m3u,omitempty"`
@@ -68,7 +75,7 @@ type RequestStruct struct {
 	} `json:"wizard,omitempty"`
 }
 
-// ResponseStruct : Antworten an den Client (WEB)
+// ResponseStruct : Responses to the Client (WEB)
 type ResponseStruct struct {
 	ClientInfo struct {
 		ARCH      string `json:"arch"`
@@ -105,6 +112,7 @@ type ResponseStruct struct {
 	Alert               string                 `json:"alert,omitempty"`
 	ConfigurationWizard bool                   `json:"configurationWizard,required"`
 	Error               string                 `json:"err,omitempty"`
+	IPAddressesV4Host   []string               `json:"ipAddressesV4Host"` // Every IPv4 address to display in web client
 	Log                 WebScreenLogStruct     `json:"log,required"`
 	LogoURL             string                 `json:"logoURL,omitempty"`
 	OpenLink            string                 `json:"openLink,omitempty"`
@@ -120,7 +128,7 @@ type ResponseStruct struct {
 	Notification map[string]Notification `json:"notification,omitempty"`
 }
 
-// APIRequestStruct : Anfrage über die API Schnittstelle
+// APIRequestStruct : Request via the API interface
 type APIRequestStruct struct {
 	Cmd      string `json:"cmd"`
 	Password string `json:"password"`
@@ -128,7 +136,7 @@ type APIRequestStruct struct {
 	Username string `json:"username"`
 }
 
-// APIResponseStruct : Antwort an den Client (API)
+// APIResponseStruct : Response to the Client (API)
 type APIResponseStruct struct {
 	EpgSource     string `json:"epg.source,omitempty"`
 	Error         string `json:"err,omitempty"`
@@ -146,7 +154,7 @@ type APIResponseStruct struct {
 	VersionXteve  string `json:"version.xteve,omitempty"`
 }
 
-// WebScreenLogStruct : Logs werden im RAM gespeichert und für das Webinterface bereitgestellt
+// WebScreenLogStruct : Logs are saved in RAM and made available for the Web Interface
 type WebScreenLogStruct struct {
 	Errors   int      `json:"errors,required"`
 	Log      []string `json:"log,required"`

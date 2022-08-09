@@ -86,6 +86,7 @@ func extractZIP(archive, target string) (err error) {
 	if err != nil {
 		return err
 	}
+	defer reader.Close()
 
 	if err := os.MkdirAll(target, 0755); err != nil {
 		return err
@@ -127,7 +128,7 @@ func extractGZIP(gzipBody []byte, fileSource string) (body []byte, err error) {
 	var r io.Reader
 	r, err = gzip.NewReader(b)
 	if err != nil {
-		// Keine gzip Datei
+		// Not a gzip file
 		body = gzipBody
 		err = nil
 		return

@@ -1,35 +1,22 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var SettingsCategory = /** @class */ (function () {
-    function SettingsCategory() {
+class SettingsCategory {
+    constructor() {
         this.DocumentID = "content_settings";
     }
-    SettingsCategory.prototype.createCategoryHeadline = function (value) {
+    createCategoryHeadline(value) {
         var element = document.createElement("H4");
         element.innerHTML = value;
         return element;
-    };
-    SettingsCategory.prototype.createHR = function () {
+    }
+    createHR() {
         var element = document.createElement("HR");
         return element;
-    };
-    SettingsCategory.prototype.createSettings = function (settingsKey) {
+    }
+    createSettings(settingsKey) {
         var setting = document.createElement("TR");
         var content = new PopupContent();
         var data = SERVER["settings"][settingsKey];
         switch (settingsKey) {
-            // Texteingaben
+            // Text inputs
             case "update":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.update.title}}" + ":";
@@ -129,7 +116,29 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
-            // Checkboxen
+            // Checkboxes
+            case "tlsMode":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.tlsMode.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "disallowURLDuplicates":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.disallowURLDuplicates.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "authentication.web":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.authenticationWEB.title}}" + ":";
@@ -218,9 +227,31 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "storeBufferInRAM":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.storeBufferInRAM.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "xteveAutoUpdate":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.xteveAutoUpdate.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "clearXMLTVCache":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.clearXMLTVCache.title}}" + ":";
                 var tdRight = document.createElement("TD");
                 var input = content.createCheckbox(settingsKey);
                 input.checked = data;
@@ -240,7 +271,30 @@ var SettingsCategory = /** @class */ (function () {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "enableMappedChannels":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.enableMappedChannels.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createCheckbox(settingsKey);
+                input.checked = data;
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             // Select
+            case "hostIP":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.hostIP.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var text = SERVER["ipAddressesV4Host"];
+                var values = SERVER["ipAddressesV4Host"];
+                var select = content.createSelect(text, values, data, settingsKey);
+                select.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(select);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "tuner":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.tuner.title}}" + ":";
@@ -263,6 +317,23 @@ var SettingsCategory = /** @class */ (function () {
                 var tdRight = document.createElement("TD");
                 var text = ["PMS", "XEPG"];
                 var values = ["PMS", "XEPG"];
+                var select = content.createSelect(text, values, data, settingsKey);
+                select.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(select);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
+            case "defaultMissingEPG":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.defaultMissingEPG.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var text = [
+                    "-", "30 Minutes (30_Minutes)", "60 Minutes (60_Minutes)", "90 Minutes (90_Minutes)",
+                    "120 Minutes (120_Minutes)", "180 Minutes (180_Minutes)", "240 Minutes (240_Minutes)", "360 Minutes (360_Minutes)"
+                ];
+                var values = [
+                    "-", "30_Minutes", "60_Minutes", "90_Minutes", "120_Minutes", "180_Minutes", "240_Minutes", "360_Minutes"
+                ];
                 var select = content.createSelect(text, values, data, settingsKey);
                 select.setAttribute("onchange", "javascript: this.className = 'changed'");
                 tdRight.appendChild(select);
@@ -318,11 +389,17 @@ var SettingsCategory = /** @class */ (function () {
                 break;
         }
         return setting;
-    };
-    SettingsCategory.prototype.createDescription = function (settingsKey) {
+    }
+    createDescription(settingsKey) {
         var description = document.createElement("TR");
         var text;
         switch (settingsKey) {
+            case "tlsMode":
+                text = "{{.settings.tlsMode.description}}";
+                break;
+            case "disallowURLDuplicates":
+                text = "{{.settings.disallowURLDuplicates.description}}";
+                break;
             case "authentication.web":
                 text = "{{.settings.authenticationWEB.description}}";
                 break;
@@ -358,6 +435,9 @@ var SettingsCategory = /** @class */ (function () {
             case "buffer.size.kb":
                 text = "{{.settings.bufferSize.description}}";
                 break;
+            case "storeBufferInRAM":
+                text = "{{.settings.storeBufferInRAM.description}}";
+                break;
             case "buffer.timeout":
                 text = "{{.settings.bufferTimeout.description}}";
                 break;
@@ -379,14 +459,26 @@ var SettingsCategory = /** @class */ (function () {
             case "epgSource":
                 text = "{{.settings.epgSource.description}}";
                 break;
+            case "hostIP":
+                text = "{{.settings.hostIP.description}}";
+                break;
             case "tuner":
                 text = "{{.settings.tuner.description}}";
                 break;
             case "update":
                 text = "{{.settings.update.description}}";
                 break;
+            case "clearXMLTVCache":
+                text = "{{.settings.clearXMLTVCache.description}}";
+                break;
             case "api":
                 text = "{{.settings.api.description}}";
+                break;
+            case "defaultMissingEPG":
+                text = "{{.settings.defaultMissingEPG.description}}";
+                break;
+            case "enableMappedChannels":
+                text = "{{.settings.enableMappedChannels.description}}";
                 break;
             case "files.update":
                 text = "{{.settings.filesUpdate.description}}";
@@ -413,27 +505,23 @@ var SettingsCategory = /** @class */ (function () {
         description.appendChild(tdLeft);
         description.appendChild(tdRight);
         return description;
-    };
-    return SettingsCategory;
-}());
-var SettingsCategoryItem = /** @class */ (function (_super) {
-    __extends(SettingsCategoryItem, _super);
-    function SettingsCategoryItem(headline, settingsKeys) {
-        var _this = _super.call(this) || this;
-        _this.headline = headline;
-        _this.settingsKeys = settingsKeys;
-        return _this;
     }
-    SettingsCategoryItem.prototype.createCategory = function () {
-        var _this = this;
+}
+class SettingsCategoryItem extends SettingsCategory {
+    constructor(headline, settingsKeys) {
+        super();
+        this.headline = headline;
+        this.settingsKeys = settingsKeys;
+    }
+    createCategory() {
         var headline = this.createCategoryHeadline(this.headline);
         var settingsKeys = this.settingsKeys;
         var doc = document.getElementById(this.DocumentID);
         doc.appendChild(headline);
-        // Tabelle für die Kategorie erstellen
+        // Create a table for the category
         var table = document.createElement("TABLE");
         var keys = settingsKeys.split(",");
-        keys.forEach(function (settingsKey) {
+        keys.forEach(settingsKey => {
             switch (settingsKey) {
                 case "authentication.pms":
                 case "authentication.m3u":
@@ -443,8 +531,8 @@ var SettingsCategoryItem = /** @class */ (function (_super) {
                         break;
                     }
                 default:
-                    var item = _this.createSettings(settingsKey);
-                    var description = _this.createDescription(settingsKey);
+                    var item = this.createSettings(settingsKey);
+                    var description = this.createDescription(settingsKey);
                     table.appendChild(item);
                     table.appendChild(description);
                     break;
@@ -452,22 +540,19 @@ var SettingsCategoryItem = /** @class */ (function (_super) {
         });
         doc.appendChild(table);
         doc.appendChild(this.createHR());
-    };
-    return SettingsCategoryItem;
-}(SettingsCategory));
+    }
+}
 function showSettings() {
-    console.log("SETTINGS");
-    for (var i = 0; i < settingsCategory.length; i++) {
+    for (let i = 0; i < settingsCategory.length; i++) {
         settingsCategory[i].createCategory();
     }
 }
 function saveSettings() {
-    console.log("Save Settings");
     var cmd = "saveSettings";
     var div = document.getElementById("content_settings");
     var settings = div.getElementsByClassName("changed");
     var newSettings = new Object();
-    for (var i = 0; i < settings.length; i++) {
+    for (let i = 0; i < settings.length; i++) {
         var name;
         var value;
         switch (settings[i].tagName) {
@@ -496,7 +581,7 @@ function saveSettings() {
             case "SELECT":
                 name = settings[i].name;
                 value = settings[i].value;
-                // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+                // If the value is a number, store it as a number
                 if (isNaN(value)) {
                     newSettings[name] = value;
                 }

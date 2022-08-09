@@ -3,6 +3,7 @@ class Log {
   createLog(entry:string):any {
 
     var element = document.createElement("PRE");
+    entry = String(entry);
 
     if (entry.indexOf("WARNING") != -1) {
       element.className = "warningMsg"
@@ -32,7 +33,7 @@ function showLogs(bottom:boolean) {
 
   div.innerHTML = ""
 
-  var keys = getObjKeys(logs)
+  var keys = getOwnObjProps(logs)
 
   keys.forEach(logID => {
 

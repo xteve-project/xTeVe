@@ -58,12 +58,13 @@
   {
     "table":
     {
+      "startingChannel": "Starting Ch. No.",
       "name": "Filter Name",
       "type": "Filter Type",
       "filter": "Filter"
     },
     "custom": "Custom",
-    "group": "Group",
+    "group": "M3U Group",
     "name":
     {
       "title": "Filter Name",
@@ -111,8 +112,19 @@
       "title": "Exclude",
       "placeholder": "ES,IT",
       "description": "Channel name must not contain.<br>(Comma separated) Comma means or"
+    },
+    "preserveMapping":
+    {
+      "title": "Preserve Existing M3U<br>Channel Numbers",
+      "palceholder": "",
+      "description": "Preserve existing M3U playlist channel numbers?"
+    },
+    "startingChannel":
+    {
+      "title": "Starting Channel Number",
+      "placeholder": "",
+      "description": ""
     }
-
   },
   "playlist":
   {
@@ -207,10 +219,12 @@
       "chNo": "Ch. No.",
       "logo": "Logo",
       "channelName": "Channel Name",
+      "updateChannelNameRegex": "Upd. Rx.",
       "playlist": "Playlist",
       "groupTitle": "Group Title",
       "xmltvFile": "XMLTV File",
-      "xmltvID": "XMLTV ID"
+      "xmltvID": "XMLTV ID",
+      "timeshift": "Timeshift"
     },
     "active":
     {
@@ -235,6 +249,24 @@
       "title": "Update Channel Name",
       "placeholder": "",
       "description": ""
+    },
+    "updateChannelNameRegex":
+    {
+      "title": "Channel name update regex",
+      "placeholder": "For example ^PPV[ \\\\-_]?1.*",
+      "description": "On update, if any new channel name matches this regex, rename current channel to the first matching name"
+    },
+    "updateChannelNameByGroupRegex":
+    {
+      "title": "Only by group regex",
+      "placeholder": "",
+      "description": "Rename this channel only if current user-defined group matches this regex"
+    },
+    "updateChannelGroup":
+    {
+      "title": "Update Channel Group",
+      "placeholder": "",
+      "description": "If checked, use group from the database"
     },
     "channelLogo":
     {
@@ -270,6 +302,12 @@
     {
       "title": "XMLTV Channel",
       "placeholder": "",
+      "description": ""
+    },
+    "timeshift":
+    {
+      "title": "Timeshift",
+      "placeholder": "0",
       "description": ""
     }
   },
@@ -339,6 +377,7 @@
     "category":
     {
       "general": "General",
+      "mapping": "Mapping",
       "files": "Files",
       "streaming": "Streaming",
       "backup": "Backup",
@@ -355,6 +394,25 @@
       "title": "API Interface",
       "description": "Via API interface it is possible to send commands to xTeVe. API documentation is <a href='https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md#api'>here</a>"
     },
+    "clearXMLTVCache":
+    {
+      "title": "Clear XMLTV cache",
+      "description": "If checked, do not keep XMLTV cache in memory.<br>Significally reduces RAM usage in idle mode,<br>but significally slowing down every subsequent update in XEPG database."
+    },
+    "defaultMissingEPG":
+    {
+      "title": "Fill Missing EPG Data",
+      "description": "When there is no matching EPG data for channel, <br>autofill with xTeVe dummy EPG data?"
+    },
+    "enableMappedChannels": {
+      "title": "Enable mapped channels",
+      "description": "Automatically enable channels with assigned EPG data"
+    },
+    "disallowURLDuplicates":
+    {
+      "title": "Disallow URL duplicates",
+      "description": "If checked, do not add a new channel from playlist if channel with such URL already exists"
+    },
     "epgSource":
     {
       "title": "EPG Source",
@@ -364,6 +422,15 @@
     {
       "title": "Number of Tuners",
       "description": "Number of parallel connections that can be established to the provider.<br>Available for: Plex, Emby (HDHR), M3U (with active buffer).<br>After a change, xTeVe must be delete in the Plex / Emby DVR settings and set up again."
+    },
+    "hostIP":
+    {
+      "title": "Host IP",
+      "description": "IP address xTeVe will use to form M3U and XMLTV files"
+    },
+    "tlsMode": {
+      "title": "TLS (HTTPS) mode",
+      "description": "Changes web server protocol to HTTPS.<br>For details, see <a>https://github.com/SCP002/xTeVe#tls-mode</a>"
     },
     "filesUpdate":
     {
@@ -429,6 +496,11 @@
     {
       "title": "Buffer Size",
       "description": "Buffer size in MB.<br>M3U8: If the TS segment smaller then the buffer size, the file size of the segment is used."
+    },
+    "storeBufferInRAM":
+    {
+      "title": "Store buffer in RAM",
+      "description": "If checked, write buffer to RAM instead of writing to disk"
     },
     "bufferTimeout":
     {

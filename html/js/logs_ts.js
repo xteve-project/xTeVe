@@ -1,8 +1,7 @@
-var Log = /** @class */ (function () {
-    function Log() {
-    }
-    Log.prototype.createLog = function (entry) {
+class Log {
+    createLog(entry) {
         var element = document.createElement("PRE");
+        entry = String(entry);
         if (entry.indexOf("WARNING") != -1) {
             element.className = "warningMsg";
         }
@@ -14,16 +13,15 @@ var Log = /** @class */ (function () {
         }
         element.innerHTML = entry;
         return element;
-    };
-    return Log;
-}());
+    }
+}
 function showLogs(bottom) {
     var log = new Log();
     var logs = SERVER["log"]["log"];
     var div = document.getElementById("content_log");
     div.innerHTML = "";
-    var keys = getObjKeys(logs);
-    keys.forEach(function (logID) {
+    var keys = getOwnObjProps(logs);
+    keys.forEach(logID => {
         var entry = log.createLog(logs[logID]);
         div.append(entry);
     });

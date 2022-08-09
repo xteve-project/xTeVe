@@ -4,7 +4,6 @@ function login() {
     var div = document.getElementById("content");
     var form = document.getElementById("authentication");
     var inputs = div.getElementsByTagName("INPUT");
-    console.log(inputs);
     for (var i = inputs.length - 1; i >= 0; i--) {
         var key = inputs[i].name;
         var value = inputs[i].value;
@@ -27,6 +26,5 @@ function login() {
             return;
         }
     }
-    console.log(data);
     form.submit();
 }

@@ -6,7 +6,9 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"net"
 	"os"
@@ -16,18 +18,21 @@ import (
 	"runtime"
 	"strings"
 	"text/template"
+
+	"github.com/avfs/avfs"
+	"github.com/samber/lo"
 )
 
 // --- System Tools ---
 
-// Prüft ob der Ordner existiert, falls nicht, wir der Ordner erstellt
+// Checks whether the Folder exists, if not, the Folder is created
 func checkFolder(path string) (err error) {
 
 	var debug string
 	_, err = os.Stat(filepath.Dir(path))
 
 	if os.IsNotExist(err) {
-		// Ordner existiert nicht, wird jetzt erstellt
+		// Folder does not exist, will now be created
 
 		err = os.MkdirAll(getPlatformPath(path), 0755)
 		if err == nil {
@@ -45,7 +50,44 @@ func checkFolder(path string) (err error) {
 	return nil
 }
 
-// Prüft ob die Datei im Dateisystem existiert
+// checkVFSFolder : Checks whether the Folder exists in provided virtual filesystem, if not, the Folder is created
+func checkVFSFolder(path string, vfs avfs.VFS) (err error) {
+
+	var debug string
+	_, err = vfs.Stat(filepath.Dir(path))
+
+	if fsIsNotExistErr(err) {
+		// Folder does not exist, will now be created
+
+		err = vfs.MkdirAll(getPlatformPath(path), 0755)
+		if err == nil {
+
+			debug = fmt.Sprintf("Create virtual filesystem Folder:%s", path)
+			showDebug(debug, 1)
+
+		} else {
+			return err
+		}
+
+		return nil
+	}
+
+	return nil
+}
+
+// fsIsNotExistErr : Returns true whether the <err> is known to report that a file or directory does not exist,
+// including virtual file system errors
+func fsIsNotExistErr(err error) bool {
+	if errors.Is(err, fs.ErrNotExist) ||
+		errors.Is(err, avfs.ErrWinPathNotFound) ||
+		errors.Is(err, avfs.ErrWinFileNotFound) {
+		return true
+	}
+
+	return false
+}
+
+// Checks whether the File exists in the Filesystem
 func checkFile(filename string) (err error) {
 
 	var file = getPlatformFile(filename)
@@ -69,7 +111,16 @@ func checkFile(filename string) (err error) {
 	return
 }
 
-// GetUserHomeDirectory : Benutzer Homer Verzeichnis
+func allFilesExist(list ...string) bool {
+	for _, f := range list {
+		if err := checkFile(f); err != nil {
+			return false
+		}
+	}
+	return true
+}
+
+// GetUserHomeDirectory : User Home Directory
 func GetUserHomeDirectory() (userHomeDirectory string) {
 
 	usr, err := user.Current()
@@ -92,7 +143,7 @@ func GetUserHomeDirectory() (userHomeDirectory string) {
 	return
 }
 
-// Prüft Dateiberechtigung
+// Checks File Permissions
 func checkFilePermission(dir string) (err error) {
 
 	var filename = dir + "permission.test"
@@ -105,12 +156,46 @@ func checkFilePermission(dir string) (err error) {
 	return
 }
 
-// Ordnerpfad für das laufende OS generieren
+// Generate folder path for the running OS
 func getPlatformPath(path string) string {
 	return filepath.Dir(path) + string(os.PathSeparator)
 }
 
-// Dateipfad für das laufende OS generieren
+// getDefaultTempDir returns default temporary folder path + application name, e.g.: "/tmp/xteve/" or %Tmp%\xteve.
+//
+// Function assumes default OS temporary folder exists and writable.
+func getDefaultTempDir() string {
+	return os.TempDir() + string(os.PathSeparator) + System.AppName + string(os.PathSeparator)
+}
+
+// getValidTempDir returns standartized temporary folder <path> with trailing path separator:
+//
+// Slashes will be replaced with OS specific ones and duplicated slashes removed.
+//
+// On Windows, "/tmp" will be replaced with expanded system environment variable %Tmp%.
+func getValidTempDir(path string) string {
+	if runtime.GOOS == "windows" {
+		if strings.HasPrefix(path, "/tmp") {
+			path = strings.Replace(path, "/tmp", os.TempDir(), 1)
+		}
+	}
+	path = filepath.Clean(path)
+	path = path + string(os.PathSeparator)
+
+	err := checkFolder(path)
+	if err == nil {
+		err = checkFilePermission(path)
+	}
+
+	if err != nil {
+		ShowError(err, 1015)
+		path = getDefaultTempDir()
+	}
+
+	return path
+}
+
+// Generate File Path for the running OS
 func getPlatformFile(filename string) (osFilePath string) {
 
 	path, file := filepath.Split(filename)
@@ -120,18 +205,12 @@ func getPlatformFile(filename string) (osFilePath string) {
 	return
 }
 
-// Dateinamen aus dem Dateipfad ausgeben
+// Output Filenames from the File Path
 func getFilenameFromPath(path string) (file string) {
 	return filepath.Base(path)
 }
 
-// Nicht mehr verwendete Systemdaten löschen
-func removeOldSystemData() {
-	// Temporären Ordner löschen
-	os.RemoveAll(System.Folder.Temp)
-}
-
-// Sucht eine Datei im OS
+// Searches for a File in the OS
 func searchFileInOS(file string) (path string) {
 
 	switch runtime.GOOS {
@@ -193,14 +272,6 @@ func mapToJSON(tmpMap interface{}) string {
 func jsonToMap(content string) map[string]interface{} {
 
 	var tmpMap = make(map[string]interface{})
-	json.Unmarshal([]byte(content), &tmpMap)
-
-	return (tmpMap)
-}
-
-func jsonToMapInt64(content string) map[int64]interface{} {
-
-	var tmpMap = make(map[int64]interface{})
 	json.Unmarshal([]byte(content), &tmpMap)
 
 	return (tmpMap)
@@ -287,7 +358,7 @@ func readStringFromFile(file string) (str string, err error) {
 	return
 }
 
-// Netzwerk
+// Network
 func resolveHostIP() (err error) {
 
 	netInterfaceAddresses, err := net.InterfaceAddrs()
@@ -307,9 +378,10 @@ func resolveHostIP() (err error) {
 			if networkIP.IP.To4() != nil {
 
 				System.IPAddressesV4 = append(System.IPAddressesV4, ip)
+				System.IPAddressesV4Raw = append(System.IPAddressesV4Raw, networkIP.IP)
 
 				if !networkIP.IP.IsLoopback() && ip[0:7] != "169.254" {
-					System.IPAddress = ip
+					System.IPAddressesV4Host = append(System.IPAddressesV4Host, ip)
 				}
 
 			} else {
@@ -320,17 +392,22 @@ func resolveHostIP() (err error) {
 
 	}
 
-	if len(System.IPAddress) == 0 {
+	// If IP previously set in settings (including the default, empty) is not available anymore
+	if lo.Contains(System.IPAddressesV4Host, Settings.HostIP) == false {
+		Settings.HostIP = System.IPAddressesV4Host[0]
+	}
+
+	if len(Settings.HostIP) == 0 {
 
 		switch len(System.IPAddressesV4) {
 
 		case 0:
 			if len(System.IPAddressesV6) > 0 {
-				System.IPAddress = System.IPAddressesV6[0]
+				Settings.HostIP = System.IPAddressesV6[0]
 			}
 
 		default:
-			System.IPAddress = System.IPAddressesV4[0]
+			Settings.HostIP = System.IPAddressesV4[0]
 
 		}
 
@@ -344,7 +421,7 @@ func resolveHostIP() (err error) {
 	return
 }
 
-// Sonstiges
+// Miscellaneous
 func randomString(n int) string {
 
 	const alphanum = "AB1CD2EF3GH4IJ5KL6MN7OP8QR9ST0UVWXYZ"
@@ -372,39 +449,6 @@ func parseTemplate(content string, tmpMap map[string]interface{}) (result string
 	result = tpl.String()
 
 	return
-}
-
-func indexOfString(element string, data []string) int {
-
-	for k, v := range data {
-		if element == v {
-			return k
-		}
-	}
-
-	return -1
-}
-
-func indexOfFloat64(element float64, data []float64) int {
-
-	for k, v := range data {
-		if element == v {
-			return (k)
-		}
-	}
-
-	return -1
-}
-
-func indexOfInt(element int, data []int) int {
-
-	for k, v := range data {
-		if element == v {
-			return (k)
-		}
-	}
-
-	return -1
 }
 
 func getMD5(str string) string {

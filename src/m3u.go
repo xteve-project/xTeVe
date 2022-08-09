@@ -9,10 +9,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/samber/lo"
 	m3u "xteve/src/internal/m3u-parser"
 )
 
-// Playlisten parsen
+// Parse Playlists
 func parsePlaylist(filename, fileType string) (channels []interface{}, err error) {
 
 	content, err := readByteFromFile(filename)
@@ -33,7 +34,7 @@ func parsePlaylist(filename, fileType string) (channels []interface{}, err error
 	return
 }
 
-// Streams filtern
+// Filter Streams
 func filterThisStream(s interface{}) (status bool) {
 
 	status = false
@@ -61,7 +62,7 @@ func filterThisStream(s interface{}) (status bool) {
 			name = v
 		}
 
-		// Unerwünschte Streams !{DEU}
+		// Unwanted Streams !{DEU}
 		r := regexp.MustCompile(regexpNO)
 		val := r.FindStringSubmatch(filter.Rule)
 
@@ -73,7 +74,7 @@ func filterThisStream(s interface{}) (status bool) {
 
 		}
 
-		// Muss zusätzlich erfüllt sein {DEU}
+		// Required Streams {DEU}
 		r = regexp.MustCompile(regexpYES)
 		val = r.FindStringSubmatch(filter.Rule)
 
@@ -105,6 +106,8 @@ func filterThisStream(s interface{}) (status bool) {
 
 			if group == filter.Rule {
 				match = true
+				stream["_preserve-mapping"] = strconv.FormatBool(filter.PreserveMapping)
+				stream["_starting-channel"] = filter.StartingChannel
 			}
 
 		case "custom-filter":
@@ -139,7 +142,7 @@ func filterThisStream(s interface{}) (status bool) {
 	return false
 }
 
-// Bedingungen für den Filter
+// Conditions for the Filter
 func checkConditions(streamValues, conditions, coType string) (status bool) {
 
 	switch coType {
@@ -178,7 +181,7 @@ func checkConditions(streamValues, conditions, coType string) (status bool) {
 	return
 }
 
-// xTeVe M3U Datei erstellen
+// Create xTeVe M3U file
 func buildM3U(groups []string) (m3u string, err error) {
 
 	var imgc = Data.Cache.Images
@@ -195,7 +198,7 @@ func buildM3U(groups []string) (m3u string, err error) {
 
 				if len(groups) > 0 {
 
-					if indexOfString(xepgChannel.XGroupTitle, groups) == -1 {
+					if lo.IndexOf(groups, xepgChannel.XGroupTitle) == -1 {
 						goto Done
 					}
 
@@ -215,7 +218,7 @@ func buildM3U(groups []string) (m3u string, err error) {
 	Done:
 	}
 
-	// M3U Inhalt erstellen
+	// Create M3U Content
 	sort.Float64s(channelNumbers)
 
 	var xmltvURL = fmt.Sprintf("%s://%s/xmltv/xteve.xml", System.ServerProtocol.XML, System.Domain)

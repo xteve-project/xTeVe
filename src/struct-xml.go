@@ -2,7 +2,7 @@ package src
 
 import "encoding/xml"
 
-// XMLTV : XMLTV Datei
+// XMLTV : XMLTV File
 type XMLTV struct {
 	Generator string   `xml:"generator-info-name,attr"`
 	Source    string   `xml:"source-info-name,attr"`
@@ -12,24 +12,24 @@ type XMLTV struct {
 	Program []*Program `xml:"programme"`
 }
 
-// Channel : Kanäle
+// Channel : Channels
 type Channel struct {
-	ID          string        `xml:"id,attr"`
-	DisplayName []DisplayName `xml:"display-name"`
-	Icon        Icon          `xml:"icon"`
+	ID           string        `xml:"id,attr"`
+	DisplayNames []DisplayName `xml:"display-name"`
+	Icon         Icon          `xml:"icon"`
 }
 
-// DisplayName : Kanalname
+// DisplayName : Channel Name
 type DisplayName struct {
 	Value string `xml:",chardata"`
 }
 
-// Icon : Senderlogo
+// Icon : Station Logo
 type Icon struct {
 	Src string `xml:"src,attr"`
 }
 
-// Program : Programme
+// Program : Programs
 type Program struct {
 	Channel string `xml:"channel,attr"`
 	Start   string `xml:"start,attr"`
@@ -54,61 +54,61 @@ type Program struct {
 	Premiere        *Live            `xml:"premiere"`
 }
 
-// Title : Programmtitel
+// Title : Program Title
 type Title struct {
 	Lang  string `xml:"lang,attr"`
 	Value string `xml:",chardata"`
 }
 
-// SubTitle : Kurzbeschreibung
+// SubTitle : Brief Description
 type SubTitle struct {
 	Lang  string `xml:"lang,attr"`
 	Value string `xml:",chardata"`
 }
 
-//Desc : Programmbeschreibung
+//Desc : Program Description
 type Desc struct {
 	Lang  string `xml:"lang,attr"`
 	Value string `xml:",chardata"`
 }
 
-// Category : Kategorien
+// Category : Categories
 type Category struct {
 	Lang  string `xml:"lang,attr"`
 	Value string `xml:",chardata"`
 }
 
-// Rating : Bewertung
+// Rating : Rating
 type Rating struct {
 	System string `xml:"system,attr"`
 	Value  string `xml:"value"`
 	Icon   []Icon `xml:"icon"`
 }
 
-// StarRating : Bewertung / Kritiken
+// StarRating : Rating / Reviews
 type StarRating struct {
 	Value  string `xml:"value"`
 	System string `xml:"system,attr"`
 }
 
-// Language : Sprachen
+// Language : Langueages
 type Language struct {
 	Value string `xml:",chardata"`
 }
 
-// Country : Länder
+// Country : Countries
 type Country struct {
 	Lang  string `xml:"lang,attr"`
 	Value string `xml:",chardata"`
 }
 
-// EpisodeNum : Episodennummerierung
+// EpisodeNum : Episode Numbering
 type EpisodeNum struct {
 	System string `xml:"system,attr"`
 	Value  string `xml:",chardata"`
 }
 
-// Poster : Programmposter / Cover
+// Poster : Program Poster / Cover
 type Poster struct {
 	Height string `xml:"height,attr"`
 	Src    string `xml:"src,attr"`
@@ -151,7 +151,7 @@ type Producer struct {
 	Value string `xml:",chardata"`
 }
 
-// Video : Video Metadaten
+// Video : Video Metadata
 type Video struct {
 	Aspect  string `xml:"aspect,omitempty"`
 	Colour  string `xml:"colour,omitempty"`
@@ -159,17 +159,17 @@ type Video struct {
 	Quality string `xml:"quality,omitempty"`
 }
 
-// PreviouslyShown : Widerholung bzw. Erstausstrahlung
+// PreviouslyShown : Repetition or first Broadcast
 type PreviouslyShown struct {
 	Start string `xml:"start,attr"`
 }
 
-// New : Sendung als neu deklarieren
+// New : Declare the Broadcast as new
 type New struct {
 	Value string `xml:",chardata"`
 }
 
-// Live : Sendung als Liveübertragung deklarieren
+// Live : Declare the Broadcast as a Live Broadcast
 type Live struct {
 	Value string `xml:",chardata"`
 }

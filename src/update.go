@@ -12,7 +12,7 @@ import (
 	"reflect"
 )
 
-// BinaryUpdate : Binary Update Prozess. Git Branch master und beta wird von GitHub geladen.
+// BinaryUpdate : Binary update process. Git Branch master and beta is loaded from GitHub.
 func BinaryUpdate() (err error) {
 
 	if System.GitHub.Update == false {
@@ -30,7 +30,7 @@ func BinaryUpdate() (err error) {
 
 	switch System.Branch {
 
-	// Update von GitHub
+	// Update from GitHub
 	case "master", "beta":
 
 		var gitInfo = fmt.Sprintf("%s/%s/info.json?raw=true", System.Update.Git, System.Branch)
@@ -70,7 +70,7 @@ func BinaryUpdate() (err error) {
 		updater.Response.Version = git.Version
 		updater.Response.Filename = git.Filename
 
-	// Update vom eigenen Server
+	// Update from your own Server
 	default:
 
 		updater.URL = Settings.UpdateURL
@@ -83,7 +83,7 @@ func BinaryUpdate() (err error) {
 		showInfo("Update URL:" + updater.URL)
 		fmt.Println("-----------------")
 
-		// Versionsinformationen vom Server laden
+		// Load version information from the Server
 		err = up2date.GetVersion()
 		if err != nil {
 
@@ -105,22 +105,22 @@ func BinaryUpdate() (err error) {
 
 	var currentVersion = System.Version + "." + System.Build
 
-	// Versionsnummer überprüfen
+	// Check Version Number
 	if updater.Response.Version > currentVersion && updater.Response.Status == true {
 
 		if Settings.XteveAutoUpdate == true {
-			// Update durchführen
+			// Perform update
 			var fileType, url string
 
 			showInfo(fmt.Sprintf("Update Available:Version: %s", updater.Response.Version))
 
 			switch System.Branch {
 
-			// Update von GitHub
+			// Update from GitHub
 			case "master", "beta":
 				showInfo(fmt.Sprintf("Update Server:GitHub"))
 
-			// Update vom eigenen Server
+			// Update from your own Server
 			default:
 				showInfo(fmt.Sprintf("Update Server:%s", Settings.UpdateURL))
 
@@ -128,13 +128,13 @@ func BinaryUpdate() (err error) {
 
 			showInfo(fmt.Sprintf("Start Update:Branch: %s", updater.Branch))
 
-			// Neue Version als BIN Datei herunterladen
+			// Download the new version as a BIN File
 			if len(updater.Response.UpdateBIN) > 0 {
 				url = updater.Response.UpdateBIN
 				fileType = "bin"
 			}
 
-			// Neue Version als ZIP Datei herunterladen
+			// Download the new version as a ZIP File
 			if len(updater.Response.UpdateZIP) > 0 {
 				url = updater.Response.UpdateZIP
 				fileType = "zip"
@@ -150,7 +150,7 @@ func BinaryUpdate() (err error) {
 			}
 
 		} else {
-			// Hinweis ausgeben
+			// Display update exception
 			showWarning(6004)
 		}
 
@@ -176,7 +176,7 @@ checkVersion:
 			return
 		}
 
-		// Letzte Kompatible Version (1.4.4)
+		// Latest Compatible Version (1.4.4)
 		if settingsVersion < System.Compatibility {
 			err = errors.New(getErrMsg(1013))
 			return
@@ -185,13 +185,13 @@ checkVersion:
 		switch settingsVersion {
 
 		case "1.4.4":
-			// UUID Wert in xepg.json setzen
+			// Set UUID Value in xepg.json
 			err = setValueForUUID()
 			if err != nil {
 				return
 			}
 
-			// Neuer Filter (WebUI). Alte Filtereinstellungen werden konvertiert
+			// New filter (WebUI). Old Filter Settings are converted
 			if oldFilter, ok := settingsMap["filter"].([]interface{}); ok {
 				var newFilterMap = convertToNewFilter(oldFilter)
 				settingsMap["filter"] = newFilterMap
@@ -238,14 +238,42 @@ checkVersion:
 				return
 			}
 
-		case "2.1.0":
-			// Falls es in einem späteren Update Änderungen an der Datenbank gibt, geht es hier weiter
+		case "2.1.0", "2.1.1":
+			// Database verison <= 2.1.1 has broken XEPG mapping
+
+			// Clear XEPG mapping
+			Data.XEPG.Channels = make(map[string]interface{})
+			Data.XEPG.XEPGCount = 0
+			Data.Cache.Streams = struct{ Active []string }{}
+
+			err = saveMapToJSONFile(System.File.XEPG, Data.XEPG.Channels)
+			if err != nil {
+				ShowError(err, 000)
+				return err
+			}
+
+			// Notify user
+			showWarning(2022)
+			sendAlert(getErrMsg(2022))
+
+			// Update database version
+			settingsMap["version"] = "2.2.0"
+
+			err = saveMapToJSONFile(System.File.Settings, settingsMap)
+			if err != nil {
+				return
+			}
+
+			goto checkVersion
+
+		case "2.2.0", "2.2.1", "2.2.2", "2.2.3", "2.3.0":
+			// If there are changes to the Database in a later update, continue here
 
 			break
 		}
 
 	} else {
-		// settings.json ist zu alt (älter als Version 1.4.4)
+		// settings.json is too old (older than Version 1.4.4)
 		err = errors.New(getErrMsg(1013))
 	}
 
