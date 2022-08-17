@@ -4,8 +4,6 @@ services:
     image: xteve:latest
     container_name: xteve
     environment:
-      - PUID=31337
-      - PGID=31337
       - TZ=America/New_York
     volumes:
       - /opt/configs/xteve/config:/home/xteve/conf
