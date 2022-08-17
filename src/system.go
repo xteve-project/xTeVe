@@ -12,7 +12,7 @@ import (
 // Show Developer Information
 func showDevInfo() {
 
-	if System.Dev == true {
+	if System.Dev {
 
 		fmt.Print("\033[31m")
 		fmt.Println("* * * * * D E V   M O D E * * * * *")
@@ -24,7 +24,6 @@ func showDevInfo() {
 
 	}
 
-	return
 }
 
 // Create all System Folders
@@ -210,7 +209,7 @@ func saveSettings(settings SettingsStruct) (err error) {
 		settings.BufferTimeout = 0
 	}
 
-	if System.Dev == true {
+	if System.Dev {
 		Settings.UUID = "2019-01-DEV-xTeVe!"
 	}
 
@@ -267,7 +266,6 @@ func setGlobalDomain(domain string) {
 		System.Addresses.XML = getErrMsg(2106)
 	}
 
-	return
 }
 
 // Generate UUID
@@ -289,7 +287,6 @@ func setDeviceID() {
 		System.DeviceID = fmt.Sprintf("%s:%d", id, Settings.Tuner)
 	}
 
-	return
 }
 
 // Convert Provider Streaming URL to xTeVe Streaming URL
@@ -355,7 +352,7 @@ func getStreamInfo(urlID string) (streamInfo StreamInfo, err error) {
 		streamInfo = s
 		streamInfo.URL = strings.Trim(streamInfo.URL, "\r\n")
 	} else {
-		err = errors.New("Streaming error")
+		err = errors.New("streaming error")
 	}
 
 	return

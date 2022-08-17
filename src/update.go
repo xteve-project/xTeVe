@@ -15,7 +15,7 @@ import (
 // BinaryUpdate : Binary update process. Git Branch master and beta is loaded from GitHub.
 func BinaryUpdate() (err error) {
 
-	if System.GitHub.Update == false {
+	if !System.GitHub.Update {
 		showWarning(2099)
 		return
 	}
@@ -58,7 +58,7 @@ func BinaryUpdate() (err error) {
 			return err
 		}
 
-		body, err = ioutil.ReadAll(resp.Body)
+		body, _ = ioutil.ReadAll(resp.Body)
 
 		err = json.Unmarshal(body, &git)
 		if err != nil {
@@ -87,7 +87,7 @@ func BinaryUpdate() (err error) {
 		err = up2date.GetVersion()
 		if err != nil {
 
-			debug = fmt.Sprintf(err.Error())
+			debug = err.Error()
 			showDebug(debug, 1)
 
 			return nil
@@ -106,9 +106,9 @@ func BinaryUpdate() (err error) {
 	var currentVersion = System.Version + "." + System.Build
 
 	// Check Version Number
-	if updater.Response.Version > currentVersion && updater.Response.Status == true {
+	if updater.Response.Version > currentVersion && updater.Response.Status {
 
-		if Settings.XteveAutoUpdate == true {
+		if Settings.XteveAutoUpdate {
 			// Perform update
 			var fileType, url string
 
@@ -118,7 +118,7 @@ func BinaryUpdate() (err error) {
 
 			// Update from GitHub
 			case "master", "beta":
-				showInfo(fmt.Sprintf("Update Server:GitHub"))
+				showInfo("Update Server:GitHub")
 
 			// Update from your own Server
 			default:
@@ -309,7 +309,7 @@ func convertToNewFilter(oldFilter []interface{}) (newFilterMap map[int]interface
 
 func setValueForUUID() (err error) {
 
-	xepg, err := loadJSONFileToMap(System.File.XEPG)
+	xepg, _ := loadJSONFileToMap(System.File.XEPG)
 
 	for _, c := range xepg {
 

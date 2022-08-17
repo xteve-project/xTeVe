@@ -63,7 +63,7 @@ func createFirstUserForAuthentication(username, password string) (token string, 
 
 func tokenAuthentication(token string) (newToken string, err error) {
 
-	if System.ConfigurationWizard == true {
+	if System.ConfigurationWizard {
 		return
 	}
 
@@ -74,7 +74,7 @@ func tokenAuthentication(token string) (newToken string, err error) {
 
 func basicAuth(r *http.Request, level string) (username string, err error) {
 
-	err = errors.New("User authentication failed")
+	err = errors.New("user authentication failed")
 
 	auth := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 
@@ -109,7 +109,7 @@ func urlAuth(r *http.Request, requestType string) (err error) {
 
 	case "m3u":
 		level = "authentication.m3u"
-		if Settings.AuthenticationM3U == true {
+		if Settings.AuthenticationM3U {
 			token, err = authentication.UserAuthentication(username, password)
 			if err != nil {
 				return
@@ -119,7 +119,7 @@ func urlAuth(r *http.Request, requestType string) (err error) {
 
 	case "xml":
 		level = "authentication.xml"
-		if Settings.AuthenticationXML == true {
+		if Settings.AuthenticationXML {
 			token, err = authentication.UserAuthentication(username, password)
 			if err != nil {
 				return
@@ -150,19 +150,19 @@ func checkAuthorizationLevel(token, level string) (err error) {
 
 		if v, ok := userData[level].(bool); ok {
 
-			if v == false {
-				err = errors.New("No authorization")
+			if !v {
+				err = errors.New("no authorization")
 			}
 
 		} else {
 			userData[level] = false
-			err = authentication.WriteUserData(userID, userData)
-			err = errors.New("No authorization")
+			authentication.WriteUserData(userID, userData)
+			//err = errors.New("No authorization")
 		}
 
 	} else {
-		err = authentication.WriteUserData(userID, userData)
-		err = errors.New("No authorization")
+		authentication.WriteUserData(userID, userData)
+		//err = errors.New("No authorization")
 	}
 
 	return

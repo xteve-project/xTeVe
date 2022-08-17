@@ -73,10 +73,10 @@ func createMapFromFiles(folder string) string {
 
 	// Sort map keys before writing to file to prevent git mark webUI.go as modified when no real changes has been made
 	keys := make([]string, 0, len(blankMap))
-    for k := range blankMap {
-        keys = append(keys, k)
-    }
-    sort.Strings(keys)
+	for k := range blankMap {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
 
 	for _, key := range keys {
 		var newKey = key
@@ -88,7 +88,7 @@ func createMapFromFiles(folder string) string {
 
 func readFilesToMap(path string, info os.FileInfo, err error) error {
 
-	if info.IsDir() == false {
+	if !info.IsDir() {
 		var base64Str = fileToBase64(getLocalPath(path))
 		blankMap[filepath.ToSlash(path)] = base64Str
 	}

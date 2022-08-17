@@ -152,7 +152,7 @@ func getProviderData(fileType, fileID string) (err error) {
 		}
 
 		// If an ID is available and does not match the one from the Database, the Update is skipped (goto)
-		if len(fileID) > 0 && newProvider == false {
+		if len(fileID) > 0 && !newProvider {
 			if dataID != fileID {
 				goto Done
 			}
@@ -204,7 +204,7 @@ func getProviderData(fileType, fileID string) (err error) {
 			ShowError(err, 000)
 			var downloadErr = err
 
-			if newProvider == false {
+			if !newProvider {
 
 				// Check whether there is an older File
 				var file = System.Folder.Data + dataID + fileExtension
@@ -236,7 +236,7 @@ func getProviderData(fileType, fileID string) (err error) {
 		}
 
 		// Calculate the Margin of Error
-		if newProvider == false {
+		if !newProvider {
 
 			if value, ok := dataMap[dataID].(map[string]interface{}); ok {
 

@@ -7,8 +7,20 @@
 			"problemMatcher": [
 				"$tsc"
 			],
-			"group": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"label": "tsc build"
+		},
+		{
+			"label": "Build Go",
+			"type": "shell",
+			"command": "go build xteve.go",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
 		}
 	]
 }
