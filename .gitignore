@@ -2,4 +2,5 @@
 xteve
 xteve.exe
 /.idea/*
-~/.xteve/backup/
+.xteve/
+__debug_bin
