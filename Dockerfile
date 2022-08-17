@@ -8,7 +8,7 @@
 FROM golang:bullseye AS builder
 
 # Download the source code
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+#ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
 WORKDIR /src
 
@@ -43,11 +43,6 @@ ENV XTEVE_BIN=/home/xteve/bin
 ENV XTEVE_CONF=/home/xteve/conf
 ENV XTEVE_HOME=/home/xteve
 ENV XTEVE_TEMP=/tmp/xteve
-ENV XTEVE_UID=31337
-ENV XTEVE_USER=xteve
-
-# Create the user to run inside the container
-RUN adduser --uid $XTEVE_UID $XTEVE_USER
 
 # Add binary to PATH
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$XTEVE_BIN
@@ -82,12 +77,6 @@ RUN chmod a+rwX $XTEVE_TEMP
 # Configure container volume mappings
 VOLUME $XTEVE_CONF
 VOLUME $XTEVE_TEMP
-
-# Ensure the container user has ownership of home dir
-RUN chown -R $XTEVE_USER $XTEVE_HOME
-
-# Switch users to the xTeVe container user
-USER $XTEVE_USER
 
 # Run the xTeVe executable
 ENTRYPOINT ${XTEVE_BIN}/xteve -port=${XTEVE_PORT} -config=${XTEVE_CONF}

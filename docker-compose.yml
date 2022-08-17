@@ -1,0 +1,20 @@
+version: "2.1"
+services:
+  xteve:
+    image: xteve:latest
+    container_name: xteve
+    environment:
+      - PUID=31337
+      - PGID=31337
+      - TZ=America/New_York
+    volumes:
+      - /opt/configs/xteve/config:/home/xteve/conf
+      - /tmp/xteve:/tmp/xteve:rw
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [ gpu ]
+    ports:
+      - 34400:34400
+    restart: unless-stopped
