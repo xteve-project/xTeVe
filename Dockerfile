@@ -8,6 +8,7 @@
 FROM golang:bullseye AS builder
 
 # Download the source code
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
 WORKDIR /src
 
