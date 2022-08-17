@@ -4,10 +4,11 @@
 # -----------------------------------------------------------------------------
 
 # Base image for builder is debian 11 with golang 1.18+ pre-installed
-FROM golang:1.18.1-bullseye AS builder
+#FROM golang:1.18.1-bullseye AS builder
+FROM golang:bullseye AS builder
 
 # Download the source code
-RUN git clone https://github.com/SCP002/xTeVe.git /src
+RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
 WORKDIR /src
 
 # Install dependencies
@@ -29,11 +30,11 @@ ARG XTEVE_VERSION
 
 LABEL org.label-schema.build-date="{$BUILD_DATE}" \
       org.label-schema.name="xTeVe" \
-      org.label-schema.description="Dockerized fork of xTeVe by SCP002" \
-      org.label-schema.url="https://hub.docker.com/r/scp002/xteve/" \
+      org.label-schema.description="Dockerized fork of xTeVe by SenexCrenshaw" \
+      org.label-schema.url="https://hub.docker.com/r/SenexCrenshaw/xteve/" \
       org.label-schema.vcs-ref="{$VCS_REF}" \
-      org.label-schema.vcs-url="https://github.com/SCP002/xTeVe" \
-      org.label-schema.vendor="SCP002" \
+      org.label-schema.vcs-url="https://github.com/SenexCrenshaw/xTeVe" \
+      org.label-schema.vendor="SenexCrenshaw" \
       org.label-schema.version="{$XTEVE_VERSION}" \
       org.label-schema.schema-version="1.0"
 
