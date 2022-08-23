@@ -894,10 +894,18 @@ function createLayout() {
   let keys = getOwnObjProps(obj);
   for (var i = 0; i < keys.length; i++) {
     
+    document.getElementById(keys[i]).innerHTML = obj[keys[i]];
+
     if (document.getElementById(keys[i])) {
-      document.getElementById(keys[i]).innerHTML = obj[keys[i]];
+      if (location.protocol === 'https:') {
+        if (keys[i] === "xepg-url" || keys[i] === "m3u-url"  || keys[i] === "DVR") {          
+          document.getElementById(keys[i]).addEventListener('click', function (event) {
+            const target = event.target as HTMLElement;        
+            navigator.clipboard.writeText(target.innerText.split(" ")[0]).then(() => {});
+          },false);
+        }
+      }      
     }
-  
   }
 
   if (!document.getElementById("main-menu")) {

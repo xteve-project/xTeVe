@@ -1,47 +1,49 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    <title>xTeVe</title>
-    <link rel="stylesheet" href="css/screen.css" type="text/css">
-    <link rel="stylesheet" href="css/base.css" type="text/css">
-    <script language="javascript" type="text/javascript" src="js/network_ts.js"></script>
-    <script language="javascript" type="text/javascript" src="js/authentication_ts.js"></script>
-  </head>
 
-    <body>
-          
-      <div id="header" class="imgCenter"></div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xTeVe</title>
+  <link rel="stylesheet" href="css/screen.css" type="text/css">
+  <link rel="stylesheet" href="css/base.css" type="text/css">
+  <script language="javascript" type="text/javascript" src="js/network_ts.js"></script>
+  <script language="javascript" type="text/javascript" src="js/authentication_ts.js"></script>
+</head>
 
-      <div id="box">
+<body>
 
-        <div id="headline">
-          <h1 id="head-text" class="center">{{.account.headline}}</h1>
-        </div>
+  <div id="header" class="imgCenter"></div>
 
-        <p id="err" class="errorMsg center"></p>
+  <div id="box">
 
-        <div id="content">
+    <div id="headline">
+      <h1 id="head-text" class="center">{{.account.headline}}</h1>
+    </div>
 
-            <form id="authentication" action="" method="post">
+    <p id="err" class="errorMsg center"></p>
 
-              <h5>{{.account.username.title}}:</h5>
-              <input id="username" type="text" name="username" placeholder="Username" value="">
-              <h5>{{.account.password.title}}:</h5>
-              <input id="password" type="password" name="password" placeholder="Password" value="">
-              <h5>{{.account.confirm.title}}:</h5>
-              <input id="confirm"  type="password" name="confirm"  placeholder="Confirm" value="">
-              
-            </form>
+    <div id="content">
 
-        </div>
-        
-        <div id="box-footer">
-          <input id="submit" class="" type="button" value="{{.button.craeteAccount}}" onclick="javascript: login();">
-        </div>
-      
-        
-      </div>
-    </body>
+      <form id="authentication" action="" method="post">
+
+        <h5>{{.account.username.title}}:</h5>
+        <input id="username" type="text" name="username" placeholder="Username" value="">
+        <h5>{{.account.password.title}}:</h5>
+        <input id="password" type="password" name="password" placeholder="Password" value="">
+        <h5>{{.account.confirm.title}}:</h5>
+        <input id="confirm" type="password" name="confirm" placeholder="Confirm" value="">
+
+      </form>
+
+    </div>
+
+    <div id="box-footer">
+      <input id="submit" class="" type="button" value="{{.button.craeteAccount}}" onclick="javascript: login();">
+    </div>
+
+
+  </div>
+</body>
+
 </html>
