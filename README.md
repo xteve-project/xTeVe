@@ -11,11 +11,6 @@
 
 Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md).
 
-#### Donation
-
-* **Bitcoin:** 1c1iCe4CJPfNUXtqxKBbW2Qd2EtqRPWme  
-![Bitcoin](html/img/BC-QR.jpg "Bitcoin - xTeVe")
-
 ---
 
 ## Features
@@ -68,6 +63,8 @@ Certificate and it's private key should be placed in xTeVe config directory like
 ```
 
 If the certificate is signed by a certificate authority (CA), it should be the concatenation of the server's certificate, any intermediates, and the CA's certificate.
+
+This will also enable copy to clipboad by clicking the green links at the header. (DVR IP,M3U URL,XEPG URL)
 
 ---
 
