@@ -458,6 +458,7 @@ func WS(w http.ResponseWriter, r *http.Request) {
 			var authenticationUpdate = Settings.AuthenticationWEB
 			var previousTLSMode = Settings.TLSMode
 			var previousHostIP = Settings.HostIP
+			var previousHostName = Settings.HostName
 			var previousStoreBufferInRAM = Settings.StoreBufferInRAM
 			var previousClearXMLTVCache = Settings.ClearXMLTVCache
 
@@ -481,6 +482,16 @@ func WS(w http.ResponseWriter, r *http.Request) {
 
 				if Settings.HostIP != previousHostIP {
 					showInfo("Web server:" + fmt.Sprintf("Changing host IP to %s", Settings.HostIP))
+
+					reinitialize()
+
+					response.OpenLink = System.URLBase + "/web/"
+					restartWebserver <- true
+				}
+
+				if Settings.HostName != previousHostName {
+					Settings.HostIP = previousHostName
+					showInfo("Web server:" + fmt.Sprintf("Changing host name to %s", Settings.HostName))
 
 					reinitialize()
 
