@@ -72,7 +72,7 @@ func buildXEPG(background bool) {
 				createXMLTVFile()
 				createM3UFile()
 
-				showInfo("XEPG: Ready to use")
+				showInfo("XEPG:" + "Ready to use")
 
 				if Settings.CacheImages && System.ImageCachingInProgress == 0 {
 
@@ -134,7 +134,7 @@ func buildXEPG(background bool) {
 
 				}
 
-				showInfo("XEPG: Ready to use")
+				showInfo("XEPG:" + "Ready to use")
 
 				System.ScanInProgress = 0
 

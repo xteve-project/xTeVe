@@ -555,7 +555,7 @@ func saveXEpgMapping(request RequestStruct) (err error) {
 			cleanupXEPG()
 			System.ScanInProgress = 0
 			buildXEPG(false)
-			showInfo("XEPG: Ready to use")
+			showInfo("XEPG:" + "Ready to use")
 
 			System.BackgroundProcess = false
 
