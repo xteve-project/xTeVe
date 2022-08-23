@@ -40,6 +40,7 @@ type RequestStruct struct {
 		VLCPath                  *string   `json:"vlc.path,omitempty"`
 		FilesUpdate              *bool     `json:"files.update,omitempty"`
 		HostIP                   *string   `json:"hostIP,omitempty"` // IP chosen in web client. Used to form m3u and xml files.
+		HostName                 *string   `json:"hostName"`         // Hostname chosen in web client. Used to form m3u and xml files.
 		TempPath                 *string   `json:"temp.path,omitempty"`
 		TLSMode                  *bool     `json:"tlsMode,omitempty"`
 		Tuner                    *int      `json:"tuner,omitempty"`

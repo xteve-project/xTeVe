@@ -126,6 +126,7 @@ func loadSettings() (settings SettingsStruct, err error) {
 	defaults["filter"] = make(map[string]interface{})
 	defaults["git.branch"] = System.Branch
 	defaults["hostIP"] = "" // Will be set in resolveHostIP()
+	defaults["hostName"] = ""
 	defaults["language"] = "en"
 	defaults["log.entries.ram"] = 500
 	defaults["m3u8.adaptive.bandwidth.mbps"] = 10

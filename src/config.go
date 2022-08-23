@@ -194,6 +194,10 @@ func Init() (err error) {
 	showInfo(fmt.Sprintf("GitHub:https://github.com/%s", System.GitHub.User))
 	showInfo(fmt.Sprintf("Git Branch:%s [%s]", System.Branch, System.GitHub.User))
 
+	if len(strings.TrimSpace(Settings.HostName)) > 0 {
+		Settings.HostIP = strings.TrimSpace(Settings.HostName)
+	}
+
 	// Set Domain Names
 	setGlobalDomain(fmt.Sprintf("%s:%s", Settings.HostIP, Settings.Port))
 

@@ -295,6 +295,17 @@ class SettingsCategory {
                 setting.appendChild(tdLeft);
                 setting.appendChild(tdRight);
                 break;
+            case "hostName":
+                var tdLeft = document.createElement("TD");
+                tdLeft.innerHTML = "{{.settings.hostName.title}}" + ":";
+                var tdRight = document.createElement("TD");
+                var input = content.createInput("text", "hostName", data);
+                input.setAttribute("placeholder", "{{.settings.hostName.placeholder}}");
+                input.setAttribute("onchange", "javascript: this.className = 'changed'");
+                tdRight.appendChild(input);
+                setting.appendChild(tdLeft);
+                setting.appendChild(tdRight);
+                break;
             case "tuner":
                 var tdLeft = document.createElement("TD");
                 tdLeft.innerHTML = "{{.settings.tuner.title}}" + ":";
@@ -461,6 +472,9 @@ class SettingsCategory {
                 break;
             case "hostIP":
                 text = "{{.settings.hostIP.description}}";
+                break;
+            case "hostName":
+                text = "{{.settings.hostName.description}}";
                 break;
             case "tuner":
                 text = "{{.settings.tuner.description}}";

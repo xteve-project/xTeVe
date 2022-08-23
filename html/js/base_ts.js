@@ -17,7 +17,7 @@ menuItems.push(new MainMenuItem("log", "{{.mainMenu.item.log}}", "log.png", "{{.
 menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.png", "{{.mainMenu.headline.logout}}"));
 // Settings categories
 var settingsCategory = new Array();
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "tlsMode,xteveAutoUpdate,hostIP,tuner,epgSource,disallowURLDuplicates,clearXMLTVCache,api"));
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "tlsMode,xteveAutoUpdate,hostIP,hostName,tuner,epgSource,disallowURLDuplicates,clearXMLTVCache,api"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.mapping}}", "defaultMissingEPG,enableMappedChannels"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"));
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,udpxy,buffer.size.kb,storeBufferInRAM,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"));

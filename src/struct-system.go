@@ -304,7 +304,8 @@ type SettingsStruct struct {
 
 	FilesUpdate               bool                  `json:"files.update"`
 	Filter                    map[int64]interface{} `json:"filter"`
-	HostIP                    string                `json:"hostIP"` // IP chosen in web client. Used to form m3u and xml files.
+	HostIP                    string                `json:"hostIP"`   // IP chosen in web client. Used to form m3u and xml files.
+	HostName                  string                `json:"hostName"` // Hostname chosen in web client. Used to form m3u and xml files.
 	Key                       string                `json:"key,omitempty"`
 	Language                  string                `json:"language"`
 	LogEntriesRAM             int                   `json:"log.entries.ram"`
