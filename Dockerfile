@@ -9,7 +9,7 @@ FROM golang:bullseye AS builder
 
 # Download the source code
 # Uncomment the below line to force git pull (no cache)
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+#ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
 WORKDIR /src
 
@@ -23,22 +23,22 @@ RUN go build xteve.go
 # -----------------------------------------------------------------------------
 
 # Base image is a latest stable debian
-FROM debian
+FROM alpine:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
 ARG XTEVE_PORT=34400
 ARG XTEVE_VERSION
 
-LABEL org.label-schema.build-date="{$BUILD_DATE}" \
-      org.label-schema.name="xTeVe" \
-      org.label-schema.description="Dockerized fork of xTeVe by SenexCrenshaw" \
-      org.label-schema.url="https://hub.docker.com/r/SenexCrenshaw/xteve/" \
-      org.label-schema.vcs-ref="{$VCS_REF}" \
-      org.label-schema.vcs-url="https://github.com/SenexCrenshaw/xTeVe" \
-      org.label-schema.vendor="SenexCrenshaw" \
-      org.label-schema.version="{$XTEVE_VERSION}" \
-      org.label-schema.schema-version="1.0"
+LABEL org.opencontainers.image.created="{$BUILD_DATE}" \
+      org.opencontainers.image.url="https://hub.docker.com/r/SenexCrenshaw/xteve/" \
+      org.opencontainers.image.source="https://github.com/SenexCrenshaw/xTeVe" \
+      org.opencontainers.image.version="{$XTEVE_VERSION}" \
+      org.opencontainers.image.revision="{$VCS_REF}" \
+      org.opencontainers.image.vendor="SenexCrenshaw" \
+      org.opencontainers.image.title="xTeVe" \
+      org.opencontainers.image.description="Dockerized fork of xTeVe by SenexCrenshaw" \
+      org.opencontainers.image.authors="SenexCrenshaw SenexCrenshaw@gmail.com"
 
 ENV XTEVE_BIN=/home/xteve/bin
 ENV XTEVE_CONF=/home/xteve/conf
@@ -52,13 +52,23 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$XTEVE_BIN
 WORKDIR $XTEVE_HOME
 
 # Update package lists
-RUN apt-get update
+RUN apk update
+RUN apk upgrade
 
 # Install CA certificates
-RUN apt-get install --yes ca-certificates
+RUN apk add --no-cache ca-certificates
 
-# Add VLC and FFMPEG support
-RUN apt-get install --yes vlc-bin ffmpeg
+# Timezone (TZ)
+RUN apk update && apk add --no-cache tzdata
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Add ffmpeg and vlc
+RUN apk add ffmpeg
+RUN apk add vlc
+
+# Creat bin dir
+RUN mkdir $XTEVE_BIN
 
 # Copy built binary from builder image
 COPY --from=builder [ "/src/xteve", "${XTEVE_BIN}/" ]
@@ -75,9 +85,14 @@ RUN chmod a+rwX $XTEVE_CONF
 RUN mkdir $XTEVE_TEMP
 RUN chmod a+rwX $XTEVE_TEMP
 
+RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+
 # Configure container volume mappings
 VOLUME $XTEVE_CONF
 VOLUME $XTEVE_TEMP
+
+# Expose Port
+EXPOSE 34400
 
 # Run the xTeVe executable
 ENTRYPOINT ${XTEVE_BIN}/xteve -port=${XTEVE_PORT} -config=${XTEVE_CONF}

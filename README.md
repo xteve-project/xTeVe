@@ -9,7 +9,7 @@
 
 ### This is a fork of <https://github.com/xteve-project/xTeVe>, all credit goes to the original author
 
-Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md).
+Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/main/en/configuration.md).
 
 ---
 
@@ -137,13 +137,13 @@ docker stop xteve
 
 ### xTeVe Beta branch
 
-New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the master branch.
+New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the main branch.
 
 **It is not recommended to use the beta version in a production system.**  
 
 With the command line argument `branch` the Git Branch can be changed. xTeVe must be started via the terminal.  
 
-#### Switch from master to beta branch
+#### Switch from main to beta branch
 
 ```text
 xteve -branch beta
@@ -154,14 +154,14 @@ xteve -branch beta
 ...
 ```
 
-#### Switch from beta to master branch
+#### Switch from beta to main branch
 
 ```text
-xteve -branch master
+xteve -branch main
 
 ...
 [xTeVe] GitHub:                https://github.com/senexcrenshaw
-[xTeVe] Git Branch:            master [senexcrenshaw]
+[xTeVe] Git Branch:            main [senexcrenshaw]
 ...
 ```
 
@@ -232,7 +232,7 @@ xteve -dev
 
 :exclamation: To not to get CreateFile error, do not forget to switch your binary to "regular" mode after runnning with `-dev` flag:
 
-`xteve -branch master` or `xteve -branch beta`
+`xteve -branch main` or `xteve -branch beta`
 
 #### 4. Build xTeVe
 
@@ -257,7 +257,7 @@ When creating a fork, the xTeVe GitHub account must be changed from the source c
 xteve.go - Line: 29
 
 ```go
-var GitHub = GitHubStruct{Branch: "master", User: "senexcrenshaw", Repo: "xTeVe", Update: true}
+var GitHub = GitHubStruct{Branch: "main", User: "senexcrenshaw", Repo: "xTeVe", Update: true}
 
 // Branch: GitHub Branch
 // User:   GitHub Username
