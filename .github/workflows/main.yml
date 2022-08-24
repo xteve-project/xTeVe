@@ -1,4 +1,4 @@
-name: Publish to Registry
+name: Publish to Docker Registry
 on:
   #push:
     #branches:
