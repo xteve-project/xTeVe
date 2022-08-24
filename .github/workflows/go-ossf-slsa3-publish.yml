@@ -14,9 +14,9 @@
 name: SLSA Go releaser
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
+  # push:
+  #   tags:
+  #     - "*"
   release:
     types: [created]
 
@@ -48,7 +48,7 @@ jobs:
   #     Prerequesite: Create a .slsa-goreleaser.yml in the root directory of your project.      
   #       See format in https://github.com/slsa-framework/slsa-github-generator/blob/main/internal/builders/go/README.md#configuration-file
   #=========================================================================================================================================
-  build:
+  build_go:
     permissions:
       id-token: write # To sign.
       contents: write # To upload release assets.
@@ -61,3 +61,17 @@ jobs:
       # =============================================================================================================
       #     Optional: For more options, see https://github.com/slsa-framework/slsa-github-generator#golang-projects
       # =============================================================================================================
+  build_docker_and_publish:
+    needs: build_go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3      
+      - name: Publish to Docker Registry      
+        uses: elgohr/Publish-Docker-Github-Action@v4
+        with:
+          name: senexcrenshaw/xteve
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          cache: ${{ github.event_name != 'schedule' }}
+          tags: "latest,${{needs.args.outputs.version}}"
+          default_branch: main

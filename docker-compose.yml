@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   xteve:
-    image: xteve:latest
+    image: senexcrenshaw/xteve:latest
     container_name: xteve
     environment:
       - TZ=America/New_York
