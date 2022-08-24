@@ -8,11 +8,6 @@ services:
     volumes:
       - /opt/configs/xteve/config:/home/xteve/conf
       - /tmp/xteve:/tmp/xteve:rw
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - capabilities: [ gpu ]
     ports:
       - 34400:34400
     restart: unless-stopped
