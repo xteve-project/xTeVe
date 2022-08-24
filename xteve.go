@@ -26,7 +26,7 @@ type GitHubStruct struct {
 
 // GitHub : GitHub Account
 // If you want to fork this project, enter your Github account here. This prevents a newer version of xTeVe from updating your version.
-var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Update: false}
+var GitHub = GitHubStruct{Branch: "main", User: "SenexCrenshaw", Repo: "xTeVe", Update: false}
 
 // Branch:	GitHub Branch
 // User: 	GitHub Username
