@@ -13,6 +13,10 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
       
+      - name: Extract latest tag
+        run: |
+          GIT_TAG=$GITHUB_REF_NAME
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -30,5 +34,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          version: ${{ steps.prep.outputs.version }}
+          tags: $GIT_TAG 
           labels: ${{ steps.meta.outputs.labels }}
