@@ -9,7 +9,7 @@ FROM golang:bullseye AS builder
 
 # Download the source code
 # Uncomment the below line to force git pull (no cache)
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+#ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
 WORKDIR /src
 
@@ -54,13 +54,21 @@ WORKDIR $XTEVE_HOME
 # Update package lists
 RUN apk update
 RUN apk upgrade
-RUN apk add --no-cache ca-certificates
 
 # Install CA certificates
-RUN apt-get install --yes ca-certificates
+RUN apk add --no-cache ca-certificates
 
-# Add VLC and FFMPEG support
-RUN apt-get install --yes vlc-bin ffmpeg
+# Timezone (TZ)
+RUN apk update && apk add --no-cache tzdata
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Add ffmpeg and vlc
+RUN apk add ffmpeg
+RUN apk add vlc
+
+# Creat bin dir
+RUN mkdir $XTEVE_BIN
 
 # Copy built binary from builder image
 COPY --from=builder [ "/src/xteve", "${XTEVE_BIN}/" ]
@@ -77,9 +85,14 @@ RUN chmod a+rwX $XTEVE_CONF
 RUN mkdir $XTEVE_TEMP
 RUN chmod a+rwX $XTEVE_TEMP
 
+RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+
 # Configure container volume mappings
 VOLUME $XTEVE_CONF
 VOLUME $XTEVE_TEMP
+
+# Expose Port
+EXPOSE 34400
 
 # Run the xTeVe executable
 ENTRYPOINT ${XTEVE_BIN}/xteve -port=${XTEVE_PORT} -config=${XTEVE_CONF}
