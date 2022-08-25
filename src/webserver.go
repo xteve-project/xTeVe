@@ -115,6 +115,11 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	showDebug(debug, 2)
 
 	switch path {
+	case "/favicon.ico":
+		if value, ok := webUI["html"+path].(string); ok {
+			response = []byte(GetHTMLString(value))
+			w.Header().Set("Content-Type", "image/x-icon")
+		}
 
 	case "/discover.json":
 		response, err = getDiscover()
@@ -833,7 +838,6 @@ func Web(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if value, ok := webUI[requestFile].(string); ok {
-
 		content = GetHTMLString(value)
 		contentType = getContentType(requestFile)
 
