@@ -15,8 +15,8 @@ on:
   
 jobs:
   build_docker_and_publish:    
-    runs-on: ubuntu-latest
-     steps:
+   runs-on: ubuntu-latest
+   steps:
      
       - name: Clone repository
         uses: actions/checkout@v2
