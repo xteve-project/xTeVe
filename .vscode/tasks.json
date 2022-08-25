@@ -2,6 +2,15 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Update Version",
+			"type": "shell",
+			"command": "./update_version.sh",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
 			"type": "typescript",
 			"tsconfig": "ts/tsconfig.json",
 			"problemMatcher": [
@@ -14,13 +23,17 @@
 			"label": "tsc build"
 		},
 		{
-			"label": "Build Go",
+			"label": "Build xTeVe",
 			"type": "shell",
 			"command": "go build xteve.go",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"dependsOn": [
+				"Update Version",
+				"tsc build"
+			]
 		}
 	]
 }

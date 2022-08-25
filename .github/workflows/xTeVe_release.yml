@@ -1,0 +1,76 @@
+name: xTeVe release
+on:
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - "*"
+  #release:
+   # types: [created]
+
+permissions: read-all
+
+jobs:
+  release-linux-amd64:
+    name: release linux/amd64
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/386, linux/amd64, linux/arm64, windows/386, windows/amd64, darwin/amd64, darwin/arm64
+        goos: [linux, windows, darwin]
+        goarch: ["386", amd64, arm64]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+          - goarch: arm64
+            goos: windows
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Read version from release.json
+      uses: notiz-dev/github-action-json-property@release
+      id: xteve_version
+      with:
+        path: 'release.json'
+        prop_path: 'version'
+    
+    - name: Read go_version from release.json
+      uses: notiz-dev/github-action-json-property@release
+      id: go_version
+      with:
+        path: 'release.json'
+        prop_path: 'go_version'
+    
+    - name: Set APP_VERSION env
+      run: echo APP_VERSION=$(echo ${GITHUB_REF} | rev | cut -d'/' -f 1 | rev ) >> ${GITHUB_ENV}
+    - name: Set BUILD_TIME env
+      run: echo BUILD_TIME=$(date -u +%Y%m%d-%H%M) >> ${GITHUB_ENV}
+    - name: Environment Printer
+      uses: managedkaos/print-env@v1.0
+
+    - uses: wangyoucao577/go-release-action@v1.30
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        extra_files: LICENSE README.md        
+        #release_name: v${{steps.xteve_version.outputs.prop}}
+        overwrite: true
+        binary_name: xteve
+        asset_name: "xteve-${{ env.BUILD_TIME }}-${{ matrix.goos }}-${{ matrix.goarch }}"
+        build_flags: -v
+        ldflags: -X "main.appVersion=${{ steps.xteve_version.outputs.prop }}" -X "main.buildTime=${{ env.BUILD_TIME }}" -X main.gitCommit=${{ github.sha }} -X main.gitRef=${{ github.ref }}
+
+  # build_docker_and_publish:
+  #   needs: build_go
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3      
+  #     - name: Publish to Docker Registry      
+  #       uses: elgohr/Publish-Docker-Github-Action@v4
+  #       with:
+  #         name: senexcrenshaw/xteve
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_PASSWORD }}
+  #         cache: ${{ github.event_name != 'schedule' }}
+  #         tags: "latest,${{needs.args.outputs.version}}"
+  #         default_branch: main
