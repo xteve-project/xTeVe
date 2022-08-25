@@ -140,7 +140,7 @@ docker stop xteve
 ```
 
 ---
-
+<!-- 
 ### xTeVe Beta branch
 
 New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the main branch.
@@ -173,7 +173,7 @@ xteve -branch main
 
 When the branch is changed, an update is only performed if there is a new version and the update function is activated in the settings.  
 
----
+--- -->
 
 ## Build from source code [Go / Golang]
 
