@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 
 # Base image for builder is debian 11 with golang 1.18+ pre-installed
-FROM golang:bullseye AS builder
+FROM --platform=$BUILDPLATFORM golang:bullseye AS builder
 
 # Download the source code
 # Uncomment the below line to force git pull (no cache)
@@ -10,11 +10,12 @@ FROM golang:bullseye AS builder
 RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
 WORKDIR /src
 
+ARG TARGETOS TARGETARCH
 # Install dependencies
-RUN go mod download
+RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go mod download
 
 # Compile
-RUN go build xteve.go
+RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build xteve.go
 
 # Second stage. Creating an image
 # -----------------------------------------------------------------------------
