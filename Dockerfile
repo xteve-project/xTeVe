@@ -1,3 +1,23 @@
+# First stage. Building a binary
+# -----------------------------------------------------------------------------
+
+# Base image for builder is debian 11 with golang 1.18+ pre-installed
+FROM golang:bullseye AS builder
+
+# Download the source code
+# Uncomment the below line to force git pull (no cache)
+#ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+RUN git clone https://github.com/SenexCrenshaw/xTeVe.git /src
+WORKDIR /src
+
+# Install dependencies
+RUN go mod download
+
+# Compile
+RUN go build xteve.go
+
+# Second stage. Creating an image
+# -----------------------------------------------------------------------------
 FROM alpine:latest
 
 ARG BUILD_DATE
@@ -47,7 +67,7 @@ RUN apk add vlc
 RUN mkdir $XTEVE_BIN
 
 # Copy built binary from builder image
-RUN curl -L "https://github.com/SenexCrenshaw/xTeVe/releases/download/v$XTEVE_VERSION/xteve-v$XTEVE_VERSION-$TARGETOS-$TARGETARCH.tar.gz" | tar xvz -C $XTEVE_BIN/
+COPY --from=builder [ "/src/xteve", "${XTEVE_BIN}/" ]
 
 # Set binary permissions
 RUN chmod +rx $XTEVE_BIN/xteve
