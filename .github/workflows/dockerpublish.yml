@@ -51,4 +51,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/xteve:${{ steps.xteve_version.outputs.prop }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/xteve:latest,${{ secrets.DOCKER_USERNAME }}/xteve:${{ steps.xteve_version.outputs.prop }}
