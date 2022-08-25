@@ -7,6 +7,7 @@ class MainMenu {
     createIMG(src) {
         let element = document.createElement("IMG");
         element.setAttribute("src", this.ImagePath + src);
+        element.setAttribute("alt", src);
         return element;
     }
     createValue(value) {
