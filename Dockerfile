@@ -4,8 +4,6 @@ ARG BUILD_DATE
 ARG VCS_REF
 ARG XTEVE_PORT=34400
 ARG XTEVE_VERSION=2.5.1
-ARG XTEVE_OS=linux
-ARG XTEVE_ARCH=amd64
 
 LABEL org.opencontainers.image.created="{$BUILD_DATE}" \
       org.opencontainers.image.url="https://hub.docker.com/r/SenexCrenshaw/xteve/" \
@@ -49,7 +47,7 @@ RUN apk add vlc
 RUN mkdir $XTEVE_BIN
 
 # Copy built binary from builder image
-RUN curl -L "https://github.com/SenexCrenshaw/xTeVe/releases/download/v$XTEVE_VERSION/xteve-v$XTEVE_VERSION-$XTEVE_OS-$XTEVE_ARCH.tar.gz" | tar xvz -C $XTEVE_BIN/
+RUN curl -L "https://github.com/SenexCrenshaw/xTeVe/releases/download/v$XTEVE_VERSION/xteve-v$XTEVE_VERSION-$TARGETOS-$TARGETARCH.tar.gz" | tar xvz -C $XTEVE_BIN/
 
 # Set binary permissions
 RUN chmod +rx $XTEVE_BIN/xteve
