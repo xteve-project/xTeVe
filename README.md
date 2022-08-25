@@ -70,6 +70,12 @@ This will also enable copy to clipboad by clicking the green links at the header
 
 ## Docker
 
+Supported OS/ARCH:
+
+* linux/amd64
+* linux/arm64
+* linux/arm/v7
+
 ### Get an image
 
 Pull from dockerhub:
