@@ -36,9 +36,6 @@ var GitHub = GitHubStruct{Branch: "main", User: "SenexCrenshaw", Repo: "xTeVe", 
 // Name : Program Name
 const Name = "xTeVe"
 
-// Version : Version, the Build Number is parsed in the main func
-const Version = "2.5.1.0000"
-
 // DBVersion : Database Version
 const DBVersion = "2.3.0"
 
@@ -64,7 +61,7 @@ var dev = flag.Bool("dev", false, ": Activates the developer mode, the source co
 func main() {
 
 	// Separate Build Number from Version Number
-	var build = strings.Split(Version, ".")
+	var build = strings.Split(src.Version, ".")
 
 	var system = &src.System
 	system.APIVersion = APIVersion

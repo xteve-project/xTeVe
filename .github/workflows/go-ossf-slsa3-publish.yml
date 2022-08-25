@@ -17,8 +17,8 @@ on:
   # push:
   #   tags:
   #     - "*"
-  release:
-    types: [created]
+  # release:
+  #   types: [created]
 
 permissions: read-all
 
