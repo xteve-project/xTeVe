@@ -14,16 +14,38 @@ on:
   workflow_dispatch:
   
 jobs:
-  build_and_publish:
+  build_docker_and_publish:
+    needs: build_xteve
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3      
-      - name: Publish to Docker Registry      
-        uses: elgohr/Publish-Docker-Github-Action@v4
+      - uses: actions/checkout@v3
+
+      - name: Read version from release.json
+        uses: notiz-dev/github-action-json-property@release
+        id: xteve_version
         with:
-          name: senexcrenshaw/xteve
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          cache: ${{ github.event_name != 'schedule' }}
-          tags: "latest,${{ env.STATE_RELEASE_VERSION }}"
-          default_branch: main
+          path: 'release.json'
+          prop_path: 'version'  
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: arm64,arm
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ranking:${{ steps.xteve_version.outputs.prop}}
