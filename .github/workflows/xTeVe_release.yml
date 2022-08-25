@@ -1,16 +1,19 @@
-name: xTeVe release
+name: xTeVe release manual
 on:
   workflow_dispatch:
   # push:
   #   tags:
   #     - "*"
-  #release:
-   # types: [created]
+  release:
+    types: [created]
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
-  release-linux-amd64:
+  release:
+    permissions:
+      contents: write
     name: release linux/amd64
     runs-on: ubuntu-latest
     strategy:
@@ -25,38 +28,32 @@ jobs:
             goos: windows
     steps:
     - uses: actions/checkout@v3
-
+    
     - name: Read version from release.json
       uses: notiz-dev/github-action-json-property@release
       id: xteve_version
       with:
         path: 'release.json'
-        prop_path: 'version'
-    
-    - name: Read go_version from release.json
-      uses: notiz-dev/github-action-json-property@release
-      id: go_version
-      with:
-        path: 'release.json'
-        prop_path: 'go_version'
+        prop_path: 'version'     
     
     - name: Set APP_VERSION env
       run: echo APP_VERSION=$(echo ${GITHUB_REF} | rev | cut -d'/' -f 1 | rev ) >> ${GITHUB_ENV}
     - name: Set BUILD_TIME env
       run: echo BUILD_TIME=$(date -u +%Y%m%d-%H%M) >> ${GITHUB_ENV}
-    - name: Environment Printer
-      uses: managedkaos/print-env@v1.0
+    #- name: Environment Printer
+    #  uses: managedkaos/print-env@v1.0
 
     - uses: wangyoucao577/go-release-action@v1.30
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
-        extra_files: LICENSE README.md        
-        #release_name: v${{steps.xteve_version.outputs.prop}}
         overwrite: true
+        extra_files: LICENSE README.md
+        release_tag: v${{steps.xteve_version.outputs.prop}}
+        #release_name: v${{steps.xteve_version.outputs.prop}}
         binary_name: xteve
-        asset_name: "xteve-${{ env.BUILD_TIME }}-${{ matrix.goos }}-${{ matrix.goarch }}"
+        #asset_name: "xteve-${{ steps.xteve_version.outputs.prop }}-${{ matrix.goos }}-${{ matrix.goarch }}"
         build_flags: -v
         ldflags: -X "main.appVersion=${{ steps.xteve_version.outputs.prop }}" -X "main.buildTime=${{ env.BUILD_TIME }}" -X main.gitCommit=${{ github.sha }} -X main.gitRef=${{ github.ref }}
 
