@@ -1,4 +1,4 @@
-name: Publish to Docker Registry
+name: Publish to Docker Registry Manual
 on:
   # release:
   #     types: [published]
