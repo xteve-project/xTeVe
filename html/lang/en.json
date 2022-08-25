@@ -233,7 +233,7 @@
       "description": ""
     },
     "updateChannelLogo": {
-      "title": "Update Channel Logo",
+      "title": "Use logo from M3U",
       "placeholder": "",
       "description": ""
     },
