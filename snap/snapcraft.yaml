@@ -39,12 +39,12 @@ apps:
     plugs:
       - network
       - network-bind
-  restart:
-    daemon: oneshot
-    command: bin/restart-if-inactive
-    timer: 00:10-23:10/24
-    plugs:
-      - network
+# restart:
+#   daemon: oneshot
+#   command: bin/restart-if-inactive
+#   timer: 00:10-23:10/24
+#   plugs:
+#     - network
   inactive:
     command: bin/xteve-inactive -port 8080
     plugs:
