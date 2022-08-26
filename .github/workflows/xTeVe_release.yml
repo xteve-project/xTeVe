@@ -1,9 +1,6 @@
 name: xTeVe release manual
 on:
   workflow_dispatch:
-  # push:
-  #   tags:
-  #     - "*"
   release:
     types: [created]
 
@@ -47,9 +44,7 @@ jobs:
         overwrite: true
         extra_files: LICENSE README.md
         release_tag: v${{steps.xteve_version.outputs.prop}}
-        #release_name: v${{steps.xteve_version.outputs.prop}}
         binary_name: xteve
-        #asset_name: "xteve-${{ steps.xteve_version.outputs.prop }}-${{ matrix.goos }}-${{ matrix.goarch }}"
         build_flags: -v
         ldflags: -X "main.appVersion=${{ steps.xteve_version.outputs.prop }}" -X "main.buildTime=${{ env.BUILD_TIME }}" -X main.gitCommit=${{ github.sha }} -X main.gitRef=${{ github.ref }}
 

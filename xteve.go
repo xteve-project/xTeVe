@@ -57,6 +57,7 @@ var h = flag.Bool("h", false, ": Show help")
 
 // Activates Development Mode. The local Files are then used for the Webserver.
 var dev = flag.Bool("dev", false, ": Activates the developer mode, the source code must be available. The local files for the web interface are used.")
+var buildwebui = flag.Bool("buildwebui", false, ": Builds webUI.go and exits.")
 
 func main() {
 
@@ -114,6 +115,17 @@ func main() {
 	if *h {
 		flag.Usage()
 		return
+	}
+
+	if *buildwebui {
+		src.HTMLInit("webUI", "src", "html"+string(os.PathSeparator), "src"+string(os.PathSeparator)+"webUI.go")
+		err := src.BuildGoFile()
+		if err != nil {
+			src.ShowError(err, 0)
+		} else {
+			fmt.Println("webUI.go built successfully")
+		}
+		os.Exit(0)
 	}
 
 	system.Dev = *dev
