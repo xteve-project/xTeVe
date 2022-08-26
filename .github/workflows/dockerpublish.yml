@@ -1,16 +1,5 @@
 name: Publish to Docker Registry Manual
 on:
-  # release:
-  #     types: [published]
-  #push:
-    #branches:
-    #  - main    
-  #schedule:
-   # - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
-  # workflow_run:
-  #   workflows: ["SLSA Go releaser"]
-  #   types:
-  #     - completed
   workflow_dispatch:
   
 jobs:
@@ -20,8 +9,6 @@ jobs:
      
       - name: Clone repository
         uses: actions/checkout@v2
-        # with:
-        #   ref: ${{ steps.vars.outputs.tag }}
 
       - name: Read version from release.json
         uses: notiz-dev/github-action-json-property@release

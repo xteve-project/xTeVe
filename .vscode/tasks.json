@@ -23,6 +23,19 @@
 			"label": "tsc build"
 		},
 		{
+			"label": "Build webUI",
+			"type": "shell",
+			"command": "test -f './xteve' && ./xteve -buildwebui",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"dependsOn": [
+				"Update Version",
+				"tsc build"
+			]
+		},
+		{
 			"label": "Build xTeVe",
 			"type": "shell",
 			"command": "go build xteve.go",
@@ -31,8 +44,7 @@
 				"isDefault": true
 			},
 			"dependsOn": [
-				"Update Version",
-				"tsc build"
+				"Build webUI"
 			]
 		}
 	]
