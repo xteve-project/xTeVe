@@ -33,7 +33,7 @@ parts:
 apps:
   xteve:
     daemon: simple
-    command: bin/xteve -port 8080 -config $SNAP_COMMON/config -no-updates -debug 1
+    command: bin/xteve -port 8080 -config $SNAP_COMMON/config -no-updates -debug 3
     environment:
       LD_LIBRARY_PATH: ${SNAP}/usr/lib/arm-linux-gnueabihf/pulseaudio/
     plugs:
