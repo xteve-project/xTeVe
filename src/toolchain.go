@@ -80,6 +80,7 @@ func checkVFSFolder(path string, vfs avfs.VFS) (err error) {
 func fsIsNotExistErr(err error) bool {
 	if errors.Is(err, fs.ErrNotExist) ||
 		errors.Is(err, avfs.ErrWinPathNotFound) ||
+		errors.Is(err, avfs.ErrNoSuchFileOrDir) ||
 		errors.Is(err, avfs.ErrWinFileNotFound) {
 		return true
 	}
@@ -104,8 +105,8 @@ func checkFile(filename string) (err error) {
 	switch mode := fi.Mode(); {
 	case mode.IsDir():
 		err = fmt.Errorf("%s: %s", file, getErrMsg(1072))
-	case mode.IsRegular():
-		break
+		// case mode.IsRegular():
+		// 	break
 	}
 
 	return
@@ -304,6 +305,9 @@ func saveMapToJSONFile(file string, tmpMap interface{}) error {
 func loadJSONFileToMap(file string) (tmpMap map[string]interface{}, err error) {
 
 	f, err := os.Open(getPlatformFile(file))
+	if err != nil {
+		panic(err)
+	}
 	defer f.Close()
 
 	content, err := ioutil.ReadAll(f)
@@ -321,6 +325,9 @@ func loadJSONFileToMap(file string) (tmpMap map[string]interface{}, err error) {
 func readByteFromFile(file string) (content []byte, err error) {
 
 	f, err := os.Open(getPlatformFile(file))
+	if err != nil {
+		panic(err)
+	}
 	defer f.Close()
 
 	content, err = ioutil.ReadAll(f)
@@ -393,7 +400,7 @@ func resolveHostIP() (err error) {
 	}
 
 	// If IP previously set in settings (including the default, empty) is not available anymore
-	if lo.Contains(System.IPAddressesV4Host, Settings.HostIP) == false {
+	if !lo.Contains(System.IPAddressesV4Host, Settings.HostIP) {
 		Settings.HostIP = System.IPAddressesV4Host[0]
 	}
 

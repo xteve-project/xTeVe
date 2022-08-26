@@ -1,0 +1,13 @@
+version: "2.1"
+services:
+  xteve:
+    image: senexcrenshaw/xteve:latest
+    container_name: xteve
+    environment:
+      - TZ=America/New_York
+    volumes:
+      - /opt/configs/xteve/config:/home/xteve/conf
+      - /tmp/xteve:/tmp/xteve:rw
+    ports:
+      - 34400:34400
+    restart: unless-stopped

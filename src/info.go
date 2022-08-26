@@ -25,47 +25,42 @@ func ShowSystemInfo() {
 	fmt.Println("OK")
 	println()
 
-	fmt.Println(fmt.Sprintf("Version:             %s %s.%s", System.Name, System.Version, System.Build))
-	fmt.Println(fmt.Sprintf("Branch:              %s", System.Branch))
-	fmt.Println(fmt.Sprintf("GitHub:              %s/%s | Git update = %t", System.GitHub.User, System.GitHub.Repo, System.GitHub.Update))
-	fmt.Println(fmt.Sprintf("Folder (config):     %s", System.Folder.Config))
+	fmt.Printf("Version:             %s %s.%s\n", System.Name, System.Version, System.Build)
+	fmt.Printf("Branch:              %s\n", System.Branch)
+	fmt.Printf("GitHub:              %s/%s | Git update = %t\n", System.GitHub.User, System.GitHub.Repo, System.GitHub.Update)
+	fmt.Printf("Folder (config):     %s\n", System.Folder.Config)
 
-	fmt.Println(fmt.Sprintf("Streams:             %d / %d", len(Data.Streams.Active), len(Data.Streams.All)))
-	fmt.Println(fmt.Sprintf("Filter:              %d", len(Data.Filter)))
-	fmt.Println(fmt.Sprintf("XEPG Chanels:        %d", int(Data.XEPG.XEPGCount)))
+	fmt.Printf("Streams:             %d / %d\n", len(Data.Streams.Active), len(Data.Streams.All))
+	fmt.Printf("Filter:              %d\n", len(Data.Filter))
+	fmt.Printf("XEPG Chanels:        %d\n", int(Data.XEPG.XEPGCount))
 
 	println()
-	fmt.Println(fmt.Sprintf("IPv4 Addresses:"))
+	fmt.Println("IPv4 Addresses:")
 
 	for i, ipv4 := range System.IPAddressesV4 {
 
 		switch count := i; {
 
 		case count < 10:
-			fmt.Println(fmt.Sprintf("  %d.                 %s", count, ipv4))
-			break
+			fmt.Printf("  %d.                 %s\n", count, ipv4)
 		case count < 100:
-			fmt.Println(fmt.Sprintf("  %d.                %s", count, ipv4))
-			break
+			fmt.Printf("  %d.                %s\n", count, ipv4)
 
 		}
 
 	}
 
 	println()
-	fmt.Println(fmt.Sprintf("IPv6 Addresses:"))
+	fmt.Println("IPv6 Addresses:")
 
 	for i, ipv4 := range System.IPAddressesV6 {
 
 		switch count := i; {
 
 		case count < 10:
-			fmt.Println(fmt.Sprintf("  %d.                 %s", count, ipv4))
-			break
+			fmt.Printf("  %d.                 %s\n", count, ipv4)
 		case count < 100:
-			fmt.Println(fmt.Sprintf("  %d.                %s", count, ipv4))
-			break
-
+			fmt.Printf("  %d.                %s\n", count, ipv4)
 		}
 
 	}
@@ -73,33 +68,33 @@ func ShowSystemInfo() {
 	println("---")
 
 	fmt.Println("Settings [General]")
-	fmt.Println(fmt.Sprintf("xTeVe Update:        %t", Settings.XteveAutoUpdate))
-	fmt.Println(fmt.Sprintf("UUID:                %s", Settings.UUID))
-	fmt.Println(fmt.Sprintf("Tuner (Plex / Emby): %d", Settings.Tuner))
-	fmt.Println(fmt.Sprintf("EPG Source:          %s", Settings.EpgSource))
+	fmt.Printf("xTeVe Update:        %t\n", Settings.XteveAutoUpdate)
+	fmt.Printf("UUID:                %s\n", Settings.UUID)
+	fmt.Printf("Tuner (Plex / Emby): %d\n", Settings.Tuner)
+	fmt.Printf("EPG Source:          %s\n", Settings.EpgSource)
 
 	println("---")
 
 	fmt.Println("Settings [Files]")
-	fmt.Println(fmt.Sprintf("Schedule:            %s", strings.Join(Settings.Update, ",")))
-	fmt.Println(fmt.Sprintf("Files Update:        %t", Settings.FilesUpdate))
-	fmt.Println(fmt.Sprintf("Folder (tmp):        %s", Settings.TempPath))
-	fmt.Println(fmt.Sprintf("Image Chaching:      %t", Settings.CacheImages))
-	fmt.Println(fmt.Sprintf("Replace EPG Image:   %t", Settings.XepgReplaceMissingImages))
+	fmt.Printf("Schedule:            %s\n", strings.Join(Settings.Update, ","))
+	fmt.Printf("Files Update:        %t\n", Settings.FilesUpdate)
+	fmt.Printf("Folder (tmp):        %s\n", Settings.TempPath)
+	fmt.Printf("Image Chaching:      %t\n", Settings.CacheImages)
+	fmt.Printf("Replace EPG Image:   %t\n", Settings.XepgReplaceMissingImages)
 
 	println("---")
 
 	fmt.Println("Settings [Streaming]")
-	fmt.Println(fmt.Sprintf("Buffer:              %s", Settings.Buffer))
-	fmt.Println(fmt.Sprintf("UDPxy:               %s", Settings.UDPxy))
-	fmt.Println(fmt.Sprintf("Buffer Size:         %d KB", Settings.BufferSize))
-	fmt.Println(fmt.Sprintf("Timeout:             %d ms", int(Settings.BufferTimeout)))
-	fmt.Println(fmt.Sprintf("User Agent:          %s", Settings.UserAgent))
+	fmt.Printf("Buffer:              %s\n", Settings.Buffer)
+	fmt.Printf("UDPxy:               %s\n", Settings.UDPxy)
+	fmt.Printf("Buffer Size:         %d KB\n", Settings.BufferSize)
+	fmt.Printf("Timeout:             %d ms\n", int(Settings.BufferTimeout))
+	fmt.Printf("User Agent:          %s\n", Settings.UserAgent)
 
 	println("---")
 
 	fmt.Println("Settings [Backup]")
-	fmt.Println(fmt.Sprintf("Folder (backup):     %s", Settings.BackupPath))
-	fmt.Println(fmt.Sprintf("Backup Keep:         %d", Settings.BackupKeep))
+	fmt.Printf("Folder (backup):     %s\n", Settings.BackupPath)
+	fmt.Printf("Backup Keep:         %d\n", Settings.BackupKeep)
 
 }

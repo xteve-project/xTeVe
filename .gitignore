@@ -6,4 +6,7 @@ parts/
 prime/
 stage/
 xteve*.snap
+html/js/
 /.idea/*
+.xteve/
+__debug_bin

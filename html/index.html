@@ -1,35 +1,34 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <!---
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
-    -->
-    <title>xTeVe</title>
-    <link rel="stylesheet" href="css/screen.css" type="text/css">
-    <link rel="stylesheet" href="css/base.css" type="text/css">
+<html lang="en">
 
-    <script language="javascript" type="text/javascript" src="js/network_ts.js"></script>
-    <script language="javascript" type="text/javascript" src="js/menu_ts.js"></script>
-    <script language="javascript" type="text/javascript" src="js/settings_ts.js"></script>
-    <script language="javascript" type="text/javascript" src="js/logs_ts.js"></script>
-    <script language="javascript" type="text/javascript" src="js/base_ts.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xTeVe</title>
+  <link rel="stylesheet" href="css/screen.css" type="text/css">
+  <link rel="stylesheet" href="css/base.css" type="text/css">
 
-  </head>
+  <script language="javascript" type="text/javascript" src="js/network_ts.js"></script>
+  <script language="javascript" type="text/javascript" src="js/menu_ts.js"></script>
+  <script language="javascript" type="text/javascript" src="js/settings_ts.js"></script>
+  <script language="javascript" type="text/javascript" src="js/logs_ts.js"></script>
+  <script language="javascript" type="text/javascript" src="js/base_ts.js"></script>
 
-    <body onload="javascript: PageReady();">
+</head>
 
-      <div id="loading" class="none">
-        <div class="loader"></div>
-      </div>
+<body onload="javascript: PageReady();">
 
-      <div id="popup" class="none">
-        <div id="popup-custom"></div>
-      </div>
+  <div id="loading" class="none">
+    <div class="loader"></div>
+  </div>
 
-      <div id="layout">
+  <div id="popup" class="none">
+    <div id="popup-custom"></div>
+  </div>
 
-        <!--
+  <div id="layout">
+
+    <!--
         <div id="notification">
           <div class="element">
             <h5>XEPG</h5>
@@ -40,69 +39,69 @@
         </div>
       -->
 
-        <div id="menu-wrapper" class="layout-left">
-          <div id= "branch"></div>
-          <div id="logo"></div>
-          <nav id="main-menu"></nav>
-        </div>
+    <div id="menu-wrapper" class="layout-left">
+      <div id="branch"></div>
+      <div id="logo"></div>
+      <nav id="main-menu"></nav>
+    </div>
 
-        <div class="layout-right">
+    <div class="layout-right">
 
-          <table id="clientInfo" class="">
+      <table id="clientInfo" class="">
 
-            <tr>
-              <td class="tdKey">xTeVe:</td>
-              <td id="version" class="tdVal">&nbsp;</td>
-              <td class="tdKey">OS:</td>
-              <td id="os" class="tdVal">&nbsp;</td>
-              <td class="tdKey phone">DVR IP:</td>
-              <td id="DVR" class="tdVal phone">&nbsp;</td>
-            </tr>
+        <tr>
+          <td class="tdKey">xTeVe:</td>
+          <td id="version" class="tdVal">&nbsp;</td>
+          <td class="tdKey">OS:</td>
+          <td id="os" class="tdVal">&nbsp;</td>
+          <td class="tdKey phone">DVR IP:</td>
+          <td id="DVR" class="tdValLink phone">&nbsp;</td>
+        </tr>
 
-            <tr>
-              <td class="tdKey">UUID:</td>
-              <td id="uuid" class="tdVal">&nbsp;</td>
-              <td class="tdKey">Arch:</td>
-              <td id="arch" class="tdVal">&nbsp;</td>
-              <td class="tdKey phone">M3U URL:</td>
-              <td id="m3u-url" class="tdVal phone">&nbsp;</td>
-            </tr>
+        <tr>
+          <td class="tdKey">UUID:</td>
+          <td id="uuid" class="tdVal">&nbsp;</td>
+          <td class="tdKey">Arch:</td>
+          <td id="arch" class="tdVal">&nbsp;</td>
+          <td class="tdKey phone">M3U URL:</td>
+          <td id="m3u-url" class="tdValLink phone">&nbsp;</td>
+        </tr>
 
-            <tr>
-              <td class="tdKey">Available Streams:</td>
-              <td id="streams" class="tdVal">&nbsp;</td>
-              <td class="tdKey">EPG Source:</td>
-              <td id="epgSource" class="tdVal">&nbsp;</td>
-              <td class="tdKey phone">XEPG URL:</td>
-              <td id="xepg-url" class="tdVal phone">&nbsp;</td>
-            </tr>
+        <tr>
+          <td class="tdKey">Available Streams:</td>
+          <td id="streams" class="tdVal">&nbsp;</td>
+          <td class="tdKey">EPG Source:</td>
+          <td id="epgSource" class="tdVal">&nbsp;</td>
+          <td class="tdKey phone">XEPG URL:</td>
+          <td id="xepg-url" class="tdValLink phone">&nbsp;</td>
+        </tr>
 
-            <tr>
-              <td class="tdKey">XEPG Channels:</td>
-              <td id="xepg" class="tdVal">&nbsp;</td>
-              <td class="tdKey">Errors:</td>
-              <td id="errors" class="tdVal">&nbsp;</td>
-              <td class="tdKey">Warnings:</td>
-              <td id="warnings" class="tdVal">&nbsp;</td>
-            </tr>
+        <tr>
+          <td class="tdKey">XEPG Channels:</td>
+          <td id="xepg" class="tdVal">&nbsp;</td>
+          <td class="tdKey">Errors:</td>
+          <td id="errors" class="tdVal">&nbsp;</td>
+          <td class="tdKey">Warnings:</td>
+          <td id="warnings" class="tdVal">&nbsp;</td>
+        </tr>
 
-          </table>
-         
-          <div id="myStreamsBox" class="notVisible">
+      </table>
 
-            <div id="allStreams">
-              <table id="activeStreams"></table>
-              <table id="inactiveStreams"></table>
-            </div>
+      <div id="myStreamsBox" class="notVisible">
 
-          </div>
-          
-          <div id="content" class=""></div>
-            
+        <div id="allStreams">
+          <table id="activeStreams"></table>
+          <table id="inactiveStreams"></table>
         </div>
 
       </div>
-      
-    </body>
-    
+
+      <div id="content" class=""></div>
+
+    </div>
+
+  </div>
+
+</body>
+
 </html>

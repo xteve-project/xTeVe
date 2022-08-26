@@ -2,13 +2,50 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Update Version",
+			"type": "shell",
+			"command": "./update_version.sh",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
 			"type": "typescript",
 			"tsconfig": "ts/tsconfig.json",
 			"problemMatcher": [
 				"$tsc"
 			],
-			"group": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"label": "tsc build"
+		},
+		{
+			"label": "Build webUI",
+			"type": "shell",
+			"command": "test -f './xteve' && ./xteve -buildwebui",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"dependsOn": [
+				"Update Version",
+				"tsc build"
+			]
+		},
+		{
+			"label": "Build xTeVe",
+			"type": "shell",
+			"command": "go build xteve.go",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": [
+				"Build webUI"
+			]
 		}
 	]
 }

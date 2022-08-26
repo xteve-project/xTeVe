@@ -1,5 +1,5 @@
 <div align="center" style="background-color: #111; padding: 100;">
-    <a href="https://github.com/SCP002/xTeVe"><img width="880" height="200" src="html/img/logo_b_880x200.jpg" alt="xTeVe" /></a>
+    <a href="https://github.com/senexcrenshaw/xTeVe"><img width="880" height="200" src="html/img/logo_b_880x200.jpg" alt="xTeVe" /></a>
 </div>
 <br>
 
@@ -9,12 +9,7 @@
 
 ### This is a fork of <https://github.com/xteve-project/xTeVe>, all credit goes to the original author
 
-Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md).
-
-#### Donation
-
-* **Bitcoin:** 1c1iCe4CJPfNUXtqxKBbW2Qd2EtqRPWme  
-![Bitcoin](html/img/BC-QR.jpg "Bitcoin - xTeVe")
+Documentation for setup and configuration is [here](https://github.com/xteve-project/xTeVe-Documentation/blob/main/en/configuration.md).
 
 ---
 
@@ -47,7 +42,7 @@ Documentation for setup and configuration is [here](https://github.com/xteve-pro
 
 ## Downloads
 
-* See [releases page](https://github.com/SCP002/xTeVe/releases)
+* See [releases page](https://github.com/senexcrenshaw/xTeVe/releases)
 
 ---
 
@@ -69,24 +64,32 @@ Certificate and it's private key should be placed in xTeVe config directory like
 
 If the certificate is signed by a certificate authority (CA), it should be the concatenation of the server's certificate, any intermediates, and the CA's certificate.
 
+This will also enable copy to clipboad by clicking the green links at the header. (DVR IP,M3U URL,XEPG URL)
+
 ---
 
 ## Docker
+
+Supported OS/ARCH:
+
+* linux/amd64
+* linux/arm64
+* linux/arm/v7
 
 ### Get an image
 
 Pull from dockerhub:
 
 ```sh
-docker pull scp002/xteve:latest
+docker pull senexcrenshaw/xteve:latest
 ```
 
 **OR** build your own image based on Dockerfile from this repository:
 
 ```sh
-git clone https://github.com/SCP002/xTeVe.git
+git clone https://github.com/SenexCrenshaw/xTeVe.git
 cd xTeVe
-docker build --tag scp002/xteve .
+docker build --tag senexcrenshaw/xteve .
 ```
 
 ### Create a container
@@ -96,7 +99,7 @@ docker create \
     --tty \
     --publish 34400:34400 \
     --name xteve \
-    scp002/xteve
+    senexcrenshaw/xteve
 ```
 
 With the specific timezone, ip and port:
@@ -108,7 +111,7 @@ docker create \
     --env XTEVE_PORT=12345 \
     --publish 192.168.88.218:12345:12345 \
     --name xteve \
-    scp002/xteve
+    senexcrenshaw/xteve
 ```
 
 ### Start a container
@@ -137,40 +140,40 @@ docker stop xteve
 ```
 
 ---
-
+<!-- 
 ### xTeVe Beta branch
 
-New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the master branch.
+New features and bug fixes are only available in beta branch. Only after successful testing are they are merged into the main branch.
 
 **It is not recommended to use the beta version in a production system.**  
 
 With the command line argument `branch` the Git Branch can be changed. xTeVe must be started via the terminal.  
 
-#### Switch from master to beta branch
+#### Switch from main to beta branch
 
 ```text
 xteve -branch beta
 
 ...
-[xTeVe] GitHub:                https://github.com/SCP002
-[xTeVe] Git Branch:            beta [SCP002]
+[xTeVe] GitHub:                https://github.com/senexcrenshaw
+[xTeVe] Git Branch:            beta [senexcrenshaw]
 ...
 ```
 
-#### Switch from beta to master branch
+#### Switch from beta to main branch
 
 ```text
-xteve -branch master
+xteve -branch main
 
 ...
-[xTeVe] GitHub:                https://github.com/SCP002
-[xTeVe] Git Branch:            master [SCP002]
+[xTeVe] GitHub:                https://github.com/senexcrenshaw
+[xTeVe] Git Branch:            main [senexcrenshaw]
 ...
 ```
 
 When the branch is changed, an update is only performed if there is a new version and the update function is activated in the settings.  
 
----
+--- -->
 
 ## Build from source code [Go / Golang]
 
@@ -192,7 +195,7 @@ When the branch is changed, an update is only performed if there is a new versio
 #### 1. Download source code
 
 ```sh
-git clone https://github.com/SCP002/xTeVe.git
+git clone https://github.com/senexcrenshaw/xTeVe.git
 ```
 
 #### 2. Install dependencies
@@ -235,7 +238,7 @@ xteve -dev
 
 :exclamation: To not to get CreateFile error, do not forget to switch your binary to "regular" mode after runnning with `-dev` flag:
 
-`xteve -branch master` or `xteve -branch beta`
+`xteve -branch main` or `xteve -branch beta`
 
 #### 4. Build xTeVe
 
@@ -260,7 +263,7 @@ When creating a fork, the xTeVe GitHub account must be changed from the source c
 xteve.go - Line: 29
 
 ```go
-var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Update: true}
+var GitHub = GitHubStruct{Branch: "main", User: "senexcrenshaw", Repo: "xTeVe", Update: true}
 
 // Branch: GitHub Branch
 // User:   GitHub Username

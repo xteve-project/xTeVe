@@ -1,7 +1,8 @@
 // Copyright 2019 marmei. All rights reserved.
+// Copyright 2022 senexcrenshaw. All rights reserved.
 // Use of this source code is governed by a MIT license that can be found in the
 // LICENSE file.
-// GitHub: https://github.com/xteve-project/xTeVe
+// GitHub: https://github.com/SenexCrenshaw/xTeVe
 
 package main
 
@@ -26,7 +27,7 @@ type GitHubStruct struct {
 
 // GitHub : GitHub Account
 // If you want to fork this project, enter your Github account here. This prevents a newer version of xTeVe from updating your version.
-var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Update: false}
+var GitHub = GitHubStruct{Branch: "main", User: "SenexCrenshaw", Repo: "xTeVe", Update: false}
 
 // Branch:	GitHub Branch
 // User: 	GitHub Username
@@ -35,9 +36,6 @@ var GitHub = GitHubStruct{Branch: "master", User: "SCP002", Repo: "xTeVe", Updat
 
 // Name : Program Name
 const Name = "xTeVe"
-
-// Version : Version, the Build Number is parsed in the main func
-const Version = "2.5.0.0000"
 
 // DBVersion : Database Version
 const DBVersion = "2.3.0"
@@ -62,11 +60,12 @@ var h = flag.Bool("h", false, ": Show help")
 
 // Activates Development Mode. The local Files are then used for the Webserver.
 var dev = flag.Bool("dev", false, ": Activates the developer mode, the source code must be available. The local files for the web interface are used.")
+var buildwebui = flag.Bool("buildwebui", false, ": Builds webUI.go and exits.")
 
 func main() {
 
 	// Separate Build Number from Version Number
-	var build = strings.Split(Version, ".")
+	var build = strings.Split(src.Version, ".")
 
 	var system = &src.System
 	system.APIVersion = APIVersion
@@ -119,6 +118,17 @@ func main() {
 	if *h {
 		flag.Usage()
 		return
+	}
+
+	if *buildwebui {
+		src.HTMLInit("webUI", "src", "html"+string(os.PathSeparator), "src"+string(os.PathSeparator)+"webUI.go")
+		err := src.BuildGoFile()
+		if err != nil {
+			src.ShowError(err, 0)
+		} else {
+			fmt.Println("webUI.go built successfully")
+		}
+		os.Exit(0)
 	}
 
 	system.Dev = *dev

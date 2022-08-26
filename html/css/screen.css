@@ -42,7 +42,7 @@ nav p {
   height: 100px;
   background: url("../img/logo_w_600x200.png");
   background-repeat: no-repeat;
-  background-position: center; 
+  background-position: center;
   background-size: 100%;
 }
 
@@ -57,14 +57,14 @@ nav p {
   height: -moz-calc(100% - 130px);
   height: calc(100% - 130px);
   */
-  
+
   min-height: -webkit-calc(100% - 120px);
   min-height: -moz-calc(100% - 120px);
   min-height: calc(100% - 120px);
-  
-  
+
+
   box-shadow: 0px 5px 5px #222;
-  
+
 }
 
 #uiSetting {
@@ -72,13 +72,14 @@ nav p {
   margin-right: 25px;
 }
 
-#box input[type=text], #box input[type=password] {
+#box input[type=text],
+#box input[type=password] {
   width: -webkit-calc(100% - 20px);
   width: -moz-calc(100% - 20px);
   width: calc(100% - 20px);
 }
 
-#box input[type=submit]{
+#box input[type=submit] {
   margin: 50px auto;
 }
 
@@ -122,22 +123,17 @@ nav p {
   float: right;
 }
 
-#settings-footer {
-
-}
-
-
 /* Wizard*/
 #box {
   background-color: #444;
   min-height: 400px;
-  
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-#box p{
+#box p {
   padding: 10px 0px;
 }
 
@@ -167,13 +163,16 @@ nav p {
 /* --- */
 
 
-#clientInfo, #activeStreams, #inactiveStreams {
+#clientInfo,
+#activeStreams,
+#inactiveStreams {
   font-family: monospace;
   display: block;
   font-size: 9px;
   background-color: #111;
   color: #00E6FF;
-  border-bottom: solid 0px;;
+  border-bottom: solid 0px;
+  ;
   padding: 0px;
   letter-spacing: 1px;
   overflow-x: hidden;
@@ -188,9 +187,9 @@ nav p {
   max-height: 150px;
   background-color: #111;
   color: white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #openStreams {
@@ -203,24 +202,26 @@ nav p {
   bottom: 0px;
   background: url("../img/touch.png");
   background-color: #111;
-  
-  background-position: bottom right;  
+
+  background-position: bottom right;
 }
 
 #allStreams {
   width: 100%;
   height: 100%;
-  padding: 2px;     
+  padding: 2px;
 }
 
-#activeStreams, #inactiveStreams {
+#activeStreams,
+#inactiveStreams {
   overflow-y: scroll;
   width: 50%;
   max-height: 100px;
   float: left;
 }
 
-#activeStreams .tdKey, #inactiveStreams .tdKey {
+#activeStreams .tdKey,
+#inactiveStreams .tdKey {
   width: 75px;
 }
 
@@ -231,21 +232,36 @@ nav p {
   color: red;
 }
 
-#clientInfo .tdVal, #logInfo .tdVal, #activeStreams .tdVal, #inactiveStreams .tdVal, #mappingInfo .tdVal{
+#clientInfo .tdVal,
+#logInfo .tdVal,
+#activeStreams .tdVal,
+#inactiveStreams .tdVal,
+#mappingInfo .tdVal {
   color: #aaa;
+  white-space: inherit;
+}
+
+#clientInfo .tdValLink,
+#logInfo .tdValLink,
+#activeStreams .tdValLink,
+#inactiveStreams .tdValLink,
+#mappingInfo .tdValLink {
+  color: lime;
   white-space: inherit;
 }
 
 #box-wrapper {
   display: inline-block;
   width: 100%;
-  
+
   overflow-y: scroll;
 }
 
-#content_table, #mapping-detail-table, #content_table {
+#content_table,
+#mapping-detail-table,
+#content_table {
   display: table;
-  
+
   border-collapse: collapse;
   overflow-y: scroll;
   width: 100%;
@@ -282,7 +298,7 @@ tbody {
   max-width: 30px;
 }
 
-#content_table tr{
+#content_table tr {
   border-left: solid 3px 444;
   border-bottom: solid 1px #333;
   cursor: pointer;
@@ -297,7 +313,7 @@ tbody {
   padding: 0px 2px;
 }
 
-#content_table input[type=text]{
+#content_table input[type=text] {
   width: 80%;
   min-width: 35px;
   max-width: 60px;
@@ -307,7 +323,7 @@ tbody {
   text-align: left;
 }
 
-#content_table input[type=checkbox]{
+#content_table input[type=checkbox] {
   max-width: 25px;
   margin: auto;
 }
@@ -321,20 +337,16 @@ tbody {
   display: none;
 }
 
-.noBulk {
-
-}
-
-#content_table tr.activeEPG{
+#content_table tr.activeEPG {
   border-left: solid 3px lawngreen;
 }
 
-#content_table tr.notActiveEPG{
+#content_table tr.notActiveEPG {
   border-left: solid 3px red;
 }
 
 
-#logScreen p{
+#logScreen p {
   white-space: pre;
   font-size: 10px;
   /*
@@ -342,11 +354,11 @@ tbody {
   font-family: "Arial", sans-serif;
   */
   letter-spacing: 1px;
-  font-family: monospace; 
-  font-size: 12px; 
-  font-style: normal; 
-  font-variant: normal; 
-  line-height: 1.6em; 
+  font-family: monospace;
+  font-size: 12px;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1.6em;
 }
 
 #popup {
@@ -359,16 +371,19 @@ tbody {
   overflow: scroll;
 }
 
-#mapping-detail, #user-detail, #file-detail, #popup-custom {
+#mapping-detail,
+#user-detail,
+#file-detail,
+#popup-custom {
   box-shadow: 0px 5px 40px #000;
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
-  
+
   max-width: 800px;
   background-color: #222;
   padding: 10px;
-  overflow:auto;
+  overflow: auto;
 }
 
 #popup-custom h3 {
@@ -389,14 +404,18 @@ tbody {
   margin-right: auto;
 }
 
-#popup-custom input[type=text], #popup-custom input[type=password], #mapping-detail input[type=text], #content_settings input[type=text], #content_settings input[type=password]{
+#popup-custom input[type=text],
+#popup-custom input[type=password],
+#mapping-detail input[type=text],
+#content_settings input[type=text],
+#content_settings input[type=password] {
   border: solid 1px;
   border-color: transparent;
   background-color: #333;
   text-align: left;
   width: -webkit-calc(100% - 20px);
-  width:    -moz-calc(100% - 20px);
-  width:         calc(100% - 20px);
+  width: -moz-calc(100% - 20px);
+  width: calc(100% - 20px);
 }
 
 #popup-custom input[type=text].notAvailable {
@@ -410,34 +429,41 @@ tbody {
   cursor: not-allowed;
 }
 
-#mapping-detail-table, #user-detail-table {
+#mapping-detail-table,
+#user-detail-table {
   display: inline-table;
   width: 100%;
 }
 
-#popup-custom table, #content_settings table {
+#popup-custom table,
+#content_settings table {
   display: inline-table;
   table-layout: fixed;
   width: 100%;
 }
 
 
-#mapping-detail-table td, #user-detail-table td {
+#mapping-detail-table td,
+#user-detail-table td {
   padding: 10px 0px;
 
 }
 
-#mapping-detail-table td.left, #user-detail-table td.left, #popup-custom td.left {
+#mapping-detail-table td.left,
+#user-detail-table td.left,
+#popup-custom td.left {
   width: 38%;
 }
 
-.interaction, #interaction {
+.interaction,
+#interaction {
   margin-top: 20px;
   display: inline-flex;
   float: right;
 }
 
-.interaction input[type=button], .interaction input[type=submit] {
+.interaction input[type=button],
+.interaction input[type=submit] {
   background-color: #000;
   min-width: 100px;
   margin: 0px 10px;
@@ -450,7 +476,7 @@ tbody {
   right: 0px;
   height: 100%;
   width: 250px;
-  
+
   background-color: #222;
   box-shadow: 0px 0px 20px #000;
 }
@@ -479,7 +505,7 @@ tbody {
 }
 
 
-@media only screen and (min-width: 620px){
+@media only screen and (min-width: 620px) {
   body {
     width: 100%;
     background-color: #444;
@@ -501,7 +527,7 @@ tbody {
     height: 100px;
     background: url("../img/logo_w_600x200.png");
     background-repeat: no-repeat;
-    
+
     background-size: 300px 100px;
   }
 
@@ -542,7 +568,4 @@ tbody {
     flex-direction: column;
   }
 
-  #settings, #settings-footer {
-    
-  }
 }
