@@ -6,8 +6,6 @@ function login() {
 
   var inputs:any = div.getElementsByTagName("INPUT")
 
-  console.log(inputs)
-
   for (var i = inputs.length - 1; i >= 0; i--) {
     
     var key:string = (inputs[i] as HTMLInputElement).name
@@ -39,8 +37,6 @@ function login() {
     }
 
   }
-  
-  console.log(data)
 
   form.submit();
 

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+${SNAP}/bin/xteve-inactive -port 8080 && snapctl restart xteve.xteve

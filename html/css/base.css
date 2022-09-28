@@ -3,7 +3,7 @@
   -moz-appearance: none;
   -ms-appearance: none;
   font-family: "Arial", sans-serif;
-  letter-spacing: 2px; 
+  letter-spacing: 2px;
 }
 
 /*
@@ -17,32 +17,35 @@
   height: 12px;
 }
 
- 
+
 ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
-    
+
 }
- 
+
 ::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0,0.6); 
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
   background-color: #444;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #333; 
+  background: #333;
 }
 
-::-webkit-scrollbar-corner { 
-  background: transparent; 
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 a {
   color: #00E6FF;
 }
 
-html, body {
+html,
+body {
   color: #fff;
   margin: 0px auto;
   height: 100%;
@@ -91,11 +94,11 @@ pre {
   color: #ddd;
   letter-spacing: 1px;
   white-space: pre-wrap;
-  font-family: monospace; 
-  font-size: 12px; 
-  font-style: normal; 
-  font-variant: normal; 
-  line-height: 1.6em; 
+  font-family: monospace;
+  font-size: 12px;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1.6em;
 }
 
 label {
@@ -124,7 +127,7 @@ select {
   outline: none;
   color: #fff;
   padding: 9px 10px;
-  display:block;
+  display: block;
   background-color: #333;
   font-size: 14px;
   margin: 5px 0px 5px 0px;
@@ -142,7 +145,8 @@ input {
   font-size: 14px;
 }
 
-input[type=button], input[type=submit] {
+input[type=button],
+input[type=submit] {
   cursor: pointer;
   background-color: #000;
   margin: 10px 10px;
@@ -154,8 +158,8 @@ input[type=button], input[type=submit] {
   color: #fff;
 }
 
-input[type=button]:focus { 
-   outline: none;
+input[type=button]:focus {
+  outline: none;
 }
 
 input[type=button]:hover {
@@ -163,12 +167,14 @@ input[type=button]:hover {
   color: #000;
 }
 
-input[type=button]:hover.delete  {
+input[type=button]:hover.delete {
   background-color: red;
   color: #fff;
 }
 
-input[type=text], input[type=search], input[type=password] {
+input[type=text],
+input[type=search],
+input[type=password] {
   color: #fff;
   width: -webkit-calc(100% - 0px);
   width: -moz-calc(100% - 0px);
@@ -215,23 +221,24 @@ input[type="checkbox"]:checked:before {
 
 
 input[type=button].cancel {
-  
+
   background-color: transparent;
   border-color: red;
 }
 
-input[type=button].save{
+input[type=button].save {
   background-color: #111;
   float: right;
 }
 
 
-input[type=button].black, input[type=submit].black{
+input[type=button].black,
+input[type=submit].black {
   background-color: #000;
   border-color: #000;
 }
 
-input[type=button].center{
+input[type=button].center {
   margin-right: auto;
   margin-left: auto;
   background-color: #000;
@@ -302,27 +309,22 @@ input[type=button].center{
   margin-bottom: 30px;
 }
 
-.block {
-
-}
-
 .none {
   display: none;
 }
-
 
 .notVisible {
   height: 0px;
   display: none;
   opacity: 0;
   border-bottom: #000 solid 0px;
-  
+
 }
 
 .visible {
   opacity: 1;
   display: block;
-  border-bottom: #444 solid 1px; 
+  border-bottom: #444 solid 1px;
   padding: 10px;
 }
 
@@ -336,10 +338,6 @@ input[type=button].center{
 
 .menu-active {
   background-color: #00E6FF;
-}
-
-.menu-notActive {
-  
 }
 
 #branch {
@@ -380,7 +378,11 @@ input[type=button].center{
   color: magenta;
 }
 
-.News, .Movie, .Series, .Sports, .Kids {
+.News,
+.Movie,
+.Series,
+.Sports,
+.Kids {
   border-left: solid 2px
 }
 
@@ -410,7 +412,7 @@ input[type=button].center{
   top: 0px;
   z-index: 10000;
   position: absolute;
-  background-color: rgba(0,0,0, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   margin: auto;
   width: 100%;
   height: 100%;
@@ -434,15 +436,25 @@ input[type=button].center{
   right: 0;
   bottom: 0;
   left: 0;
-  
+
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

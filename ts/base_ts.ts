@@ -7,10 +7,9 @@ var SERVER_CONNECTION = false
 var WS_AVAILABLE = false
 
 
-// Menü
+// Menu
 var menuItems = new Array()
 menuItems.push(new MainMenuItem("playlist", "{{.mainMenu.item.playlist}}", "m3u.png", "{{.mainMenu.headline.playlist}}"))
-//menuItems.push(new MainMenuItem("pmsID", "{{.mainMenu.item.pmsID}}", "number.png", "{{.mainMenu.headline.pmsID}}"))
 menuItems.push(new MainMenuItem("filter", "{{.mainMenu.item.filter}}", "filter.png", "{{.mainMenu.headline.filter}}"))
 menuItems.push(new MainMenuItem("xmltv", "{{.mainMenu.item.xmltv}}", "xmltv.png", "{{.mainMenu.headline.xmltv}}"))
 menuItems.push(new MainMenuItem("mapping", "{{.mainMenu.item.mapping}}", "mapping.png", "{{.mainMenu.headline.mapping}}"))
@@ -19,10 +18,12 @@ menuItems.push(new MainMenuItem("settings", "{{.mainMenu.item.settings}}", "sett
 menuItems.push(new MainMenuItem("log", "{{.mainMenu.item.log}}", "log.png", "{{.mainMenu.headline.log}}"))
 menuItems.push(new MainMenuItem("logout", "{{.mainMenu.item.logout}}", "logout.png", "{{.mainMenu.headline.logout}}"))
 
-// Kategorien für die Einstellungen
+// Settings categories
 var settingsCategory = new Array()
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "xteveAutoUpdate,tuner,epgSource,api"));settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"))
-settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,udpxy,buffer.size.kb,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.general}}", "tlsMode,xteveAutoUpdate,hostIP,hostName,tuner,epgSource,disallowURLDuplicates,clearXMLTVCache,api"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.mapping}}", "defaultMissingEPG,enableMappedChannels"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.files}}", "update,files.update,temp.path,cache.images,xepg.replace.missing.images"))
+settingsCategory.push(new SettingsCategoryItem("{{.settings.category.streaming}}", "buffer,udpxy,buffer.size.kb,storeBufferInRAM,buffer.timeout,user.agent,ffmpeg.path,ffmpeg.options,vlc.path,vlc.options"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.backup}}", "backup.path,backup.keep"))
 settingsCategory.push(new SettingsCategoryItem("{{.settings.category.authentication}}", "authentication.web,authentication.pms,authentication.m3u,authentication.xml,authentication.api"))
 
@@ -60,7 +61,7 @@ function changeButtonAction(element, buttonID, attribute) {
 }
 
 function getLocalData(dataType, id):object {
-  var data = new Object()
+  let data = {}
   switch(dataType) {
     case "m3u":
       data = SERVER["settings"]["files"][dataType][id]
@@ -82,6 +83,8 @@ function getLocalData(dataType, id):object {
         data["include"] = ""
         data["name"] = ""
         data["type"] = "group-title"
+        data["preserveMapping"] = true
+        data["startingChannel"] = SERVER["settings"]["mapping.first.channel"]
         SERVER["settings"]["filter"][id] = data
       }
       data = SERVER["settings"]["filter"][id]
@@ -107,16 +110,8 @@ function getLocalData(dataType, id):object {
   return data
 }
 
-function getObjKeys(obj) {
-  var keys = new Array();
-
-  for (var i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      keys.push(i);
-    }
-  }
-
-  return keys;
+function getOwnObjProps(object: Object): string[] {
+  return object ? Object.getOwnPropertyNames(object) : [];
 }
 
 function getAllSelectedChannels():string[] {
@@ -201,38 +196,38 @@ function bulkEdit() {
 }
 
 function sortTable(column) {
-  //console.log(columm);
 
   if (column == COLUMN_TO_SORT) {
     return;
   }
 
+  const table       = document.getElementById("content_table");
+  const tableHead   = table.getElementsByTagName("TR")[0];
+  const tableItems  = tableHead.getElementsByTagName("TD");
 
-  var table       = document.getElementById("content_table");
-  var tableHead   = table.getElementsByTagName("TR")[0];
-  var tableItems  = tableHead.getElementsByTagName("TD");
+  type SortEntry = {
+    key: string | number;
+    row: HTMLTableRowElement;
+  }
 
-  var sortObj = new Object();
-  var x, xValue;
-  var tableHeader
-  var sortByString = false
+  const sortArr: SortEntry[] = [];
+  let xValue: string | number;
 
-  if (column > 0 && COLUMN_TO_SORT > 0)  {
+  if (column >= 0 && COLUMN_TO_SORT >= 0)  {
     tableItems[COLUMN_TO_SORT].className = "pointer";
     tableItems[column].className = "sortThis";
   }
 
   COLUMN_TO_SORT = column;
 
-
-  var rows = (table as HTMLTableElement).rows;
+  const rows = (table as HTMLTableElement).rows;
 
   if (rows[1] != undefined) {
-    tableHeader = rows[0]
+    const tableHeader = rows[0];
 
-    x = rows[1].getElementsByTagName("TD")[column];
+    let x: any = rows[1].getElementsByTagName("TD")[column];
 
-    for (i = 1; i < rows.length; i++) {
+    for (let i = 1; i < rows.length; i++) {
 
       x = rows[i].getElementsByTagName("TD")[column];
 
@@ -245,32 +240,11 @@ function sortTable(column) {
           xValue = x.getElementsByTagName("P")[0].innerText.toLowerCase();
           break;
 
-        default: console.log(x.childNodes[0].tagName);
+        default:
+          break;
       }
 
-      if (xValue == "" || xValue == NaN) {
-
-        xValue = i
-        sortObj[i] = rows[i];
-
-      } else {
-
-        switch(isNaN(xValue)) {
-          case false:
-
-            xValue = parseFloat(xValue);
-            sortObj[xValue] = rows[i]
-            break;
-
-          case true:
-
-            sortByString = true
-            sortObj[xValue.toLowerCase() + i] = rows[i]
-            break;
-
-        }
-
-      }
+      sortArr.push({key: xValue ? xValue : i, row: rows[i]});
 
     }
 
@@ -278,25 +252,30 @@ function sortTable(column) {
       table.removeChild(table.firstChild);
     }
 
-    var sortValues = getObjKeys(sortObj)
+    sortArr.sort((se1: SortEntry, se2: SortEntry): number => {
+      const se1KeyNum = parseFloat(String(se1.key));
+      const se2KeyNum = parseFloat(String(se2.key));
 
-    if (sortByString == true) {
-      sortValues.sort()
-      console.log(sortValues);
-    } else {
-      function sortFloat(a, b) {
-        return a - b;
+      if (!isNaN(se1KeyNum) && !isNaN(se2KeyNum)) {
+        return se1KeyNum - se2KeyNum;
       }
-      sortValues.sort(sortFloat);
-    }
 
-    table.appendChild(tableHeader)
+      if (se1.key < se2.key) {
+        return -1;
+      }
 
-    for (var i = 0; i < sortValues.length; i++) {
+      if (se1.key > se2.key) {
+        return 1;
+      }
 
-      table.appendChild(sortObj[sortValues[i]])
+      return 0;
+    });
 
-    }
+    table.appendChild(tableHeader);
+
+    sortArr.forEach((se: SortEntry) => {
+      table.appendChild(se.row);
+    });
 
   }
 
@@ -307,9 +286,9 @@ function createSearchObj() {
 
   SEARCH_MAPPING = new Object()
   var data = SERVER["xepg"]["epgMapping"]
-  var channels = getObjKeys(data)
+  var channels = getOwnObjProps(data)
 
-  var channelKeys:string[] = ["x-active", "x-channelID", "x-name", "_file.m3u.name", "x-group-title", "x-xmltv-file"]
+  var channelKeys:string[] = ["x-active", "x-channelID", "x-name", "updateChannelNameRegex", "_file.m3u.name", "x-group-title", "x-xmltv-file"]
 
   channels.forEach(id => {
 
@@ -403,7 +382,7 @@ function changeChannelNumber(element) {
   var newNumber:number = parseFloat(element.value)
   var channelNumbers:number[] = []
   var data = SERVER["xepg"]["epgMapping"]
-  var channels = getObjKeys(data)
+  var channels = getOwnObjProps(data)
 
   if (isNaN(newNumber)) {
     alert("{{.alert.invalidChannelNumber}}")
@@ -436,8 +415,6 @@ function changeChannelNumber(element) {
   data[dbID]["x-channelID"] = newNumber.toString()
   element.value = newNumber
 
-  console.log(data[dbID]["x-channelID"])
-
   if (COLUMN_TO_SORT == 1) {
     COLUMN_TO_SORT = -1
     sortTable(1)
@@ -449,17 +426,12 @@ function changeChannelNumber(element) {
 function backup() {
 
   var data = new Object()
-  console.log("Backup data")
-
   var cmd = "xteveBackup"
-
-  console.log("SEND TO SERVER");
-  console.log(data)
-
   var server:Server = new Server(cmd)
   server.request(data)
 
   return
+
 }
 
 function toggleChannelStatus(id:string) {
@@ -514,6 +486,24 @@ function toggleChannelStatus(id:string) {
 
 }
 
+function toggleGroupUpdateCb(xepgId: string, target: HTMLInputElement) {
+  target.className = 'changed';
+
+  const groupInput: HTMLInputElement = document.querySelector('input[name="x-group-title"]');
+  const mapping = getLocalData('mapping', xepgId);
+
+  if (target.checked) {
+    groupInput.dataset.oldValue = groupInput.value;
+    groupInput.value = mapping['group-title'];
+    groupInput.disabled = true;
+  } else {
+    groupInput.value = groupInput.dataset.oldValue;
+    groupInput.disabled = false;
+  }
+
+  groupInput.className = 'changed';
+}
+
 function restore() {
 
   if (document.getElementById('upload')) {
@@ -543,7 +533,6 @@ function restore() {
 
         reader.readAsDataURL(file);
         reader.onload = function() {
-          console.log(reader.result);
           var data = new Object();
           var cmd = "xteveRestore"
           data["base64"]  = reader.result
@@ -596,7 +585,6 @@ function uploadLogo() {
 
       reader.readAsDataURL(file);
       reader.onload = function() {
-        console.log(reader.result);
         var data = new Object();
         var cmd = "uploadLogo"
         data["base64"]  = reader.result
@@ -640,32 +628,8 @@ function checkUndo(key:string) {
   return
 }
 
-function sortSelect(elem) {
-
-  var tmpAry = [];
-  var selectedValue = elem[elem.selectedIndex].value;
-
-  for (var i=0;i<elem.options.length;i++) tmpAry.push(elem.options[i]);
-
-  tmpAry.sort(function(a,b){ return (a.text < b.text)?-1:1; });
-  while (elem.options.length > 0) elem.options[0] = null;
-
-  var newSelectedIndex = 0;
-
-  for (var i=0;i<tmpAry.length;i++) {
-
-      elem.options[i] = tmpAry[i];
-      if(elem.options[i].value == selectedValue) newSelectedIndex = i;
-
-  }
-
-  elem.selectedIndex = newSelectedIndex; // Set new selected index after sorting
-  return;
-}
-
 function updateLog() {
 
-  console.log("TOKEN")
   var server:Server = new Server("updateLog")
   server.request(new Object())
 

@@ -1,1 +1,0 @@
-# Information for the developers will come soon

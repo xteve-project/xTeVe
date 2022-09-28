@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"sort"
+	"strconv"
+
+	"github.com/samber/lo"
 )
 
 func makeInteraceFromHDHR(content []byte, playlistName, id string) (channels []interface{}, err error) {
@@ -154,7 +158,7 @@ func getLineup() (jsonContent []byte, err error) {
 				return
 			}
 
-			if xepgChannel.XActive == true {
+			if xepgChannel.XActive {
 				var stream LineupStream
 				stream.GuideName = xepgChannel.XName
 				stream.GuideNumber = xepgChannel.XChannelID
@@ -169,8 +173,16 @@ func getLineup() (jsonContent []byte, err error) {
 			}
 
 		}
-
 	}
+
+	// Sort the lineup
+	// Have to use type assertions (https://golang.org/ref/spec#Type_assertions) to cast generic interface{} into LineupStream
+	sort.Slice(lineup, func(i, j int) bool {
+		var chanA, chanB float64
+		chanA, _ = strconv.ParseFloat(lineup[i].(LineupStream).GuideNumber, 64)
+		chanB, _ = strconv.ParseFloat(lineup[j].(LineupStream).GuideNumber, 64)
+		return chanA < chanB
+	})
 
 	jsonContent, err = json.MarshalIndent(lineup, "", "  ")
 
@@ -212,7 +224,7 @@ func getGuideNumberPMS(channelName string) (pmsID string, err error) {
 			ids = append(ids, v)
 		}
 
-		if indexOfString(id, ids) != -1 {
+		if lo.IndexOf(ids, id) != -1 {
 			i++
 			goto newID
 		}

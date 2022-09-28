@@ -1,0 +1,15 @@
+#EXTM3U url-tvg="http://example.com/file.xml" x-tvg-url="http://example.com/xteve.xml"
+#EXTINF:0 channelID="1" tvg-chno="1" tvg-name="Channel.1" tvg-id="tvg.id.1" tvg-logo="https://example/logo.png" group-title="Group 1", Channel 1
+http://example.com/stream/1
+
+#EXTINF:0 channelID="2" tvg-chno="2" tvg-name="Channel.2" tvg-id="tvg.id.2" tvg-logo="https://example/logo/2.png",Channel 2  
+#EXTGRP: Group 2
+#123
+http://example.com/stream/2
+
+#EXTINF:123,,:It's - a difficult name |
+http://example.com/stream/3
+ 
+#EXTINF:-1 tvg-id="tvg.id.4" tvg-name="Channel.4" tvg-logo="https://example/logo/4.png" tvg-chno="4" channel-id="4" tvg-shift="-5" group-title="Group 4",Channel 4
+#EXTGRP:Group 99
+http://example.com/stream/4

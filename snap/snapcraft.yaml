@@ -1,0 +1,62 @@
+name: xteve
+base: core22
+summary: M3U Proxy for Plex DVR and Emby Live TV.
+adopt-info: xteve
+description: |
+  xTeVe emulates a DVR tuner for Plex and Emby. It takes an M3U files and
+  emulates a network tuner that can be discovered by those services. Provides
+  multiple tuners and caching proxy of streams. Can also take XMLTV files an
+  handle them internally for program guides.
+
+grade: stable
+confinement: strict
+
+parts:
+  xteve:
+    plugin: go
+    source: .
+    build-snaps:
+      - go
+    override-stage: |
+      snapcraftctl stage
+      snapcraftctl set-version `$SNAPCRAFT_STAGE/bin/xteve -version`
+  snap-scripts:
+    plugin: dump
+    source: snap/local/scripts
+    organize:
+      '*': bin/
+# vlc:
+#   plugin: nil
+#   stage-packages: [ "vlc-bin" ]
+  ffmpeg:
+    plugin: nil
+    stage-packages: [ "ffmpeg" ]
+
+apps:
+  xteve:
+    daemon: simple
+    command: bin/xteve -port 8080 -config $SNAP_COMMON/config -no-updates -debug 3
+    environment:
+      LD_LIBRARY_PATH: ${LD_LIBRARY_PATH}:${SNAP}/usr/lib:${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/pulseaudio/
+    plugs:
+      - network
+      - network-bind
+# restart:
+#   daemon: oneshot
+#   command: bin/restart-if-inactive
+#   timer: 00:10-23:10/24
+#   plugs:
+#     - network
+  inactive:
+    command: bin/xteve-inactive -port 8080
+    plugs:
+      - network
+  status:
+    command: bin/xteve-status -port 8080
+    plugs:
+      - network
+
+hooks:
+  pre-refresh: 
+    plugs:
+      - network

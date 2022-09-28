@@ -1,3 +1,3 @@
 #!/bin/bash
 
-tsc *.ts --outDir ../html/js/
+tsc -p tsconfig.json

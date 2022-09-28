@@ -187,15 +187,6 @@ func restorOldBinary(oldBinary, newBinary string) {
 	os.Rename(oldBinary, newBinary)
 }
 
-func getPlatformFile(filename string) string {
-
-	path, file := filepath.Split(filename)
-	var newPath = filepath.Dir(path)
-	var newFileName = newPath + string(os.PathSeparator) + file
-
-	return newFileName
-}
-
 func getFilenameFromPath(path string) string {
 
 	file := filepath.Base(path)

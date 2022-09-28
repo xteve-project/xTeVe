@@ -1,7 +1,8 @@
 // Copyright 2019 marmei. All rights reserved.
+// Copyright 2022 senexcrenshaw. All rights reserved.
 // Use of this source code is governed by a MIT license that can be found in the
 // LICENSE file.
-// GitHub: https://github.com/xteve-project/xTeVe
+// GitHub: https://github.com/SenexCrenshaw/xTeVe
 
 package main
 
@@ -16,7 +17,7 @@ import (
 	"xteve/src"
 )
 
-// GitHubStruct : GitHub Account. Über diesen Account werden die Updates veröffentlicht
+// GitHubStruct : GitHub Account. The Updates are published via this Account
 type GitHubStruct struct {
 	Branch string
 	Repo   string
@@ -26,23 +27,18 @@ type GitHubStruct struct {
 
 // GitHub : GitHub Account
 // If you want to fork this project, enter your Github account here. This prevents a newer version of xTeVe from updating your version.
-var GitHub = GitHubStruct{Branch: "master", User: "xteve-project", Repo: "xTeVe-Downloads", Update: true}
+var GitHub = GitHubStruct{Branch: "main", User: "SenexCrenshaw", Repo: "xTeVe", Update: false}
 
-/*
-	Branch: GitHub Branch
-	User: 	GitHub Username
-	Repo: 	GitHub Repository
-	Update: Automatic updates from the GitHub repository [true|false]
-*/
+// Branch:	GitHub Branch
+// User: 	GitHub Username
+// Repo: 	GitHub Repository
+// Update:	Automatic updates from the GitHub repository [true|false]
 
-// Name : Programmname
+// Name : Program Name
 const Name = "xTeVe"
 
-// Version : Version, die Build Nummer wird in der main func geparst.
-const Version = "2.2.0.0200"
-
-// DBVersion : Datanbank Version
-const DBVersion = "2.1.0"
+// DBVersion : Database Version
+const DBVersion = "2.3.0"
 
 // APIVersion : API Version
 const APIVersion = "1.1.0"
@@ -56,17 +52,20 @@ var port = flag.String("port", "", ": Server port          [34400] (default: 344
 var restore = flag.String("restore", "", ": Restore from backup  ["+sampleRestore+"xteve_backup.zip]")
 
 var gitBranch = flag.String("branch", "", ": Git Branch           [master|beta] (default: master)")
+var noUpdates = flag.Bool("no-updates", false, ": Disable updates")
 var debug = flag.Int("debug", 0, ": Debug level          [0 - 3] (default: 0)")
 var info = flag.Bool("info", false, ": Show system info")
+var version = flag.Bool("version", false, ": Show system version")
 var h = flag.Bool("h", false, ": Show help")
 
-// Aktiviert den Entwicklungsmodus. Für den Webserver werden dann die lokalen Dateien verwendet.
+// Activates Development Mode. The local Files are then used for the Webserver.
 var dev = flag.Bool("dev", false, ": Activates the developer mode, the source code must be available. The local files for the web interface are used.")
+var buildwebui = flag.Bool("buildwebui", false, ": Builds webUI.go and exits.")
 
 func main() {
 
-	// Build-Nummer von der Versionsnummer trennen
-	var build = strings.Split(Version, ".")
+	// Separate Build Number from Version Number
+	var build = strings.Split(src.Version, ".")
 
 	var system = &src.System
 	system.APIVersion = APIVersion
@@ -77,7 +76,7 @@ func main() {
 	system.Name = Name
 	system.Version = strings.Join(build[0:len(build)-1], ".")
 
-	// Panic !!!
+	// Panic
 	defer func() {
 
 		if r := recover(); r != nil {
@@ -121,11 +120,26 @@ func main() {
 		return
 	}
 
+	if *buildwebui {
+		src.HTMLInit("webUI", "src", "html"+string(os.PathSeparator), "src"+string(os.PathSeparator)+"webUI.go")
+		err := src.BuildGoFile()
+		if err != nil {
+			src.ShowError(err, 0)
+		} else {
+			fmt.Println("webUI.go built successfully")
+		}
+		os.Exit(0)
+	}
+
 	system.Dev = *dev
 
-	// Systeminformationen anzeigen
-	if *info {
+	if *version {
+		src.ShowSystemVersion()
+		return
+	}
 
+	// Display System Information
+	if *info {
 		system.Flag.Info = true
 
 		err := src.Init()
@@ -150,6 +164,11 @@ func main() {
 		fmt.Println("Git Branch is now:", system.Flag.Branch)
 	}
 
+	// Updates
+	if noUpdates != nil {
+		system.GitHub.Update = false
+	}
+
 	// Debug Level
 	system.Flag.Debug = *debug
 	if system.Flag.Debug > 3 {
@@ -157,12 +176,12 @@ func main() {
 		return
 	}
 
-	// Speicherort für die Konfigurationsdateien
+	// Storage location for the Configuration Files
 	if len(*configFolder) > 0 {
 		system.Folder.Config = *configFolder
 	}
 
-	// Backup wiederherstellen
+	// Restore Backup
 	if len(*restore) > 0 {
 
 		system.Flag.Restore = *restore

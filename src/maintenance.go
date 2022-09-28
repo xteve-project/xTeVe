@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// InitMaintenance : Wartungsprozess initialisieren
+// InitMaintenance : Initialize maintenance process
 func InitMaintenance() (err error) {
 
 	rand.Seed(time.Now().Unix())
@@ -23,7 +23,7 @@ func maintenance() {
 
 		var t = time.Now()
 
-		// Aktualisierung der Playlist und XMLTV Dateien
+		// Update the playlist and XMLTV files
 		if System.ScanInProgress == 0 {
 
 			for _, schedule := range Settings.Update {
@@ -32,13 +32,13 @@ func maintenance() {
 
 					showInfo("Update:" + schedule)
 
-					// Backup erstellen
+					// Create a backup
 					err := xTeVeAutoBackup()
 					if err != nil {
 						ShowError(err, 000)
 					}
 
-					// Playlist und XMLTV Dateien aktualisieren
+					// Update Playlist and XMLTV Files
 					getProviderData("m3u", "")
 					getProviderData("hdhr", "")
 
@@ -46,17 +46,17 @@ func maintenance() {
 						getProviderData("xmltv", "")
 					}
 
-					// Datenbank für DVR erstellen
+					// Create database for DVR
 					err = buildDatabaseDVR()
 					if err != nil {
 						ShowError(err, 000)
 					}
 
-					if Settings.CacheImages == false && System.ImageCachingInProgress == 0 {
+					if !Settings.CacheImages && System.ImageCachingInProgress == 0 {
 						removeChildItems(System.Folder.ImagesCache)
 					}
 
-					// XEPG Dateien erstellen
+					// Create XEPG Files
 					Data.Cache.XMLTV = make(map[string]XMLTV)
 					buildXEPG(false)
 
@@ -75,7 +75,6 @@ func maintenance() {
 
 	}
 
-	return
 }
 
 func randomTime(min, max int) int {

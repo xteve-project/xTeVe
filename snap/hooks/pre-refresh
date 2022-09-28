@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -ex
+
+# Check to see if the service is running
+SERVICE_STATUS=`snapctl services xteve.xteve | tail -1 | cut -d " " -f 5`
+if [ "$SERVICE_STATUS" != "active" ]; then
+	exit 0
+fi
+
+# Check to see if it is doing anything
+exec $SNAP/bin/xteve-inactive -port 8080

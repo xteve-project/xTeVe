@@ -18,7 +18,7 @@ class SettingsCategory {
 
     switch (settingsKey) {
 
-        // Texteingaben
+      // Text inputs
       case "update":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.update.title}}" + ":"
@@ -145,7 +145,35 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
-        // Checkboxen
+      // Checkboxes
+      case "tlsMode":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.tlsMode.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
+      case "disallowURLDuplicates":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.disallowURLDuplicates.title}}" + ":"
+  
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+  
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       case "authentication.web":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.authenticationWEB.title}}" + ":"
@@ -258,9 +286,37 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
+      case "storeBufferInRAM":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.storeBufferInRAM.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
       case "xteveAutoUpdate":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.xteveAutoUpdate.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
+      case "clearXMLTVCache":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.clearXMLTVCache.title}}" + ":"
 
         var tdRight = document.createElement("TD")
         var input = content.createCheckbox(settingsKey)
@@ -286,7 +342,48 @@ class SettingsCategory {
         setting.appendChild(tdRight)
         break
 
-        // Select
+      case "enableMappedChannels":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.enableMappedChannels.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var input = content.createCheckbox(settingsKey)
+        input.checked = data
+        input.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(input)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
+      // Select
+      case "hostIP":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.hostIP.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var text: any[] = SERVER["ipAddressesV4Host"]
+        var values: any[] = SERVER["ipAddressesV4Host"]
+
+        var select = content.createSelect(text, values, data, settingsKey)
+        select.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(select)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break;
+      
+      case "hostName":
+          var tdLeft = document.createElement("TD");
+          tdLeft.innerHTML = "{{.settings.hostName.title}}" + ":";
+          var tdRight = document.createElement("TD");
+          var input = content.createInput("text", "hostName", data);
+          input.setAttribute("placeholder", "{{.settings.hostName.placeholder}}");
+          input.setAttribute("onchange", "javascript: this.className = 'changed'");
+          tdRight.appendChild(input);
+          setting.appendChild(tdLeft);
+          setting.appendChild(tdRight);
+          break;
       case "tuner":
         var tdLeft = document.createElement("TD")
         tdLeft.innerHTML = "{{.settings.tuner.title}}" + ":"
@@ -315,6 +412,27 @@ class SettingsCategory {
         var tdRight = document.createElement("TD")
         var text:any[] = ["PMS", "XEPG"]
         var values:any[] = ["PMS", "XEPG"]
+
+        var select = content.createSelect(text, values, data, settingsKey)
+        select.setAttribute("onchange", "javascript: this.className = 'changed'")
+        tdRight.appendChild(select)
+
+        setting.appendChild(tdLeft)
+        setting.appendChild(tdRight)
+        break
+
+      case "defaultMissingEPG":
+        var tdLeft = document.createElement("TD")
+        tdLeft.innerHTML = "{{.settings.defaultMissingEPG.title}}" + ":"
+
+        var tdRight = document.createElement("TD")
+        var text:any[] = [
+          "-", "30 Minutes (30_Minutes)", "60 Minutes (60_Minutes)", "90 Minutes (90_Minutes)",
+          "120 Minutes (120_Minutes)", "180 Minutes (180_Minutes)", "240 Minutes (240_Minutes)", "360 Minutes (360_Minutes)"
+        ]
+        var values:any[] = [
+          "-", "30_Minutes", "60_Minutes", "90_Minutes", "120_Minutes", "180_Minutes", "240_Minutes", "360_Minutes"
+        ]
 
         var select = content.createSelect(text, values, data, settingsKey)
         select.setAttribute("onchange", "javascript: this.className = 'changed'")
@@ -400,6 +518,14 @@ class SettingsCategory {
     var text:string
     switch (settingsKey) {
 
+      case "tlsMode":
+        text = "{{.settings.tlsMode.description}}"
+        break
+
+      case "disallowURLDuplicates":
+        text = "{{.settings.disallowURLDuplicates.description}}"
+        break
+  
       case "authentication.web":
         text = "{{.settings.authenticationWEB.description}}"
         break
@@ -446,6 +572,10 @@ class SettingsCategory {
         text = "{{.settings.bufferSize.description}}"
         break
 
+      case "storeBufferInRAM":
+        text = "{{.settings.storeBufferInRAM.description}}"
+        break
+
       case "buffer.timeout":
         text = "{{.settings.bufferTimeout.description}}"
         break
@@ -474,6 +604,14 @@ class SettingsCategory {
         text = "{{.settings.epgSource.description}}"
         break
 
+      case "hostIP":
+        text = "{{.settings.hostIP.description}}"
+        break;
+      
+      case "hostName":
+        text = "{{.settings.hostName.description}}"
+        break;
+
       case "tuner":
         text = "{{.settings.tuner.description}}"
         break
@@ -482,8 +620,20 @@ class SettingsCategory {
         text = "{{.settings.update.description}}"
         break
 
+      case "clearXMLTVCache":
+        text = "{{.settings.clearXMLTVCache.description}}"
+        break
+
       case "api":
         text = "{{.settings.api.description}}"
+        break
+
+      case "defaultMissingEPG":
+        text = "{{.settings.defaultMissingEPG.description}}"
+        break
+
+      case "enableMappedChannels":
+        text = "{{.settings.enableMappedChannels.description}}"
         break
 
       case "files.update":
@@ -542,7 +692,7 @@ class SettingsCategoryItem extends SettingsCategory {
     var doc = document.getElementById(this.DocumentID)
     doc.appendChild(headline)
 
-    // Tabelle für die Kategorie erstellen
+    // Create a table for the category
 
     var table = document.createElement("TABLE")
 
@@ -579,7 +729,6 @@ class SettingsCategoryItem extends SettingsCategory {
 }
 
 function showSettings() {
-  console.log("SETTINGS");
 
   for (let i = 0; i < settingsCategory.length; i++) {
     settingsCategory[i].createCategory()
@@ -588,7 +737,6 @@ function showSettings() {
 }
 
 function saveSettings() {
-  console.log("Save Settings");
 
   var cmd = "saveSettings"
   var div = document.getElementById("content_settings")
@@ -636,7 +784,7 @@ function saveSettings() {
         name = (settings[i] as HTMLSelectElement).name
         value = (settings[i] as HTMLSelectElement).value
 
-        // Wenn der Wert eine Zahl ist, wird dieser als Zahl gespeichert
+        // If the value is a number, store it as a number
         if(isNaN(value)){
           newSettings[name] = value
         } else {
@@ -654,4 +802,5 @@ function saveSettings() {
 
   var server:Server = new Server(cmd)
   server.request(data)
+
 }
