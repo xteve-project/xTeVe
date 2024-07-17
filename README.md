@@ -79,7 +79,11 @@ Including:
 - Zap2XML: Perl based zap2it XMLTV grabber  
 - Bash: A Unix / Linux shell  
 - Crond: Daemon to execute scheduled commands  
-- Perl: Programming language   
+- Perl: Programming language
+
+### Installation on Synology using Docker
+
+You can use follow (this guide) [https://github.com/saebaryo-xyz/xteve-synology/blob/main/README.md]
 
 ---
 
