@@ -1,0 +1,66 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+README-DEV.md
+LICENSE
+changelog-beta.md
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE files
+.vscode
+.idea
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+xteve
+
+# Test files
+*_test.go
+test_*
+
+# TypeScript source
+ts/
+*.ts
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Development files
+*.orig
+*.bak
+*.swp
+
+# Node modules (if any)
+node_modules/
+
+# Coverage reports
+coverage.out
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Cache directories
+.cache/
+dist/
+
+# Data directories (should be mounted as volumes)
+data/
+cache/
+logs/

@@ -276,48 +276,57 @@ func getProviderData(fileType, fileID string) (err error) {
 }
 
 func downloadFileFromServer(providerURL string) (filename string, body []byte, err error) {
+    _, err = url.ParseRequestURI(providerURL)
+    if err != nil {
+        return
+    }
 
-	_, err = url.ParseRequestURI(providerURL)
-	if err != nil {
-		return
-	}
+    // Создаем клиент с настройками по умолчанию (автоматически обрабатывает редиректы)
+    client := &http.Client{
+        Timeout: 120 * time.Second, // Увеличенный таймаут до 2 минут для скачивания больших файлов
+    }
+    
+    // Создаем запрос с нужными заголовками
+    req, err := http.NewRequest("GET", providerURL, nil)
+    if err != nil {
+        return
+    }
+    
+    // Устанавливаем User-Agent перед отправкой запроса
+    req.Header.Set("User-Agent", Settings.UserAgent)
+    
+    // Выполняем запрос
+    resp, err := client.Do(req)
+    if err != nil {
+        return
+    }
+    defer resp.Body.Close() // Важно закрывать тело ответа
 
-	resp, err := http.Get(providerURL)
-	if err != nil {
-		return
-	}
+    if resp.StatusCode != http.StatusOK {
+        err = fmt.Errorf(fmt.Sprintf("%d: %s "+http.StatusText(resp.StatusCode), resp.StatusCode, providerURL))
+        return
+    }
 
-	resp.Header.Set("User-Agent", Settings.UserAgent)
-
-	if resp.StatusCode != http.StatusOK {
-		err = fmt.Errorf(fmt.Sprintf("%d: %s "+http.StatusText(resp.StatusCode), resp.StatusCode, providerURL))
-		return
-	}
-
-	// Dateiname aus dem Header holen
-	var index = strings.Index(resp.Header.Get("Content-Disposition"), "filename")
-
-	if index > -1 {
-
-		var headerFilename = resp.Header.Get("Content-Disposition")[index:len(resp.Header.Get("Content-Disposition"))]
-		var value = strings.Split(headerFilename, `=`)
-		var f = strings.Replace(value[1], `"`, "", -1)
-
-		f = strings.Replace(f, `;`, "", -1)
-		filename = f
-		showInfo("Header filename:" + filename)
-
-	} else {
-
-		var cleanFilename = strings.SplitN(getFilenameFromPath(providerURL), "?", 2)
-		filename = cleanFilename[0]
-
-	}
-
-	body, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return
-	}
-
-	return
+    // Остальная часть кода остается без изменений...
+    var index = strings.Index(resp.Header.Get("Content-Disposition"), "filename")
+    
+    if index > -1 {
+        var headerFilename = resp.Header.Get("Content-Disposition")[index:len(resp.Header.Get("Content-Disposition"))]
+        var value = strings.Split(headerFilename, `=`)
+        var f = strings.Replace(value[1], `"`, "", -1)
+        
+        f = strings.Replace(f, `;`, "", -1)
+        filename = f
+        showInfo("Header filename:" + filename)
+    } else {
+        var cleanFilename = strings.SplitN(getFilenameFromPath(providerURL), "?", 2)
+        filename = cleanFilename[0]
+    }
+    
+    body, err = ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return
+    }
+    
+    return
 }
